@@ -1,21 +1,20 @@
-import { Schema,Prop,SchemaFactory } from "@nestjs/mongoose";
+import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
+import { Book } from './book.schema';
 
-@Schema({collection: 'users'})
-export class User
-{
-    @Prop({unique:true,required:true})
-    name:string;
+@Schema({ collection: 'users' })
+export class User extends Document {
+    @Prop({ unique: true, required: true })
+    name: string;
 
-    @Prop({required:false})
-    userNumber:string;
+    @Prop({ required: true })
+    userNumber: number;
 
-    @Prop({required:false})
-    displayName?: string;
+    @Prop({ type: Types.ObjectId, ref: 'Book', required: false })
+    favBook: Book;
 
-    @Prop({required:false})
-    avatarUrl?:string;
-
+    @Prop([{ type: Types.ObjectId, ref: 'Book' }])
+    readBooks: Book[];
 }
-
 
 export const UserSchema = SchemaFactory.createForClass(User);
