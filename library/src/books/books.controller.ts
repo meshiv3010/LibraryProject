@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param,NotFoundException } from '@nestjs/common';
 import { BookService } from './books.service';
 import { CreateBookDto } from '../DTO/create-book.dto';
 
@@ -20,4 +20,10 @@ export class BookController {
     findOne(@Param('id') id: string) {
         return this.bookService.getBookById(id);
     }
+
+    @Get(':bookId/author')
+    getAuthorByBookId(@Param('bookId') bookId: string) {
+        return this.bookService.getAuthorByBookId(bookId);
+    }
+    
 }

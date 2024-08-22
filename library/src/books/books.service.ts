@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable ,NotFoundException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model,PopulatedDoc } from 'mongoose';
 import { Book } from '../schema/book.schema';
 import { CreateBookDto } from '../DTO/create-book.dto';
+import { Author } from 'src/schema/author.schema';
 
 @Injectable()
 export class BookService {
@@ -19,5 +20,21 @@ export class BookService {
 
     async getBookById(id: string): Promise<Book> {
         return this.bookModel.findById(id).exec();
+        
     }
+
+
+    async getAuthorByBookId(bookId: string): Promise<string> {
+        const book = await this.bookModel.findById(bookId)
+            .populate<{ author: Pick<Author, 'name'> }>('author', 'name') // מביא רק את שם הסופר
+            .exec();
+    
+        if (!book || !book.author) {
+            throw new NotFoundException('Author not found for the given book');
+        }
+    
+        return book.author.name; // מחזיר את שם הסופר
+    }
+    
+    
 }

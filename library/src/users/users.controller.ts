@@ -1,4 +1,5 @@
-import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch,NotFoundException } from '@nestjs/common';
+import { Types } from 'mongoose';
 import { UserService } from './users.service';
 import { CreateUserDto } from '../DTO/CreateUser.DTO';
 
@@ -22,12 +23,27 @@ export class UserController {
     }
 
     @Patch(':userId/books/:bookId')
-    addBookToUser(@Param('userId') userId: string, @Param('bookId') bookId: string) {
-        return this.userService.addBookToUser(userId, bookId);
+    async addBookToUser(
+        @Param('userId') userId: string,
+        @Param('bookId') bookId: string
+    ) {
+        try {
+            const userObjectId = new Types.ObjectId(userId);
+            const bookObjectId = new Types.ObjectId(bookId);
+            return await this.userService.addBookToUser(userObjectId, bookObjectId);
+        } catch (error) {
+            throw new NotFoundException('User or book not found');
+        }
     }
 
     @Patch(':userId/favBook/:bookId')
     setFavoriteBook(@Param('userId') userId: string, @Param('bookId') bookId: string) {
         return this.userService.setFavoriteBook(userId, bookId);
     }
+
+    @Get(':userId/books-details')
+    async getBooksDetails(@Param('userId') userId: string) {
+        return this.userService.getBooksDetailsWithAuthors(userId);
+    }
+
 }

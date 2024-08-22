@@ -10,11 +10,11 @@ export class User extends Document {
     @Prop({ required: true })
     userNumber: number;
 
-    @Prop({ type: Types.ObjectId, ref: 'Book', required: false })
-    favBook: Book;
+     @Prop({ type: Types.ObjectId, ref: 'Book', required: false })
+    favBook: Types.ObjectId; 
 
     @Prop([{ type: Types.ObjectId, ref: 'Book' }])
-    readBooks: Book[];
+    readBooks: Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
