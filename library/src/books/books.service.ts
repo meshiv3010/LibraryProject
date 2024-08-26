@@ -22,8 +22,7 @@ export class BookService {
         return this.bookModel.findById(id).exec();
         
     }
-
-
+    
     async getAuthorByBookId(bookId: string): Promise<string> {
         const book = await this.bookModel.findById(bookId)
             .populate<{ author: Pick<Author, 'name'> }>('author', 'name') // מביא רק את שם הסופר
