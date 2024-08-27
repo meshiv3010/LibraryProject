@@ -1,9 +1,10 @@
 import { Injectable ,NotFoundException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model,PopulatedDoc } from 'mongoose';
+import { Model,Types } from 'mongoose';
 import { Book } from '../schema/book.schema';
 import { CreateBookDto } from '../DTO/create-book.dto';
 import { Author } from 'src/schema/author.schema';
+import path from 'path';
 
 @Injectable()
 export class BookService {
@@ -15,25 +16,43 @@ export class BookService {
     }
 
     async getAllBooks(): Promise<Book[]> {
-        return this.bookModel.find().exec();
+        return this.bookModel.find().populate({
+            path: 'readers',
+            model: 'User' // אכלוס פרטי הקוראים
+        }).populate({
+            path: 'author',
+            model: 'Author' // אכלוס פרטי הסופר
+        })
+        .exec();
     }
 
     async getBookById(id: string): Promise<Book> {
-        return this.bookModel.findById(id).exec();
+        return this.bookModel.findById(id).populate({
+            path: 'readers',
+            model: 'User' // אכלוס פרטי הקוראים
+        }).populate({
+            path: 'author',
+            model: 'Author' // אכלוס פרטי הסופר
+        }).exec();
         
     }
     
     async getAuthorByBookId(bookId: string): Promise<string> {
         const book = await this.bookModel.findById(bookId)
             .populate<{ author: Pick<Author, 'name'> }>('author', 'name') // מביא רק את שם הסופר
-            .exec();
-    
-        if (!book || !book.author) {
-            throw new NotFoundException('Author not found for the given book');
-        }
-    
+            .exec();    
         return book.author.name; // מחזיר את שם הסופר
     }
+
+    async removeReaderFromBook(bookId: Types.ObjectId, userId: Types.ObjectId): Promise<Book> {
+        // עדכון הרשימה של ה-readers ע"י הסרת ה-userId
+        return this.bookModel.findByIdAndUpdate(
+            bookId,
+            { $pull: { readers: userId } }, // ה-$pull מסיר את ה-userId מהמערך
+            { new: true } // החזרת המסמך המעודכן
+        ).exec();
+    }
+    
     
     
 }

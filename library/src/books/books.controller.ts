@@ -1,6 +1,7 @@
-import { Controller, Post, Body, Get, Param,NotFoundException } from '@nestjs/common';
+import { Controller, Post, Body, Get,Put, Param,NotFoundException } from '@nestjs/common';
 import { BookService } from './books.service';
 import { CreateBookDto } from '../DTO/create-book.dto';
+import { Types } from 'mongoose';
 
 @Controller('books')
 export class BookController {
@@ -26,4 +27,13 @@ export class BookController {
         return this.bookService.getAuthorByBookId(bookId);
     }
     
+    @Put(':bookId/readers/:userId')
+    async removeReader(
+        @Param('bookId') bookId: string,
+        @Param('userId') userId: string
+    ) {
+        const bookObjectId = new Types.ObjectId(bookId);
+        const userObjectId = new Types.ObjectId(userId);
+        return this.bookService.removeReaderFromBook(bookObjectId, userObjectId);
+    }
 }

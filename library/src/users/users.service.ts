@@ -30,30 +30,36 @@ export class UserService {
     }
 
     async addBookToUser(userId: Types.ObjectId, bookId: Types.ObjectId): Promise<User> {
-        // Update the User to add the bookId to readBooks
+        // עדכון המשתמש כדי להוסיף את ה-bookId ל-readBooks
         const user = await this.userModel.findByIdAndUpdate(
             userId,
             { $addToSet: { readBooks: bookId } },
             { new: true }
         ).exec();
-
+    
         if (!user) {
             throw new NotFoundException('User not found');
         }
-
-        // Update the Book to add the userId to readers
+    
+        // עדכון הספר כדי להוסיף את ה-userId ל-readers
         const book = await this.bookModel.findByIdAndUpdate(
             bookId,
             { $addToSet: { readers: userId } },
             { new: true }
         ).exec();
-
+    
         if (!book) {
             throw new NotFoundException('Book not found');
         }
-
-        return user;
+    
+        // שליפת המשתמש עם אכלוס פרטי הספרים ב-readBooks
+        const populatedUser = await this.userModel.findById(user._id)
+            .populate('readBooks') // אכלוס פרטי הספרים
+            .exec();
+    
+        return populatedUser;
     }
+    
 
     async setFavoriteBook(userId: string, bookId: string): Promise<User> {
         return this.userModel.findByIdAndUpdate(userId, { favBook: bookId }, { new: true }).populate('favBook').exec();
@@ -62,5 +68,37 @@ export class UserService {
     async getBooksDetailsWithAuthors(userId: string): Promise<User > {
         const user = await this.userModel.findById(userId).populate('favBook').populate({path: 'readBooks', populate:{path: 'author'}}).exec();
         return user;
+    }
+
+    async removeFavBook(userId: Types.ObjectId, bookId: Types.ObjectId): Promise<User> {
+        // בדיקה אם הספר המועדף קיים ומחיקתו אם כן
+        const user = await this.userModel.findById(userId).exec();
+
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        if (user.favBook?.toString() === bookId.toString()) {
+            user.favBook = null; // הסרת הספר מהמועדפים
+        } else {
+            throw new NotFoundException('FavBook not found in user');
+        }
+
+        return user.save(); // שמירת השינויים
+    }
+
+    async updateUser(userId: Types.ObjectId, updateData: Partial<Omit<User, 'userNumber'>>): Promise<User> {
+        // שליפת המשתמש והוצאת userNumber מהעדכון
+        const user = await this.userModel.findById(userId).exec();
+
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        // שמירת השדות לעדכון פרט לשדה userNumber
+        Object.assign(user, updateData);
+
+        // שמירת השינויים
+        return user.save();
     }
 }
