@@ -1,13 +1,15 @@
 import { Controller, Post, Body, Get,Put, Param,NotFoundException } from '@nestjs/common';
 import { BookService } from './books.service';
-import { CreateBookDto } from '../DTO/create-book.dto';
+import { CreateBookDto } from './create-book.dto';
 import { Types } from 'mongoose';
+import { Validate } from 'class-validator';
 
 @Controller('books')
 export class BookController {
     constructor(private readonly bookService: BookService) {}
 
     @Post()
+    @Validate(CreateBookDto)
     create(@Body() createBookDto: CreateBookDto) {
         return this.bookService.createBook(createBookDto);
     }
@@ -18,22 +20,13 @@ export class BookController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
+    findOne(@Param('id') id: Types.ObjectId) {
         return this.bookService.getBookById(id);
     }
 
     @Get(':bookId/author')
-    getAuthorByBookId(@Param('bookId') bookId: string) {
+    getAuthorByBookId(@Param('bookId') bookId: Types.ObjectId) {
         return this.bookService.getAuthorByBookId(bookId);
     }
     
-    @Put(':bookId/readers/:userId')
-    async removeReader(
-        @Param('bookId') bookId: string,
-        @Param('userId') userId: string
-    ) {
-        const bookObjectId = new Types.ObjectId(bookId);
-        const userObjectId = new Types.ObjectId(userId);
-        return this.bookService.removeReaderFromBook(bookObjectId, userObjectId);
-    }
 }

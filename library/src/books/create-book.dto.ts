@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsString, IsMongoId, IsNumber } from 'class-validator';
+import { Types } from 'mongoose';
 
 export class CreateBookDto {
     @IsNotEmpty()
@@ -9,5 +10,5 @@ export class CreateBookDto {
     bookNumber:number;
 
     @IsMongoId()
-    author: string;
+    author: Types.ObjectId;
 }

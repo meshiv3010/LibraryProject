@@ -1,7 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Delete } from '@nestjs/common';
 import { AuthorService } from './authors.service';
 import { Types } from 'mongoose';
-import { Book } from 'src/schema/book.schema';
+import { Book } from 'src/books/book.schema';
 
 @Controller('authors')
 export class AuthorController {
@@ -13,14 +13,17 @@ export class AuthorController {
     }
 
     @Get(':id/books')
-    findBooksByAuthor(@Param('id') id: string): Promise<Book[]> {
-        // המרה של ה-ID ל-ObjectId של MongoDB
-        const objectId = new Types.ObjectId(id);
-        return this.authorService.getBooksByAuthor(objectId);
+    findBooksByAuthor(@Param('id') id: Types.ObjectId): Promise<Types.ObjectId[]> {
+        return this.authorService.getBooksByAuthor(id);
     }
     
     @Get('nameAndNumner')
     getAllAuthorsNameWithNumber() {
         return this.authorService.getAllAuthorsNameWithNumber();
+    }
+    @Delete(':id')
+    async deleteAuthor(@Param('id') id: Types.ObjectId): Promise<{ message: string }> {
+      await this.authorService.deleteAuthor(id);
+      return { message: 'User has been successfully deleted' };
     }
 }

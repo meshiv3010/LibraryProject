@@ -1,8 +1,8 @@
 import { Controller, Post, Body, Get,Put,Delete, Param, Patch,NotFoundException } from '@nestjs/common';
-import { Types } from 'mongoose';
+import { ObjectId, Types } from 'mongoose';
 import { UserService } from './users.service';
-import { CreateUserDto } from '../DTO/CreateUser.DTO';
-import { User } from 'src/schema/user.schema';
+import { CreateUserDto } from './CreateUser.dto';
+import { User } from 'src/users/user.schema';
 
 @Controller('users')
 export class UserController {
@@ -18,48 +18,44 @@ export class UserController {
         return this.userService.getAllUsers();
     }
 
-    @Get(':userNumber')
-    findOne(@Param('userNumber') userNumber: number) {
-        return this.userService.getUserByNumber(userNumber);
-    }
-
     @Patch(':userId/books/:bookId')
     async addBookToUser(
-        @Param('userId') userId: string,
-        @Param('bookId') bookId: string
+        @Param('userId') userId: Types.ObjectId,
+        @Param('bookId') bookId: Types.ObjectId
     ) {
         try {
-            const userObjectId = new Types.ObjectId(userId);
-            const bookObjectId = new Types.ObjectId(bookId);
-            return await this.userService.addBookToUser(userObjectId, bookObjectId);
+            return await this.userService.addBookToUser(userId, bookId);
         } catch (error) {
             throw new NotFoundException('User or book not found');
         }
     }
 
+    @Delete(':id')
+    async deleteUser(@Param('id') id: Types.ObjectId): Promise<{ message: string }> {
+        try {
+            await this.userService.deleteUser(id);
+            return { message: 'User has been successfully deleted' };
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw new NotFoundException('User not found');
+            }
+            throw error; // זרוק חריגות אחרות כפי שהן
+        }
+    }
+
     @Patch(':userId/favBook/:bookId')
-    setFavoriteBook(@Param('userId') userId: string, @Param('bookId') bookId: string) {
+    setFavoriteBook(@Param('userId') userId: Types.ObjectId, @Param('bookId') bookId: Types.ObjectId) {
         return this.userService.setFavoriteBook(userId, bookId);
     }
 
     @Get(':userId/books-details')
-    async getBooksDetails(@Param('userId') userId: string) {
+    async getBooksDetails(@Param('userId') userId: Types.ObjectId) {
         return this.userService.getBooksDetailsWithAuthors(userId);
-    }
-
-    @Delete(':userId/favBook/:bookId')
-    async removeFavBook(
-        @Param('userId') userId: string,
-        @Param('bookId') bookId: string
-    ) {
-        const userObjectId = new Types.ObjectId(userId);
-        const bookObjectId = new Types.ObjectId(bookId);
-        return this.userService.removeFavBook(userObjectId, bookObjectId);
     }
 
     @Put(':id')
     async updateUser(
-        @Param('id') id: string,
+        @Param('id') id: Types.ObjectId,
         @Body() updateData: Partial<Omit<User, 'userNumber'>>
     ) {
         const userObjectId = new Types.ObjectId(id);
