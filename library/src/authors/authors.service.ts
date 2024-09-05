@@ -1,19 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject, forwardRef } from '@nestjs/common'; // ודא ייבוא Inject ו-forwardRef
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId, Types } from 'mongoose';
-import { Author } from './author.schema'
-import { Book } from '../books/book.schema';
-import { BookService } from 'src/books/books.service';
-import { UserService } from 'src/users/users.service';
+import { Model, Types } from 'mongoose';
+import { Author } from './author.schema';
+import { BookService } from '../books/books.service';
+import { UserService } from '../users/users.service';
 
 @Injectable()
 export class AuthorService {
   constructor(
     @InjectModel(Author.name) private authorModel: Model<Author>,
-    @InjectModel(Book.name) private bookModel: Model<Book>,
-    private readonly bookService: BookService,
-    private readonly userService: UserService
+    @Inject(forwardRef(() => BookService)) private readonly bookService: BookService,
+    @Inject(forwardRef(() => UserService)) private readonly userService: UserService // הזרקת UserService עם forwardRef
   ) {}
+
 
   async getAllAuthors(): Promise<Author[]> {
     return this.authorModel
@@ -50,5 +49,13 @@ export class AuthorService {
     }
     await this.authorModel.findByIdAndDelete(authorId).exec();
     console.log(`Deleted author ${authorId}.`);
+}
+async removeBookFromAuthor(authorId: Types.ObjectId, bookId: Types.ObjectId): Promise<void> {
+  await this.authorModel.findByIdAndUpdate(
+    authorId,
+    { $pull: { books: { $eq: bookId } } }, 
+    { new: true }
+  ).exec();
+  console.log(`Book ${bookId} has been removed from author's books.`);
 }
 }

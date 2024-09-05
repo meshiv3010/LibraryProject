@@ -11,7 +11,7 @@ export class Book extends Document {
   author: mongoose.Types.ObjectId;
 
   @Prop({ required: true })
-  titel: string;
+  title: string;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);

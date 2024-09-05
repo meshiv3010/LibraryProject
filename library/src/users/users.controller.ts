@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Get,Put,Delete, Param, Patch,NotFoundException } from '@nestjs/common';
 import { ObjectId, Types } from 'mongoose';
 import { UserService } from './users.service';
-import { CreateUserDto } from './CreateUser.dto';
+import { CreateUserDto } from './dto/createUser.dto';
 import { User } from 'src/users/user.schema';
 
 @Controller('users')
@@ -18,6 +18,11 @@ export class UserController {
         return this.userService.getAllUsers();
     }
 
+    @Get(':userId/books-details')
+    async getBooksDetails(@Param('userId') userId: Types.ObjectId) {
+        return this.userService.getBooksDetailsWithAuthors(userId);
+    }
+
     @Patch(':userId/books/:bookId')
     async addBookToUser(
         @Param('userId') userId: Types.ObjectId,
@@ -28,6 +33,11 @@ export class UserController {
         } catch (error) {
             throw new NotFoundException('User or book not found');
         }
+    }
+
+    @Patch(':userId/favBook/:bookId')
+    setFavoriteBook(@Param('userId') userId: Types.ObjectId, @Param('bookId') bookId: Types.ObjectId) {
+        return this.userService.setFavoriteBook(userId, bookId);
     }
 
     @Delete(':id')
@@ -41,17 +51,7 @@ export class UserController {
             }
             throw error; // זרוק חריגות אחרות כפי שהן
         }
-    }
-
-    @Patch(':userId/favBook/:bookId')
-    setFavoriteBook(@Param('userId') userId: Types.ObjectId, @Param('bookId') bookId: Types.ObjectId) {
-        return this.userService.setFavoriteBook(userId, bookId);
-    }
-
-    @Get(':userId/books-details')
-    async getBooksDetails(@Param('userId') userId: Types.ObjectId) {
-        return this.userService.getBooksDetailsWithAuthors(userId);
-    }
+    } 
 
     @Put(':id')
     async updateUser(
