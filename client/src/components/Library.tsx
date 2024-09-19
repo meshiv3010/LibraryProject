@@ -6,27 +6,28 @@ interface User {
   name: string;
 }
 
-const Library: React.FC = () => {
+const Library = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<string>('');
-
+  console.log(axios);
+  console.log("hi");
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/users'); // API שלך
+        const response = await axios.get('http://localhost:3000/users');
         setUsers(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
-    
+
     fetchUsers();
   }, []);
 
   const handleLogin = () => {
     if (selectedUser) {
       console.log("Logging in user:", selectedUser);
-      // לוגיקה להתחברות
+      // Add your login logic here
     }
   };
 

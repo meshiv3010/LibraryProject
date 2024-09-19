@@ -4,8 +4,8 @@ import { Model, Types } from 'mongoose';
 import { Book } from './book.schema';
 import { Author } from '../authors/author.schema'; 
 import { CreateBookDto } from './dto/create-book.dto';
-import { AuthorService } from 'src/authors/authors.service';
-import { UserService } from 'src/users/users.service';
+import { AuthorService } from '../authors/authors.service';
+import { UserService } from '../users/users.service';
 
 @Injectable()
 export class BookService {
