@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import style from './LoginPage.module.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // ייבוא useNavigate לניווט
+import LibraryName from '../../components/LibraryName';
 
 interface User {
-  id: string;
+  _id: string;
   name: string;
 }
 
-const Library = () => {
+const LogIn = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<string>('');
-  console.log(axios);
-  console.log("hi");
+  const navigate = useNavigate(); // יצירת משתנה לניווט
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -27,17 +30,18 @@ const Library = () => {
   const handleLogin = () => {
     if (selectedUser) {
       console.log("Logging in user:", selectedUser);
-      // Add your login logic here
+      // ניתוב לעמוד ManagementPage עם ה-ID של היוזר
+      navigate('/management', { state: { userId: selectedUser } });
     }
   };
 
   return (
-    <div>
-      <h1>סיפריה</h1>
+    <div className={style.container}>
+      <h1><LibraryName fontSize="100px" /></h1>
       <select onChange={(e) => setSelectedUser(e.target.value)} value={selectedUser}>
         <option value="">בחר יוזר</option>
         {users.map(user => (
-          <option key={user.id} value={user.id}>{user.name}</option>
+          <option key={user._id} value={user._id}>{user.name}</option> // שימוש ב-_id
         ))}
       </select>
       <button onClick={handleLogin}>התחבר</button>
@@ -45,4 +49,4 @@ const Library = () => {
   );
 };
 
-export default Library;
+export default LogIn;

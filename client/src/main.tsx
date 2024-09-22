@@ -2,7 +2,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css'; // Import your global styles
 import App from './App'; // Main App component
 
 // Create a root element to render the React app
