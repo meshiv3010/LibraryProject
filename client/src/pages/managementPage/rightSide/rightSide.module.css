@@ -1,0 +1,10 @@
+.leftSide {
+    position: relative; /* מיקום יחסית לעמוד */
+    width: 33%; /* ניתן לשנות את הרוחב לפי הצורך */
+    margin-top: 30px; /* מרווח מלמעלה כדי שיהיה מתחת לכותרת */
+    padding: 10px;
+   /* background-color: #f0f0f0; /* רקע אופציונלי */
+   height: 100vh;
+   border: 2px solid black;
+}
+  

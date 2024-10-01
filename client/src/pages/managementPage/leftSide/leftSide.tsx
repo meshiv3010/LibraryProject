@@ -1,10 +1,40 @@
 import React from 'react';
+import Card from '../card/card';
 
-const LeftSide = () => {
+interface LeftSideProps {
+  userId: string;
+  selectedCategory: string | null; 
+  readBooks: Array<{
+    _id: string;
+    bookNumber: number;
+    title: string;
+    author: {
+      _id: string;
+      name: string;
+    };
+  }>;
+  userName: string; // Keep userName here
+}
+
+const LeftSide = ({ userId, selectedCategory, readBooks, userName }: LeftSideProps) => {
   return (
     <div>
-      <h2>Left Side</h2>
-      {/* תוכן הקומפוננטה LeftSide */}
+      {selectedCategory === 'ניהול משתמשים' && (
+        <div>
+          <h3>ספרים שקרא {userName}:</h3>
+          <ul>
+            {readBooks.map(book => (
+              <li key={book._id}>
+                <Card 
+                  title={book.title} 
+                  authorName={book.author.name} 
+                  bookNumber={book.bookNumber} 
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

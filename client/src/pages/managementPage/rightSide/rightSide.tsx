@@ -1,10 +1,22 @@
 import React from 'react';
+import Card from '../card/card';
 
-const RightSide = () => {
+interface RightSideProps {
+  users: {
+    _id: string;
+    name: string;
+    userNumber: number;
+  }[]; // Define users directly here
+  selectedCategory: string;
+}
+
+const RightSide = ({ users, selectedCategory }: RightSideProps) => {
   return (
     <div>
-      <h2>RightSide</h2>
-      {/* תוכן הקומפוננטה RightSide */}
+      <h1>רשימת המשתמשים</h1>
+      {users.map((user) => (
+        <Card key={user._id} name={user.name} userNumber={user.userNumber.toString()} />
+      ))}
     </div>
   );
 };

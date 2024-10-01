@@ -1,0 +1,11 @@
+.title {
+  position: absolute;
+  top: 0; /* מיקום בחלק העליון של העמוד */
+  left: 0; /* מיושרת להתחלה */
+  width: 100%; /* אם תרצי שהיא תתפוס את כל רוחב העמוד */
+  display: flex; /* שימוש ב-flexbox */
+  justify-content: space-between; /* מרחק בין הצדדים */
+  align-items: flex-start; /* מיישר את התוכן בחלק העליון */
+  padding: 20px; /* אפשר להוסיף padding אם יש צורך */
+  border: 2px solid black;
+}

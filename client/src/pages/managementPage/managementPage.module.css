@@ -1,19 +1,15 @@
-/* src/pages/ManagementPage.module.css */
 .container {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-  }
-  
-  .leftSide {
-    width: 30%;
-    background-color: #f0f0f0;
-    padding: 10px;
-  }
-  
-  .categories {
-    width: 65%;
-    background-color: #ffffff;
-    padding: 10px;
-  }
-  
+  display: flex;
+  flex-direction: row; /* יצירת עמודה אופקית */
+  justify-content: space-between; /* פיזור האלמנטים */
+  align-items: flex-start; /* יישור למעלה */
+  padding: 20px;
+  height: 100vh;
+}
+
+.categories, .leftSide, .rightSide {
+  margin-top: 20px; /* מרווח מלמעלה כדי למנוע חפיפה */
+}
+
+
+
