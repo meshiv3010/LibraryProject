@@ -9,13 +9,12 @@ interface CardProps {
   writerNumber?: number; 
 }
 
-const Card = ({ name, userNumber, title, authorName, bookNumber , writerNumber}: CardProps) => {
+const Card = ({ name, userNumber, title, authorName, bookNumber, writerNumber }: CardProps) => {
   return (
     <div className="card">
-      {userNumber && (  <h2> מזהה: {userNumber}   שם: {name}</h2>)}
-      {bookNumber && (<h2>מזהה: {bookNumber} שם: {title} סופר: {authorName}</h2>)}
-      {writerNumber && (<h2>מזהה: {writerNumber} שם: {authorName}</h2>)}
-      {bookNumber && (<h2>מזהה: {bookNumber} שם: {title} </h2>)}
+      {userNumber && <h2>מזהה: {userNumber} שם: {name}</h2>}
+      {bookNumber && <h2>מזהה: {bookNumber} שם: {title} סופר: {authorName}</h2>}
+      {writerNumber && <h2>מזהה: {writerNumber} שם: {authorName}</h2>}
     </div>
   );
 };

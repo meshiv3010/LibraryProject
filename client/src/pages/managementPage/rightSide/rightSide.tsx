@@ -11,6 +11,8 @@ interface RightSideProps {
 }
 
 const RightSide = ({ users, selectedCategory }: RightSideProps) => {
+  console.log('RightSide props:', { users, selectedCategory }); // הוספת לוג
+
   return (
     <div>
       <h1>רשימת המשתמשים</h1>
