@@ -1,20 +1,23 @@
 import React from 'react';
+import style from './card.module.css';
 
 interface CardProps {
-  name?: string; // הפך לאופציונלי
-  userNumber?: string; // הפך לאופציונלי
-  title?: string; // הוסף פרופס אופציונלי
-  authorName?: string; // הוסף פרופס אופציונלי
-  bookNumber?: number; // הוסף פרופס אופציונלי
-  writerNumber?: number; 
+  title?: string; // יכול להיות undefined אם מדובר במשתמש
+  authorName?: string; // שם הסופר
+  bookNumber?: number; // מספר הספר
+  name?: string; // שם המשתמש
+  userNumber?: string; // מספר המשתמש
 }
 
-const Card = ({ name, userNumber, title, authorName, bookNumber, writerNumber }: CardProps) => {
+const Card = ({ title, authorName, bookNumber, name, userNumber }: CardProps) => {
   return (
-    <div className="card">
-      {userNumber && <h2>מזהה: {userNumber} שם: {name}</h2>}
-      {bookNumber && <h2>מזהה: {bookNumber} שם: {title} סופר: {authorName}</h2>}
-      {writerNumber && <h2>מזהה: {writerNumber} שם: {authorName}</h2>}
+    <div className={style.card}>
+      {bookNumber !== undefined && (
+        <h2>מזהה: {bookNumber} שם: {title} סופר: {authorName}</h2>
+      )}
+      {name && (
+        <h2>שם משתמש: {name} מספר משתמש: {userNumber}</h2>
+      )}
     </div>
   );
 };

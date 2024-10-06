@@ -6,10 +6,6 @@ interface UserType {
   _id: string;
   name: string;
   userNumber: number;
-  title?: string;
-  authorName?: string;
-  bookNumber?: number;
-  writerNumber?: number;
   readBooks: Array<{
     _id: string;
     title: string;
@@ -64,7 +60,7 @@ const User = ({ currentUser }: UserProps) => {
       />
       <RightSide 
         users={users} // שליחת כל היוזרים ל-RightSide
-        selectedCategory="user" 
+        selectedCategory="user" // העברת הקטגוריה
       />
     </div>
   );

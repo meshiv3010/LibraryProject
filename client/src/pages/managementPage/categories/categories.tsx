@@ -1,12 +1,18 @@
 import React from 'react';
 import style from './categories.module.css';
 
-interface CategoriesProps {
-  onCategorySelect: (category: string) => void;
+interface Category {
+  id: number;
+  name: string;
 }
 
-const Categories = ({ onCategorySelect }: CategoriesProps) => {
-  const categories = [
+interface CategoriesProps {
+  onCategorySelect: (category: string) => void;
+  selectedCategory?: string; // פרופס כדי לעקוב אחר הקטגוריה הנוכחית
+}
+
+const Categories = ({ onCategorySelect, selectedCategory }: CategoriesProps) => {
+  const categories: Category[] = [
     { id: 1, name: 'ניהול משתמשים' },
     { id: 2, name: 'ניהול ספרים' },
     { id: 3, name: 'ניהול סופרים' },
@@ -17,7 +23,10 @@ const Categories = ({ onCategorySelect }: CategoriesProps) => {
       <div>
         {categories.map(category => (
           <div key={category.id} className={style.categoryItem}>
-            <button onClick={() => onCategorySelect(category.name)}>
+            <button 
+              onClick={() => onCategorySelect(category.name)} 
+              className={selectedCategory === category.name ? style.active : ''}
+            >
               {category.name}
             </button>
           </div>

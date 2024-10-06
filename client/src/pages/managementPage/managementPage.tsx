@@ -36,7 +36,7 @@ const ManagementPage = () => {
   }
 
   const handleCategorySelect = (category: string) => {
-    setActivity(category);
+    setActivity(category === 'ניהול ספרים' ? 'book' : category === 'ניהול משתמשים' ? 'user' : 'author');
     console.log(`Selected activity: ${category}`);
   };
 
@@ -44,17 +44,17 @@ const ManagementPage = () => {
     <div className={style.container}>
       <div>
         <Title 
-          userName={currentUser.name || ''} // שמו של המשתמש
-          favBook={currentUser.favBook?.title || null} // ספר מועדף אם קיים
+          userName={currentUser.name || ''}
+          favBook={currentUser.favBook?.title || null}
         />     
       </div>
       <div>
         <Categories onCategorySelect={handleCategorySelect} />
       </div>
       <div>
-        {activity === 'user' && <User currentUser={currentUser} />} {/* העברת currentUser */}
-        {activity === 'book' && <Book />}
-        {activity === 'author' && <Author />}
+        {activity === 'user' && <User currentUser={currentUser} />} {/* הוספת User */}
+        {activity === 'book' && <Book />} {/* הוספת Book */}
+        {activity === 'author' && <Author />} {/* הוספת Author */}
       </div>
     </div>
   );

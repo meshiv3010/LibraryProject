@@ -8,4 +8,6 @@
    /* background-color: #f0f0f0; /* רקע אופציונלי */   right: 0%;
    border: 2px solid black;
 }
-  
+.active {
+    background-color: lightblue; /* או כל צבע אחר שתרצה */
+  }

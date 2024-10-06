@@ -25,7 +25,7 @@ const LeftSide = ({ userId, selectedCategory, readBooks, userName }: LeftSidePro
           {readBooks.length > 0 ? (
             <ul>
               {readBooks.map(book => (
-                <li key={book._id}>
+                <li key={`${book._id}-${book.bookNumber}`}>
                   <Card 
                     title={book.title} 
                     authorName={book.author?.name || 'Unknown Author'}
@@ -34,13 +34,12 @@ const LeftSide = ({ userId, selectedCategory, readBooks, userName }: LeftSidePro
                 </li>
               ))}
             </ul>
-          ) : (
-            <p>אין ספרים שקראת.</p> // הודעה כאשר אין ספרים לקרוא
-          )}
+          ) : null} {/* לא מציגים כלום אם אין ספרים */}
         </div>
       )}
     </div>
   );
 };
+
 
 export default LeftSide;
