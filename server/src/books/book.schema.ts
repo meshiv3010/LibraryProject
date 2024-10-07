@@ -1,17 +1,20 @@
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import * as mongoose from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
+import { User } from '../users/user.schema';
 
-@Schema({ collection: 'books' })
+@Schema()
 export class Book extends Document {
-  @Prop({ required: true })
-  bookNumber: number;
+    @Prop({ required: true })
+    bookNumber: number;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Author', required: true })
-  author: mongoose.Types.ObjectId;
+    @Prop({ required: true, type: Types.ObjectId, ref: 'Author' })
+    author: Types.ObjectId;
 
-  @Prop({ required: true })
-  title: string;
+    @Prop({ required: true })
+    title: string;
+
+    @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] }) // שדה לקוראים
+    readers: Types.ObjectId[];
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);

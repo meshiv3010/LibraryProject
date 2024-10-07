@@ -22,8 +22,9 @@ interface UserProps {
 }
 
 const User = ({ currentUser }: UserProps) => {
-  const [readBooks, setReadBooks] = useState<any[]>([]);
+  const [readBooks, setReadBooks] = useState<UserType['readBooks']>([]);
   const [users, setUsers] = useState<UserType[]>([]); // משתנה לשמירה על כל היוזרים
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null); // הוספת מצב למשתמש הנבחר
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -41,9 +42,14 @@ const User = ({ currentUser }: UserProps) => {
 
   useEffect(() => {
     if (currentUser) {
-      setReadBooks(currentUser.readBooks || []);
+      setReadBooks(currentUser.readBooks || []); // הגדר את הספרים של המשתמש המחובר
     }
   }, [currentUser]); // עדכון מצבים כשמשתנה currentUser
+
+  const handleUserSelect = (user: UserType) => {
+    setSelectedUser(user); // עדכון המשתמש הנבחר
+    setReadBooks(user.readBooks || []); // עדכון הספרים של המשתמש הנבחר
+  };
 
   // נוודא שהמשתמש נטען לפני שמנסים להציג את השדות שלו
   if (!currentUser) {
@@ -53,14 +59,15 @@ const User = ({ currentUser }: UserProps) => {
   return (
     <div>
       <LeftSide 
-        userId={currentUser._id} 
-        selectedCategory="user" 
+        userId={selectedUser ? selectedUser._id : currentUser._id} 
+        selectedCategory="user" // עדכון הקטגוריה
         readBooks={readBooks} 
-        userName={currentUser.name || ''} 
+        userName={selectedUser ? selectedUser.name : currentUser.name} 
       />
       <RightSide 
         users={users} // שליחת כל היוזרים ל-RightSide
         selectedCategory="user" // העברת הקטגוריה
+        onUserSelect={handleUserSelect} // העברת הפונקציה לבחירת משתמש
       />
     </div>
   );

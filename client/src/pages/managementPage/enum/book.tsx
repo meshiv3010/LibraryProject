@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import RightSide from '../rightSide/rightSide'; // יבוא הקומפוננטה RightSide
+import LeftSide from '../leftSide/leftSide'; // יבוא הקומפוננטה LeftSide
 
-// ממשק עבור פרטי הספר
+interface ReaderType {
+  _id: string;
+  name: string;
+  userNumber: number; // נוסיף ערך ברירת מחדל
+  readBooks: string[]; // נוסיף ערך ברירת מחדל
+  favBook: string; // נוסיף ערך ברירת מחדל
+}
+
 interface BookType {
-  _id: string; // הוספת ה-ID של הספר
+  _id: string;
   bookNumber: number;
   title: string;
   author: {
-    _id: string; // הוספת ה-ID של הסופר
+    _id: string;
     name: string;
   };
-  readers: string[]; // רשימת הקוראים
+  readers: ReaderType[]; // הוספת readers
 }
 
 const Book = () => {
   const [books, setBooks] = useState<BookType[]>([]);
+  const [selectedBook, setSelectedBook] = useState<BookType | null>(null); // מצב לספר שנבחר
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -24,14 +33,20 @@ const Book = () => {
         
         // שמירה של המידע של הספרים
         const formattedBooks = booksData.map((book: any) => ({
-          _id: book._id, // הוספת ה-ID של הספר
+          _id: book._id,
           bookNumber: book.bookNumber,
           title: book.title,
           author: {
-            _id: book.author?._id || 'Unknown Author ID', // הוספת ה-ID של הסופר
+            _id: book.author?._id || 'Unknown Author ID',
             name: book.author?.name || 'Unknown Author',
           },
-          readers: book.readers || [], // ודא שיש רשימה ריקה אם אין קוראים
+          readers: book.readers.map((reader: any) => ({
+            _id: reader._id,
+            name: reader.name,
+            userNumber: reader.userNumber || 0, // ערך ברירת מחדל
+            readBooks: reader.readBooks || [], // ערך ברירת מחדל
+            favBook: reader.favBook || '', // ערך ברירת מחדל
+          })) || [], // אם אין קוראים, העברת מערך ריק
         }));
 
         setBooks(formattedBooks);
@@ -43,20 +58,24 @@ const Book = () => {
     fetchBooks();
   }, []);
 
+  // פונקציה שתבחר ספר
+  const handleBookSelect = (book: BookType) => {
+    setSelectedBook(book);
+  };
+
   return (
     <div>
       {/* קריאה לקומפוננטה RightSide עם העברת רשימת הספרים */}
       <RightSide 
-        books={books.map(book => ({
-          _id: book._id, // הוספת ה-ID של הספר
-          bookNumber: book.bookNumber,
-          title: book.title,
-          author: {
-            _id: book.author._id, // הוספת ה-ID של הסופר
-            name: book.author.name,
-          },
-        }))} 
-        selectedCategory="book" // העברת הקטגוריה
+        books={books} // העברת הספרים
+        selectedCategory="book"
+        onBookSelect={handleBookSelect} // הוספת פונקציית הבחירה
+      />
+
+      {/* קריאה לקומפוננטה LeftSide עם העברת הספר שנבחר */}
+      <LeftSide 
+        book={selectedBook} // העברת הספר הנבחר
+        selectedCategory="book"
       />
     </div>
   );

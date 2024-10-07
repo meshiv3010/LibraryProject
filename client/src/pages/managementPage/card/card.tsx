@@ -2,16 +2,17 @@ import React from 'react';
 import style from './card.module.css';
 
 interface CardProps {
-  title?: string; // יכול להיות undefined אם מדובר במשתמש
-  authorName?: string; // שם הסופר
-  bookNumber?: number; // מספר הספר
-  name?: string; // שם המשתמש
-  userNumber?: string; // מספר המשתמש
+  title?: string; 
+  authorName?: string; 
+  bookNumber?: number; 
+  name?: string; 
+  userNumber?: string; 
+  onClick?: () => void; // הוספת פרופס onClick
 }
 
-const Card = ({ title, authorName, bookNumber, name, userNumber }: CardProps) => {
+const Card = ({ title, authorName, bookNumber, name, userNumber, onClick }: CardProps) => {
   return (
-    <div className={style.card}>
+    <div className={style.card} onClick={onClick}> {/* הוספת פונקציית onClick לכרטיס */}
       {bookNumber !== undefined && (
         <h2>מזהה: {bookNumber} שם: {title} סופר: {authorName}</h2>
       )}

@@ -46,6 +46,7 @@ export class UserService {
         return populatedUser;
     }
     
+    
     async setFavoriteBook(userId: Types.ObjectId, bookId: Types.ObjectId): Promise<User> {
         // שליפת המשתמש מהמאגר
         const user = await this.userModel.findById(userId).exec();

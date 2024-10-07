@@ -23,12 +23,23 @@ export class BookService {
     }
 
     async getAllBooks(): Promise<Book[]> {
-        return this.bookModel.find().populate({
-            path: 'author',
-            model: 'Author' // אכלוס פרטי הסופר
-        }).exec();
+        // חיפוש ספרים עם populate על readers
+        const books = await this.bookModel.find()
+            .populate({
+                path: 'readers',  // אכלוס של הקוראים
+                model: 'User',     // דגם של המשתמשים
+                select: 'userNumber name readBooks favBook'  // פרטים שנרצה לאכלס עבור המשתמשים
+            })
+            .populate({
+                path: 'author',   // אכלוס פרטי הסופר
+                model: 'Author',  // דגם של הסופרים
+                select: 'writerNumber name'  // פרטים שנרצה לאכלס עבור הסופרים
+            })
+            .exec();
+        
+        return books;
     }
-
+    
     async getBookById(id: Types.ObjectId): Promise<Book> {
         return this.bookModel.findById(id).populate({
             path: 'author',
