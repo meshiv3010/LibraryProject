@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Categories from './categories/categories';
 import Title from './title/title';
-import User from './enum/user';
-import Book from './enum/book';
-import Author from './enum/author';
+import User from './user/user';
+import Book from './book/book';
+import Author from './author/author';
 import style from './ManagementPage.module.css';
 
 const ManagementPage = () => {

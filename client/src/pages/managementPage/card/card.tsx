@@ -6,18 +6,36 @@ interface CardProps {
   authorName?: string; 
   bookNumber?: number; 
   name?: string; 
-  userNumber?: string; 
+  userNumber?: number; 
+  customMessage?: string; // אופציה שלישית עם הודעה מותאמת אישית
+  writerNumber?: number;
+
   onClick?: () => void; // הוספת פרופס onClick
 }
 
-const Card = ({ title, authorName, bookNumber, name, userNumber, onClick }: CardProps) => {
+const Card = ({ title, authorName, bookNumber, name, userNumber, onClick, writerNumber }: CardProps) => {
+  console.log('Card props:', { title, authorName, bookNumber, name, userNumber, writerNumber });
+  
   return (
-    <div className={style.card} onClick={onClick}> {/* הוספת פונקציית onClick לכרטיס */}
-      {bookNumber !== undefined && (
+    <div className={style.card} onClick={onClick}>
+      {/* כרטיס ספר עם סופר */}
+      {bookNumber !== undefined && title && authorName && (
         <h2>מזהה: {bookNumber} שם: {title} סופר: {authorName}</h2>
       )}
-      {name && (
-        <h2>שם משתמש: {name} מספר משתמש: {userNumber}</h2>
+
+      {/* כרטיס ספר ללא סופר */}
+      {bookNumber !== undefined && title && !authorName && (
+        <h2>מזהה: {bookNumber} שם: {title}</h2>
+      )}
+
+      {/* כרטיס משתמש */}
+      {name && userNumber !== undefined && (
+        <h2>מזהה: {userNumber} שם משתמש: {name}</h2>
+      )}
+      
+      {/* כרטיס סופר */}
+      {name && writerNumber !== undefined && (
+        <h2>מזהה: {writerNumber} שם סופר: {name}</h2>
       )}
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LeftSide from '../leftSide/leftSide';
 import RightSide from '../rightSide/rightSide';
+import style from './user.module.css';
 
 interface UserType {
   _id: string;
@@ -57,20 +58,25 @@ const User = ({ currentUser }: UserProps) => {
   }
 
   return (
-    <div>
-      <LeftSide 
-        userId={selectedUser ? selectedUser._id : currentUser._id} 
-        selectedCategory="user" // עדכון הקטגוריה
-        readBooks={readBooks} 
-        userName={selectedUser ? selectedUser.name : currentUser.name} 
-      />
-      <RightSide 
-        users={users} // שליחת כל היוזרים ל-RightSide
-        selectedCategory="user" // העברת הקטגוריה
-        onUserSelect={handleUserSelect} // העברת הפונקציה לבחירת משתמש
-      />
+    <div className={style.container}>
+      <div className={style.leftSide}>
+        <LeftSide 
+          userId={selectedUser ? selectedUser._id : currentUser._id} 
+          selectedCategory="user" 
+          readBooks={readBooks} 
+          userName={selectedUser ? selectedUser.name : currentUser.name} 
+        />
+      </div>
+
+      <div className={style.rightSide}>
+        <RightSide 
+          users={users} 
+          selectedCategory="user" 
+          onUserSelect={handleUserSelect} 
+        />
+      </div>
     </div>
-  );
+  )
 };
 
 export default User;

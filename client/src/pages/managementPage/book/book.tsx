@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import RightSide from '../rightSide/rightSide'; // יבוא הקומפוננטה RightSide
 import LeftSide from '../leftSide/leftSide'; // יבוא הקומפוננטה LeftSide
+import style from './book.module.css';
 
 interface ReaderType {
   _id: string;
@@ -10,15 +11,18 @@ interface ReaderType {
   favBook: string; // נוסיף ערך ברירת מחדל
 }
 
+interface Author {
+  _id: string;
+  name: string;
+  writerNumber: number; // הוסף את writerNumber כאן
+}
+
 interface BookType {
   _id: string;
   bookNumber: number;
   title: string;
-  author: {
-    _id: string;
-    name: string;
-  };
-  readers: ReaderType[]; // הוספת readers
+  author: Author; // Author כולל כעת writerNumber
+  readers: ReaderType[];
 }
 
 const Book = () => {
@@ -39,6 +43,7 @@ const Book = () => {
           author: {
             _id: book.author?._id || 'Unknown Author ID',
             name: book.author?.name || 'Unknown Author',
+            writerNumber: book.author?.writerNumber || 0, // הוסף את writerNumber כאן
           },
           readers: book.readers.map((reader: any) => ({
             _id: reader._id,
@@ -64,19 +69,25 @@ const Book = () => {
   };
 
   return (
-    <div>
-      {/* קריאה לקומפוננטה RightSide עם העברת רשימת הספרים */}
-      <RightSide 
-        books={books} // העברת הספרים
-        selectedCategory="book"
-        onBookSelect={handleBookSelect} // הוספת פונקציית הבחירה
-      />
+    <div className={style.container}>
+      <div className={style.leftSide}>
+        {/* קריאה לקומפוננטה LeftSide עם העברת הספר שנבחר */}
+        {selectedBook && (
+          <LeftSide 
+            book={selectedBook} 
+            selectedCategory="book" 
+          />
+        )}
+      </div>
 
-      {/* קריאה לקומפוננטה LeftSide עם העברת הספר שנבחר */}
-      <LeftSide 
-        book={selectedBook} // העברת הספר הנבחר
-        selectedCategory="book"
-      />
+      <div className={style.rightSide}>
+        {/* קריאה לקומפוננטה RightSide עם העברת רשימת הספרים */}
+        <RightSide 
+          books={books} 
+          selectedCategory="book" 
+          onBookSelect={handleBookSelect} 
+        />
+      </div>
     </div>
   );
 };

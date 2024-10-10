@@ -19,9 +19,15 @@ export class AuthorService {
       .find()
       .populate({
         path: 'books',
+        populate: {
+          path: 'readers', // אכלוס של הקוראים
+          model: 'User',    // דגם של המשתמשים
+          select: 'userNumber name readBooks favBook' // פרטים שנרצה לאכלס עבור המשתמשים
+        }
       })
       .exec();
   }
+ד  
 
   async getBooksByAuthor(authorId: Types.ObjectId): Promise<Types.ObjectId[]> {
     const author = await this.authorModel

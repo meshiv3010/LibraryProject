@@ -13,9 +13,9 @@ interface CategoriesProps {
 
 const Categories = ({ onCategorySelect, selectedCategory }: CategoriesProps) => {
   const categories: Category[] = [
-    { id: 1, name: 'ניהול משתמשים' },
-    { id: 2, name: 'ניהול ספרים' },
-    { id: 3, name: 'ניהול סופרים' },
+    { id: 1, name: 'ניהול משתמשים'},
+    { id: 2, name: 'ניהול ספרים'},
+    { id: 3, name: 'ניהול סופרים'},
   ];
 
   return (

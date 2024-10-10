@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  justify-content: center;  /* מרכז את התוכן לרוחב */
+  align-items: flex-start;  /* מוודא שהתוכן יתחיל מלמעלה */
+  height: 100vh;           /* נותן גובה של 100% למסך */
+  margin-top: 30vh;        /* מגדיר שהקומפוננטות יתחילו מ-40% מגובה העמוד */
+}
+
+.leftSide {
+  width: 45%;             /* גודל רוחב עבור הקומפוננטה השמאלית */
+  text-align: left;        /* מיושר לשמאל */
+}
+
+.rightSide {
+  width: 45%;             /* גודל רוחב עבור הקומפוננטה הימנית */
+  text-align: right;       /* מיושר לימין */
+}

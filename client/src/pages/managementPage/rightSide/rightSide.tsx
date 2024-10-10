@@ -9,7 +9,6 @@ interface ReaderType {
   favBook: string;
 }
 
-// נשתמש ב-UserType שהגדרת בקומפוננטה User
 interface UserType {
   _id: string;
   name: string;
@@ -28,27 +27,28 @@ interface UserType {
 interface Author {
   _id: string;
   name: string;
+  writerNumber: number; // ודא ששדה זה קיים כאן
 }
 
 interface Book {
   _id: string;
   bookNumber: number;
   title: string;
-  author: Author;
+  author: Author; // Author כולל כעת writerNumber
   readers: ReaderType[];
 }
 
 interface RightSideProps {
-  users?: UserType[]; // שדה אופציונלי עבור המשתמשים
-  books?: Book[]; // שדה אופציונלי עבור הספרים
-  selectedCategory: 'user' | 'book'; // קטגוריה של משתמש או ספר
-  onBookSelect?: (book: Book) => void; // הוספת onBookSelect כפרופ אופציונלי
-  onUserSelect?: (user: UserType) => void; // השתמש ב-UserType כאן
+  users?: UserType[];
+  books?: Book[];
+  authors?: Author[];
+  selectedCategory: 'user' | 'book' | 'author';
+  onBookSelect?: (book: Book) => void;
+  onUserSelect?: (user: UserType) => void;
+  onAuthorSelect?: (author: Author) => void;
 }
 
-const RightSide = ({ users, books, selectedCategory, onBookSelect, onUserSelect }: RightSideProps) => {
-  console.log('RightSide props:', { users, books, selectedCategory });
-
+const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUserSelect, onAuthorSelect }: RightSideProps) => {
   return (
     <div>
       {selectedCategory === 'user' && users && (
@@ -57,12 +57,16 @@ const RightSide = ({ users, books, selectedCategory, onBookSelect, onUserSelect 
             <Card 
               key={user._id} 
               name={user.name} 
-              userNumber={user.userNumber.toString()} 
-              onClick={() => onUserSelect ? onUserSelect(user) : undefined} // הוספת פעולה על לחיצה
+              userNumber={user.userNumber} 
+              onClick={() => {
+                console.log('User selected:', user);
+                onUserSelect?.(user);
+              }} // ודא שהפונקציה עוברת ומופעלת
             />
           ))}
         </div>
       )}
+
       {selectedCategory === 'book' && books && (
         <div>
           {books.map((book) => (
@@ -71,7 +75,26 @@ const RightSide = ({ users, books, selectedCategory, onBookSelect, onUserSelect 
               title={book.title} 
               authorName={book.author.name} 
               bookNumber={book.bookNumber} 
-              onClick={() => onBookSelect ? onBookSelect(book) : undefined} // הוספת פעולה על לחיצה
+              onClick={() => {
+                console.log('Book selected:', book);
+                onBookSelect?.(book);
+              }} // ודא שהפונקציה עוברת ומופעלת
+            />
+          ))}
+        </div>
+      )}
+
+      {selectedCategory === 'author' && authors && (
+        <div>
+          {authors.map((author) => (
+            <Card 
+              key={author._id}
+              name={author.name}
+              writerNumber={author.writerNumber} 
+              onClick={() => {
+                console.log('Author selected:', author);
+                onAuthorSelect?.(author); 
+              }}
             />
           ))}
         </div>
@@ -79,5 +102,6 @@ const RightSide = ({ users, books, selectedCategory, onBookSelect, onUserSelect 
     </div>
   );
 };
+
 
 export default RightSide;

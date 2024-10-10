@@ -27,9 +27,16 @@ interface LeftSideProps {
     title: string;
     readers: ReaderType[];
   } | null; 
+  authorName?: string; 
+  authorBooks?: Array<{
+    _id?: string; // הוספת מזהה של הספר
+    title: string;
+    bookNumber: number;
+  }>; 
 }
 
-const LeftSide = ({ userId, selectedCategory, readBooks, userName, book }: LeftSideProps) => {
+const LeftSide = ({ userId, selectedCategory, readBooks, userName, book, authorName, authorBooks }: LeftSideProps) => {
+  console.log('LeftSide props:', { userId, selectedCategory, readBooks, userName, book, authorName, authorBooks });
   return (
     <div>
       {selectedCategory === 'user' && userName && readBooks && (
@@ -47,19 +54,40 @@ const LeftSide = ({ userId, selectedCategory, readBooks, userName, book }: LeftS
                 </li>
               ))}
             </ul>
-          ) : null}
+          ) : <p>אין ספרים לקריאה.</p>}
         </div>
       )}
 
       {selectedCategory === 'book' && book && (
         <div>
-          <Card title={book.title} />
           <h4>הקוראים של "{book.title}":</h4>
-          <ul>
-            {Array.isArray(book.readers) && book.readers.map((reader) => (
-              <li key={reader._id}>{reader.name}</li>
-            ))}
-          </ul>
+          {Array.isArray(book.readers) && book.readers.length > 0 ? (
+            <ul>
+              {book.readers.map((reader) => (
+                <li key={reader._id}>
+                  <Card userNumber={reader.userNumber} name={reader.name} />
+                </li>
+              ))}
+            </ul>
+          ) : <p>אין קוראים לספר זה.</p>}
+        </div>
+      )}
+
+{selectedCategory === 'author' && authorName && authorBooks && (
+        <div>
+          <h3>ספרים של {authorName}:</h3>
+          {authorBooks.length > 0 && (
+            <ul>
+              {authorBooks.map((authorBook) => (
+                <li key={authorBook._id}>
+                  <Card 
+                    title={authorBook.title} 
+                    bookNumber={authorBook.bookNumber} 
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </div>
