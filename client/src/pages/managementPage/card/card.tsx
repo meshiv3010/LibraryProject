@@ -9,16 +9,26 @@ interface CardProps {
   userNumber?: number;
   writerNumber?: number;
   isSelected?: boolean; // האם הכרטיס נבחר
-
   onClick?: () => void; // לחיצה על כרטיס
+  onEdit?: () => void; // לחיצה על כפתור עריכה
+  onDelete?: () => void; // לחיצה על כפתור מחיקה
 }
 
-const Card = ({ title, authorName, bookNumber, name, userNumber, onClick, writerNumber, isSelected }: CardProps) => {
-  console.log('Card props:', { title, authorName, bookNumber, name, userNumber, writerNumber, isSelected });
-
+const Card = ({ 
+  title, 
+  authorName, 
+  bookNumber, 
+  name, 
+  userNumber, 
+  onClick, 
+  writerNumber, 
+  isSelected, 
+  onEdit, 
+  onDelete 
+}: CardProps) => {
   return (
     <div 
-      className={`${style.card} ${isSelected ? style.selected : ''}`} // אם הכרטיס נבחר, נוסיף את המחלקה 'selected'
+      className={`${style.card} ${isSelected ? style.selected : ''}`} 
       onClick={onClick}
     >
       {bookNumber !== undefined && title && authorName && (
@@ -36,6 +46,10 @@ const Card = ({ title, authorName, bookNumber, name, userNumber, onClick, writer
       {name && writerNumber !== undefined && (
         <h2>מזהה: {writerNumber} שם סופר: {name}</h2>
       )}
+
+      {/* כפתורי עריכה ומחיקה */}
+      {onEdit && <button onClick={onEdit}>עריכה</button>}
+      {onDelete && <button onClick={onDelete}>מחיקה</button>}
     </div>
   );
 };

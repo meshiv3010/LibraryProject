@@ -46,18 +46,23 @@ interface RightSideProps {
   onBookSelect?: (book: Book) => void;
   onUserSelect?: (user: UserType) => void;
   onAuthorSelect?: (author: Author) => void;
+  onEditUser?: (user: UserType) => void; // פונקציה לעריכת משתמש
+  onEditBook?: (book: Book) => void; // פונקציה לעריכת ספר
 }
 
-const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUserSelect, onAuthorSelect }: RightSideProps) => {
-  // ניהול מצב עבור הכרטיס שנבחר
+const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUserSelect, onAuthorSelect, onEditUser, onEditBook }: RightSideProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  // פונקציה לטיפול בלחיצה על כרטיס
   const handleCardClick = (id: string, type: 'user' | 'book' | 'author', item: any) => {
-    setSelectedId(id); // עדכון הכרטיס הנבחר לפי ID
+    setSelectedId(id);
     if (type === 'user' && onUserSelect) onUserSelect(item);
     if (type === 'book' && onBookSelect) onBookSelect(item);
     if (type === 'author' && onAuthorSelect) onAuthorSelect(item);
+  };
+
+  const handleDelete = (id: string) => {
+    // הוסף לוגיקה למחיקה (קריאה ל-API או עדכון מצב)
+    console.log(`Deleting ${id}`);
   };
 
   return (
@@ -69,8 +74,10 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
               key={user._id} 
               name={user.name} 
               userNumber={user.userNumber} 
-              onClick={() => handleCardClick(user._id, 'user', user)} // לחיצה על כרטיס משתמש
-              isSelected={user._id === selectedId} // בדיקת האם הכרטיס נבחר
+              onClick={() => handleCardClick(user._id, 'user', user)} 
+              isSelected={user._id === selectedId}
+              onEdit={() => onEditUser && onEditUser(user)} // עריכת משתמש
+              onDelete={() => handleDelete(user._id)} // מחיקת משתמש
             />
           ))}
         </div>
@@ -84,8 +91,10 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
               title={book.title} 
               authorName={book.author.name} 
               bookNumber={book.bookNumber} 
-              onClick={() => handleCardClick(book._id, 'book', book)} // לחיצה על כרטיס ספר
-              isSelected={book._id === selectedId} // בדיקת האם הכרטיס נבחר
+              onClick={() => handleCardClick(book._id, 'book', book)} 
+              isSelected={book._id === selectedId}
+              onEdit={() => onEditBook && onEditBook(book)} // עריכת ספר
+              onDelete={() => handleDelete(book._id)} // מחיקת ספר
             />
           ))}
         </div>
@@ -98,8 +107,9 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
               key={author._id} 
               name={author.name} 
               writerNumber={author.writerNumber} 
-              onClick={() => handleCardClick(author._id, 'author', author)} // לחיצה על כרטיס סופר
-              isSelected={author._id === selectedId} // בדיקת האם הכרטיס נבחר
+              onClick={() => handleCardClick(author._id, 'author', author)} 
+              isSelected={author._id === selectedId} 
+              onDelete={() => handleDelete(author._id)} // מחיקת סופר
             />
           ))}
         </div>

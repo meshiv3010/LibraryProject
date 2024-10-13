@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from '../card/card';
-import style from './leftSide.module.css'
+import style from './leftSide.module.css';
 
 interface ReaderType {
   _id: string;
@@ -34,11 +34,11 @@ interface LeftSideProps {
     title: string;
     bookNumber: number;
   }>; 
+  onDeleteBook?: (bookId: string) => void; // פונקציה למחיקת ספר
+  onDeleteReader?: (readerId: string) => void; // פונקציה למחיקת קורא
 }
 
-const LeftSide = ({ userId, selectedCategory, readBooks, userName, book, authorName, authorBooks }: LeftSideProps) => {
-  console.log('LeftSide props:', { userId, selectedCategory, readBooks, userName, book, authorName, authorBooks });
-  
+const LeftSide = ({ userId, selectedCategory, readBooks, userName, book, authorName, authorBooks, onDeleteBook, onDeleteReader }: LeftSideProps) => {
   return (
     <div className={style.leftSide}>
       {selectedCategory === 'user' && userName && readBooks && (
@@ -52,6 +52,7 @@ const LeftSide = ({ userId, selectedCategory, readBooks, userName, book, authorN
                   title={book.title} 
                   authorName={book.author?.name || 'Unknown Author'} 
                   bookNumber={book.bookNumber} 
+                  onDelete={() => onDeleteBook && book._id && onDeleteBook(book._id)} // מחיקת ספר
                 />
               ))}
             </div>
@@ -63,15 +64,14 @@ const LeftSide = ({ userId, selectedCategory, readBooks, userName, book, authorN
         <div>
           <h4>הקוראים של "{book.title}":</h4>
           {Array.isArray(book.readers) && book.readers.length > 0 ? (
-            <div>
-              {book.readers.map((reader) => (
-                <Card 
-                  key={reader._id}
-                  name={reader.name}
-                  userNumber={reader.userNumber}
-                />
-              ))}
-            </div>
+            book.readers.map((reader) => (
+              <Card 
+                key={reader._id} 
+                name={reader.name} 
+                userNumber={reader.userNumber} 
+                onDelete={() => onDeleteReader && onDeleteReader(reader._id)} // מחיקת קורא
+              />
+            ))
           ) : <p>אין קוראים לספר זה.</p>}
         </div>
       )}
@@ -79,17 +79,18 @@ const LeftSide = ({ userId, selectedCategory, readBooks, userName, book, authorN
       {selectedCategory === 'author' && authorName && authorBooks && (
         <div>
           <h3>ספרים של {authorName}:</h3>
-          {authorBooks.length > 0 && (
+          {authorBooks.length > 0 ? (
             <div>
-              {authorBooks.map((authorBook) => (
+              {authorBooks.map((book) => (
                 <Card 
-                  key={authorBook._id}
-                  title={authorBook.title} 
-                  bookNumber={authorBook.bookNumber} 
+                  key={book._id} 
+                  title={book.title} 
+                  bookNumber={book.bookNumber} 
+                  onDelete={() => onDeleteBook && book._id && onDeleteBook(book._id)} // מחיקת ספר
                 />
               ))}
             </div>
-          )}
+          ) : <p>אין ספרים לסופר זה.</p>}
         </div>
       )}
     </div>
