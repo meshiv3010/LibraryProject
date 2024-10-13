@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from '../card/card';
 
 interface ReaderType {
@@ -49,6 +49,17 @@ interface RightSideProps {
 }
 
 const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUserSelect, onAuthorSelect }: RightSideProps) => {
+  // ניהול מצב עבור הכרטיס שנבחר
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // פונקציה לטיפול בלחיצה על כרטיס
+  const handleCardClick = (id: string, type: 'user' | 'book' | 'author', item: any) => {
+    setSelectedId(id); // עדכון הכרטיס הנבחר לפי ID
+    if (type === 'user' && onUserSelect) onUserSelect(item);
+    if (type === 'book' && onBookSelect) onBookSelect(item);
+    if (type === 'author' && onAuthorSelect) onAuthorSelect(item);
+  };
+
   return (
     <div>
       {selectedCategory === 'user' && users && (
@@ -58,10 +69,8 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
               key={user._id} 
               name={user.name} 
               userNumber={user.userNumber} 
-              onClick={() => {
-                console.log('User selected:', user);
-                onUserSelect?.(user);
-              }} // ודא שהפונקציה עוברת ומופעלת
+              onClick={() => handleCardClick(user._id, 'user', user)} // לחיצה על כרטיס משתמש
+              isSelected={user._id === selectedId} // בדיקת האם הכרטיס נבחר
             />
           ))}
         </div>
@@ -75,10 +84,8 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
               title={book.title} 
               authorName={book.author.name} 
               bookNumber={book.bookNumber} 
-              onClick={() => {
-                console.log('Book selected:', book);
-                onBookSelect?.(book);
-              }} // ודא שהפונקציה עוברת ומופעלת
+              onClick={() => handleCardClick(book._id, 'book', book)} // לחיצה על כרטיס ספר
+              isSelected={book._id === selectedId} // בדיקת האם הכרטיס נבחר
             />
           ))}
         </div>
@@ -88,13 +95,11 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
         <div>
           {authors.map((author) => (
             <Card 
-              key={author._id}
-              name={author.name}
+              key={author._id} 
+              name={author.name} 
               writerNumber={author.writerNumber} 
-              onClick={() => {
-                console.log('Author selected:', author);
-                onAuthorSelect?.(author); 
-              }}
+              onClick={() => handleCardClick(author._id, 'author', author)} // לחיצה על כרטיס סופר
+              isSelected={author._id === selectedId} // בדיקת האם הכרטיס נבחר
             />
           ))}
         </div>
@@ -102,6 +107,5 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
     </div>
   );
 };
-
 
 export default RightSide;

@@ -4,6 +4,7 @@ import { Model, Types } from 'mongoose';
 import { Book } from './book.schema';
 import { Author } from '../authors/author.schema'; 
 import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/UpdateBookDto';
 import { AuthorService } from '../authors/authors.service';
 import { UserService } from '../users/users.service';
 
@@ -16,7 +17,14 @@ export class BookService {
 ) {}
 
 
-
+    async updateBook(bookId: Types.ObjectId, updateBookDto: UpdateBookDto): Promise<Book> {
+        // עדכון הספר לפי ה-id וה-DTO
+        const updatedBook = await this.bookModel.findByIdAndUpdate(bookId, updateBookDto, { new: true }).exec();
+        if (!updatedBook) {
+            throw new NotFoundException('Book not found');
+        }
+        return updatedBook;
+    }
     async createBook(createBookDto: CreateBookDto): Promise<Book> {
         const newBook = new this.bookModel(createBookDto);
         return newBook.save();
@@ -75,5 +83,6 @@ export class BookService {
         return book;
     }
       
+    
     
 }

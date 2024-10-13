@@ -1,12 +1,19 @@
-.RightSide {
-    position: relative; /* מיקום יחסית לעמוד */
-    right: 0%;
-    width: 33%; /* ניתן לשנות את הרוחב לפי הצורך */
-    margin-top: 30px; /* מרווח מלמעלה כדי שיהיה מתחת לכותרת */
-    padding: 10px;
-   /* background-color: #f0f0f0; /* רקע אופציונלי */
-   height: 100vh;
-   border: 2px solid black;
-
-}
+.leftSide {
+    width: 70%; /* מרחיב את הקומפוננטה ל-50% מרוחב העמוד */
+    height: 100vh; /* הגדרה שתכסה את כל גובה החלון */
+    border: 2px solid black;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* הוספת צל */
+  }
+  
+  
+  ul {
+    list-style-type: none; /* ביטול הנקודות */
+    padding: 0; /* ביטול הרווח הפנימי */
+  }
+  
+  li {
+    margin-bottom: 10px; /* רווח תחתון בין הכרטיסיות */
+  }
   

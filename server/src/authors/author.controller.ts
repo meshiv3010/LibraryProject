@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Delete, Put, Body} from '@nestjs/common';
 import { AuthorService } from './authors.service';
 import { Types } from 'mongoose';
 import { Book } from 'src/books/book.schema';
+import { UpdateAuthorDto } from './dto/updateAuthor.dto';
 
 @Controller('authors')
 export class AuthorController {
@@ -25,5 +26,13 @@ export class AuthorController {
     async deleteAuthor(@Param('id') id: Types.ObjectId): Promise<{ message: string }> {
       await this.authorService.deleteAuthor(id);
       return { message: 'User has been successfully deleted' };
+    }
+
+    @Put(':id')
+    updateAuthor(
+      @Param('id') id: Types.ObjectId,
+      @Body() updateAuthorDto: UpdateAuthorDto
+    ) {
+      return this.authorService.updateAuthor(id, updateAuthorDto);
     }
 }

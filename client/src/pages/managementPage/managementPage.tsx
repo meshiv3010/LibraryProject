@@ -42,19 +42,17 @@ const ManagementPage = () => {
 
   return (
     <div className={style.container}>
-      <div>
-        <Title 
-          userName={currentUser.name || ''}
-          favBook={currentUser.favBook?.title || null}
-        />     
-      </div>
-      <div>
+      <Title 
+        userName={currentUser.name || ''}
+        favBook={currentUser.favBook?.title || null}
+      />
+      <div className={style.activityContainer}>
+        <div className={style.activity}>
+          {activity === 'user' && <User currentUser={currentUser} />} {/* הוספת User */}
+          {activity === 'book' && <Book />} {/* הוספת Book */}
+          {activity === 'author' && <Author />} {/* הוספת Author */}
+        </div>
         <Categories onCategorySelect={handleCategorySelect} />
-      </div>
-      <div>
-        {activity === 'user' && <User currentUser={currentUser} />} {/* הוספת User */}
-        {activity === 'book' && <Book />} {/* הוספת Book */}
-        {activity === 'author' && <Author />} {/* הוספת Author */}
       </div>
     </div>
   );

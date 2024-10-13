@@ -4,6 +4,7 @@ import { Model, Types } from 'mongoose';
 import { Author } from './author.schema';
 import { BookService } from '../books/books.service';
 import { UserService } from '../users/users.service';
+import { UpdateAuthorDto } from './dto/updateAuthor.dto';
 
 @Injectable()
 export class AuthorService {
@@ -64,4 +65,19 @@ async removeBookFromAuthor(authorId: Types.ObjectId, bookId: Types.ObjectId): Pr
   ).exec();
   console.log(`Book ${bookId} has been removed from author's books.`);
 }
+
+async updateAuthor(authorId: Types.ObjectId, updateAuthorDto: UpdateAuthorDto): Promise<Author> {
+  const updatedAuthor = await this.authorModel.findByIdAndUpdate(
+    authorId,
+    { $set: updateAuthorDto },
+    { new: true }  // מחזיר את האובייקט המעודכן
+  ).exec();
+
+  if (!updatedAuthor) {
+    throw new NotFoundException('Author not found');
+  }
+
+  return updatedAuthor;
+}
+
 }

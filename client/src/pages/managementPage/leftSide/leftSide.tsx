@@ -1,5 +1,6 @@
 import React from 'react';
 import Card from '../card/card';
+import style from './leftSide.module.css'
 
 interface ReaderType {
   _id: string;
@@ -29,7 +30,7 @@ interface LeftSideProps {
   } | null; 
   authorName?: string; 
   authorBooks?: Array<{
-    _id?: string; // הוספת מזהה של הספר
+    _id?: string;
     title: string;
     bookNumber: number;
   }>; 
@@ -37,23 +38,23 @@ interface LeftSideProps {
 
 const LeftSide = ({ userId, selectedCategory, readBooks, userName, book, authorName, authorBooks }: LeftSideProps) => {
   console.log('LeftSide props:', { userId, selectedCategory, readBooks, userName, book, authorName, authorBooks });
+  
   return (
-    <div>
+    <div className={style.leftSide}>
       {selectedCategory === 'user' && userName && readBooks && (
         <div>
           <h3>ספרים שקרא {userName}:</h3>
           {readBooks.length > 0 ? (
-            <ul>
+            <div>
               {readBooks.map((book) => (
-                <li key={`${book._id}-${book.bookNumber}`}>
-                  <Card 
-                    title={book.title} 
-                    authorName={book.author?.name || 'Unknown Author'}
-                    bookNumber={book.bookNumber} 
-                  />
-                </li>
+                <Card 
+                  key={`${book._id}-${book.bookNumber}`} 
+                  title={book.title} 
+                  authorName={book.author?.name || 'Unknown Author'} 
+                  bookNumber={book.bookNumber} 
+                />
               ))}
-            </ul>
+            </div>
           ) : <p>אין ספרים לקריאה.</p>}
         </div>
       )}
@@ -62,31 +63,32 @@ const LeftSide = ({ userId, selectedCategory, readBooks, userName, book, authorN
         <div>
           <h4>הקוראים של "{book.title}":</h4>
           {Array.isArray(book.readers) && book.readers.length > 0 ? (
-            <ul>
+            <div>
               {book.readers.map((reader) => (
-                <li key={reader._id}>
-                  <Card userNumber={reader.userNumber} name={reader.name} />
-                </li>
+                <Card 
+                  key={reader._id}
+                  name={reader.name}
+                  userNumber={reader.userNumber}
+                />
               ))}
-            </ul>
+            </div>
           ) : <p>אין קוראים לספר זה.</p>}
         </div>
       )}
 
-{selectedCategory === 'author' && authorName && authorBooks && (
+      {selectedCategory === 'author' && authorName && authorBooks && (
         <div>
           <h3>ספרים של {authorName}:</h3>
           {authorBooks.length > 0 && (
-            <ul>
+            <div>
               {authorBooks.map((authorBook) => (
-                <li key={authorBook._id}>
-                  <Card 
-                    title={authorBook.title} 
-                    bookNumber={authorBook.bookNumber} 
-                  />
-                </li>
+                <Card 
+                  key={authorBook._id}
+                  title={authorBook.title} 
+                  bookNumber={authorBook.bookNumber} 
+                />
               ))}
-            </ul>
+            </div>
           )}
         </div>
       )}

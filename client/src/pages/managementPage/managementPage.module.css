@@ -1,15 +1,39 @@
 .container {
-  display: flex;
-  flex-direction: row; /* יצירת עמודה אופקית */
+  display: flex; /* שימוש בפריסת Flexbox */
+  flex-direction: column; /* שורה אחת עבור הכותרת */
+  padding: 20px; /* ריווח פנימי */
+  height: 100vh; /* גובה מלא של הדף */
+}
+
+.activityContainer {
+  display: flex; /* פריסה אופקית */
+  flex-direction: row; /* פריסה אופקית */
   justify-content: space-between; /* פיזור האלמנטים */
-  align-items: flex-start; /* יישור למעלה */
-  padding: 20px;
-  height: 100vh;
+  align-items: flex-start; /* יישור מלמעלה */
+  width: 100%; /* גובה מלא של עמוד */
+  margin-top: 20px; /* רווח מעל ה-container */
+  border: 2px solid #ccc; /* מסגרת של 2 פיקסלים בצבע אפור */
+  border-radius: 8px; /* רדיוס פינה */
+  padding: 10px; /* ריווח פנימי */
 }
 
-.categories, .leftSide, .rightSide {
-  margin-top: 20px; /* מרווח מלמעלה כדי למנוע חפיפה */
+.activity {
+  flex: 1; /* ייתן ל-leftSide יותר מקום */
+  margin-top: 50px;
+  margin-right: 20px; /* ריווח בין activity לקטגוריות */
+}
+
+.categories {
+  min-width: 200px; /* רוחב מינימלי לקטגוריות */
 }
 
 
 
+
+.activity {
+  flex: 14; /* ייקח את כל השטח הפנוי */
+}
+
+.categories {
+  margin-left: 20px; /* מרווח בין ה-Activity לקטגוריות */
+}

@@ -19,4 +19,8 @@
     color: #666;
     margin: 4px 0;
   }
+  .selected {
+    border: 2px solid blue; /* צבע גבול עבור כרטיס נבחר */
+    background-color: #e0f7fa; /* צבע רקע קל לכרטיס נבחר */
+  }
   
