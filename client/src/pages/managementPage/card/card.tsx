@@ -10,7 +10,7 @@ interface CardProps {
   writerNumber?: number;
   isSelected?: boolean; // האם הכרטיס נבחר
   onClick?: () => void; // לחיצה על כרטיס
-  onEdit?: (newName: string) => void; // לחיצה על כפתור עריכה
+  onEdit?: (newName: string, newTitle: string) => void; // לחיצה על כפתור עריכה
   onDelete?: () => void; // לחיצה על כפתור מחיקה
 }
 
@@ -28,15 +28,21 @@ const Card = ({
 }: CardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(authorName);
+  const [editedTitle, setEditedTitle] = useState(title); // משתנה לעריכת הכותרת
+  const [editedUserName, setEditedUserName] = useState(name);
+  const [editedWriterName, setEditedWriterName] = useState(name);
+
+
 
   const handleEditClick = () => {
     setIsEditing(true);
     setEditedName(authorName); // אתחל את השם לעריכה
+    setEditedTitle(title); // אתחל את הכותרת לעריכה
   };
 
   const handleSave = () => {
-    if (onEdit && editedName) {
-      onEdit(editedName); // שלח את השם החדש
+    if (onEdit && editedName && editedTitle) {
+      onEdit(editedName, editedTitle); // שלח את השם והכותרת החדשים
     }
     setIsEditing(false); // סיים עריכה
   };
@@ -48,7 +54,17 @@ const Card = ({
     >
       {bookNumber !== undefined && title && (
         <h2>
-          מזהה: {bookNumber} שם: {title} סופר: {isEditing ? (
+          מזהה: {bookNumber} 
+          שם: {isEditing ? (
+            <input 
+              type="text" 
+              value={editedTitle} 
+              onChange={(e) => setEditedTitle(e.target.value)} 
+            />
+          ) : (
+            title
+          )}
+          סופר: {isEditing ? (
             <input 
               type="text" 
               value={editedName} 
@@ -61,12 +77,35 @@ const Card = ({
       )}
 
       {name && userNumber !== undefined && (
-        <h2>מזהה: {userNumber} שם משתמש: {name}</h2>
+        <h2>
+          מזהה: {userNumber} 
+          שם משתמש: {isEditing ? (
+            <input 
+              type="text" 
+              value={editedUserName} // נשתמש במשתנה state עבור השם
+              onChange={(e) => setEditedUserName(e.target.value)} // מעדכן את השם בעריכה
+            />
+          ) : (
+            name
+          )}
+        </h2>
       )}
 
       {name && writerNumber !== undefined && (
-        <h2>מזהה: {writerNumber} שם סופר: {name}</h2>
+        <h2>
+          מזהה: {writerNumber} 
+          שם סופר: {isEditing ? (
+            <input 
+              type="text" 
+              value={editedWriterName} // עריכת שם הסופר
+              onChange={(e) => setEditedWriterName(e.target.value)} // מעדכן את שם הסופר בעריכה
+            />
+          ) : (
+            name
+          )}
+        </h2>
       )}
+
 
       {/* כפתורי עריכה ומחיקה */}
       {onEdit && (
