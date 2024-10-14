@@ -49,9 +49,11 @@ interface RightSideProps {
   onAuthorSelect?: (author: Author) => void;
   onEditUser?: (user: UserType) => void; // פונקציה לעריכת משתמש
   onEditBook?: (book: Book) => void; // פונקציה לעריכת ספר
+  onEditAuthor?: (author: Author) => void; // פונקציה לעריכת סופר
+
 }
 
-const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUserSelect, onAuthorSelect, onEditUser, onEditBook }: RightSideProps) => {
+const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUserSelect, onAuthorSelect, onEditUser, onEditBook,onEditAuthor }: RightSideProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const handleCardClick = (id: string, type: 'user' | 'book' | 'author', item: any) => {
@@ -108,7 +110,8 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
               name={author.name} 
               writerNumber={author.writerNumber} 
               onClick={() => handleCardClick(author._id, 'author', author)} 
-              isSelected={author._id === selectedId} 
+              isSelected={author._id === selectedId}
+              onEdit={() => onEditAuthor && onEditAuthor(author)} // עריכת סופר
               onDelete={() => handleDelete(author._id)} // מחיקת סופר
             />
           ))}
