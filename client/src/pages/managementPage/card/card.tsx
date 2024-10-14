@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import style from './card.module.css';
 
 interface CardProps {
@@ -10,7 +10,7 @@ interface CardProps {
   writerNumber?: number;
   isSelected?: boolean; // האם הכרטיס נבחר
   onClick?: () => void; // לחיצה על כרטיס
-  onEdit?: () => void; // לחיצה על כפתור עריכה
+  onEdit?: (newName: string) => void; // לחיצה על כפתור עריכה
   onDelete?: () => void; // לחיצה על כפתור מחיקה
 }
 
@@ -26,17 +26,38 @@ const Card = ({
   onEdit, 
   onDelete 
 }: CardProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedName, setEditedName] = useState(authorName);
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+    setEditedName(authorName); // אתחל את השם לעריכה
+  };
+
+  const handleSave = () => {
+    if (onEdit && editedName) {
+      onEdit(editedName); // שלח את השם החדש
+    }
+    setIsEditing(false); // סיים עריכה
+  };
+
   return (
     <div 
       className={`${style.card} ${isSelected ? style.selected : ''}`} 
       onClick={onClick}
     >
-      {bookNumber !== undefined && title && authorName && (
-        <h2>מזהה: {bookNumber} שם: {title} סופר: {authorName}</h2>
-      )}
-
-      {bookNumber !== undefined && title && !authorName && (
-        <h2>מזהה: {bookNumber} שם: {title}</h2>
+      {bookNumber !== undefined && title && (
+        <h2>
+          מזהה: {bookNumber} שם: {title} סופר: {isEditing ? (
+            <input 
+              type="text" 
+              value={editedName} 
+              onChange={(e) => setEditedName(e.target.value)} 
+            />
+          ) : (
+            authorName
+          )}
+        </h2>
       )}
 
       {name && userNumber !== undefined && (
@@ -48,7 +69,18 @@ const Card = ({
       )}
 
       {/* כפתורי עריכה ומחיקה */}
-      {onEdit && <button onClick={onEdit}>עריכה</button>}
+      {onEdit && (
+        <>
+          {isEditing ? (
+            <>
+              <button onClick={handleSave}>שמור</button>
+              <button onClick={() => setIsEditing(false)}>ביטול</button>
+            </>
+          ) : (
+            <button onClick={handleEditClick}>עריכה</button>
+          )}
+        </>
+      )}
       {onDelete && <button onClick={onDelete}>מחיקה</button>}
     </div>
   );

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Card from '../card/card';
 
@@ -62,7 +63,6 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
 
   const handleDelete = (id: string) => {
     // הוסף לוגיקה למחיקה (קריאה ל-API או עדכון מצב)
-    console.log(`Deleting ${id}`);
   };
 
   return (
@@ -117,5 +117,5 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
     </div>
   );
 };
-
+ 
 export default RightSide;
