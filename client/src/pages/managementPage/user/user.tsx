@@ -3,69 +3,35 @@ import LeftSide from '../leftSide/leftSide';
 import RightSide from '../rightSide/rightSide';
 import style from './user.module.css';
 
-interface UserType {
-  _id: string;
-  name: string;
-  userNumber: number;
-  readBooks: Array<{
-    _id: string;
-    title: string;
-    author: {
-      _id: string;
-      name: string;
-    };
-    bookNumber: number;
-  }>;
-}
-
-interface UserProps {
-  currentUser: UserType | null; // הוספת פרופס
-}
-
-const User = ({ currentUser }: UserProps) => {
-  const [readBooks, setReadBooks] = useState<UserType['readBooks']>([]);
-  const [users, setUsers] = useState<UserType[]>([]); // משתנה לשמירה על כל היוזרים
-  const [selectedUser, setSelectedUser] = useState<UserType | null>(null); // הוספת מצב למשתמש הנבחר
+const User = () => {
+  const [users, setUsers] = useState<any[]>([]);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/users');
-        const usersData = await response.json();
-        setUsers(usersData); // שמירה של כל היוזרים במערך
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
+      const response = await fetch('http://localhost:3000/users');
+      const usersData = await response.json();
+      setUsers(usersData);
     };
 
     fetchUsers();
-  }, []); // ריצה רק פעם אחת כשקונסטרקטור עולה
+  }, []);
 
-  useEffect(() => {
-    if (currentUser) {
-      setReadBooks(currentUser.readBooks || []); // הגדר את הספרים של המשתמש המחובר
-    }
-  }, [currentUser]); // עדכון מצבים כשמשתנה currentUser
-
-  const handleUserSelect = (user: UserType) => {
-    setSelectedUser(user); // עדכון המשתמש הנבחר
-    setReadBooks(user.readBooks || []); // עדכון הספרים של המשתמש הנבחר
+  const handleUserSelect = (user: any) => {
+    console.log('Selected user:', user);
+    setSelectedUser(user);
   };
-
-  // נוודא שהמשתמש נטען לפני שמנסים להציג את השדות שלו
-  if (!currentUser) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className={style.container}>
       <div className={style.leftSide}>
-        <LeftSide 
-          userId={selectedUser ? selectedUser._id : currentUser._id} 
-          selectedCategory="user" 
-          readBooks={readBooks} 
-          userName={selectedUser ? selectedUser.name : currentUser.name} 
-        />
+        {selectedUser && (
+          <LeftSide 
+            userName={selectedUser?.name} 
+            userBooks={selectedUser?.readBooks} 
+            selectedCategory="user"
+          />
+        )}
       </div>
 
       <div className={style.rightSide}>
@@ -76,7 +42,7 @@ const User = ({ currentUser }: UserProps) => {
         />
       </div>
     </div>
-  )
+  );
 };
 
 export default User;

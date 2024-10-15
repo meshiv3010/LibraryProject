@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Card from '../card/card';
 
@@ -28,14 +27,14 @@ interface UserType {
 interface Author {
   _id: string;
   name: string;
-  writerNumber: number; // ודא ששדה זה קיים כאן
+  writerNumber: number;
 }
 
 interface Book {
   _id: string;
   bookNumber: number;
   title: string;
-  author: Author; // Author כולל כעת writerNumber
+  author: Author;
   readers: ReaderType[];
 }
 
@@ -47,13 +46,29 @@ interface RightSideProps {
   onBookSelect?: (book: Book) => void;
   onUserSelect?: (user: UserType) => void;
   onAuthorSelect?: (author: Author) => void;
-  onEditUser?: (user: UserType) => void; // פונקציה לעריכת משתמש
+  onEditUser?: (user: UserType) => void;
   onEditBook?: (book: Book) => void; // פונקציה לעריכת ספר
   onEditAuthor?: (author: Author) => void; // פונקציה לעריכת סופר
-
+  onDeleteUser?: (userId: string) => void;
+  onDeleteBook?: (bookId: string) => void;
+  onDeleteAuthor?: (authorId: string) => void;
 }
 
-const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUserSelect, onAuthorSelect, onEditUser, onEditBook,onEditAuthor }: RightSideProps) => {
+const RightSide = ({
+  users,
+  books,
+  authors,
+  selectedCategory,
+  onBookSelect,
+  onUserSelect,
+  onAuthorSelect,
+  onEditUser,
+  onEditBook,
+  onEditAuthor,
+  onDeleteUser,
+  onDeleteBook,
+  onDeleteAuthor,
+}: RightSideProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const handleCardClick = (id: string, type: 'user' | 'book' | 'author', item: any) => {
@@ -61,10 +76,6 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
     if (type === 'user' && onUserSelect) onUserSelect(item);
     if (type === 'book' && onBookSelect) onBookSelect(item);
     if (type === 'author' && onAuthorSelect) onAuthorSelect(item);
-  };
-
-  const handleDelete = (id: string) => {
-    // הוסף לוגיקה למחיקה (קריאה ל-API או עדכון מצב)
   };
 
   return (
@@ -76,10 +87,11 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
               key={user._id} 
               name={user.name} 
               userNumber={user.userNumber} 
+              userId={user._id}
               onClick={() => handleCardClick(user._id, 'user', user)} 
               isSelected={user._id === selectedId}
-              onEdit={() => onEditUser && onEditUser(user)} // עריכת משתמש
-              onDelete={() => handleDelete(user._id)} // מחיקת משתמש
+              onEdit={() => onEditUser && onEditUser(user)} 
+              onDelete={() => onDeleteUser && onDeleteUser(user._id)} 
             />
           ))}
         </div>
@@ -95,8 +107,8 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
               bookNumber={book.bookNumber} 
               onClick={() => handleCardClick(book._id, 'book', book)} 
               isSelected={book._id === selectedId}
-              onEdit={() => onEditBook && onEditBook(book)} // עריכת ספר
-              onDelete={() => handleDelete(book._id)} // מחיקת ספר
+              onEdit={() => onEditBook && onEditBook(book)} // עדכון כאן
+              onDelete={() => onDeleteBook && onDeleteBook(book._id)} 
             />
           ))}
         </div>
@@ -111,8 +123,8 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
               writerNumber={author.writerNumber} 
               onClick={() => handleCardClick(author._id, 'author', author)} 
               isSelected={author._id === selectedId}
-              onEdit={() => onEditAuthor && onEditAuthor(author)} // עריכת סופר
-              onDelete={() => handleDelete(author._id)} // מחיקת סופר
+              onEdit={() => onEditAuthor && onEditAuthor(author)} // עדכון כאן
+              onDelete={() => onDeleteAuthor && onDeleteAuthor(author._id)} 
             />
           ))}
         </div>
@@ -120,5 +132,5 @@ const RightSide = ({ users, books, authors, selectedCategory, onBookSelect, onUs
     </div>
   );
 };
- 
+
 export default RightSide;
