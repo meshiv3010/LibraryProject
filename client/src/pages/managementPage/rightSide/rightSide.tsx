@@ -47,8 +47,8 @@ interface RightSideProps {
   onUserSelect?: (user: UserType) => void;
   onAuthorSelect?: (author: Author) => void;
   onEditUser?: (user: UserType) => void;
-  onEditBook?: (book: Book) => void; // פונקציה לעריכת ספר
-  onEditAuthor?: (author: Author) => void; // פונקציה לעריכת סופר
+  onEditBook?: (book: Book) => void;
+  onEditAuthor?: (author: Author) => void;
   onDeleteUser?: (userId: string) => void;
   onDeleteBook?: (bookId: string) => void;
   onDeleteAuthor?: (authorId: string) => void;
@@ -86,10 +86,9 @@ const RightSide = ({
             <Card 
               key={user._id} 
               name={user.name} 
-              userNumber={user.userNumber} 
               userId={user._id}
-              onClick={() => handleCardClick(user._id, 'user', user)} 
               isSelected={user._id === selectedId}
+              onClick={() => handleCardClick(user._id, 'user', user)} 
               onEdit={() => onEditUser && onEditUser(user)} 
               onDelete={() => onDeleteUser && onDeleteUser(user._id)} 
             />
@@ -104,10 +103,11 @@ const RightSide = ({
               key={book._id} 
               title={book.title} 
               authorName={book.author.name} 
-              bookNumber={book.bookNumber} 
-              onClick={() => handleCardClick(book._id, 'book', book)} 
+              bookId={book._id} 
+              bookNumber={book.bookNumber}
               isSelected={book._id === selectedId}
-              onEdit={() => onEditBook && onEditBook(book)} // עדכון כאן
+              onClick={() => handleCardClick(book._id, 'book', book)} 
+              onEdit={() => onEditBook && onEditBook(book)}
               onDelete={() => onDeleteBook && onDeleteBook(book._id)} 
             />
           ))}
@@ -120,10 +120,10 @@ const RightSide = ({
             <Card 
               key={author._id} 
               name={author.name} 
-              writerNumber={author.writerNumber} 
-              onClick={() => handleCardClick(author._id, 'author', author)} 
+              authorId={author._id}  // Ensure this is passed
               isSelected={author._id === selectedId}
-              onEdit={() => onEditAuthor && onEditAuthor(author)} // עדכון כאן
+              onClick={() => handleCardClick(author._id, 'author', author)} 
+              onEdit={() => onEditAuthor && onEditAuthor(author)} 
               onDelete={() => onDeleteAuthor && onDeleteAuthor(author._id)} 
             />
           ))}
