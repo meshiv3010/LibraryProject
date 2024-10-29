@@ -107,6 +107,7 @@ const RightSide = ({
               key={user._id} 
               name={user.name} 
               userId={user._id}
+              userNumber={user.userNumber}
               isSelected={user._id === selectedId}
               onClick={() => handleCardClick(user._id, 'user', user)} 
               onEdit={() => onEditUser && onEditUser(user)} 
@@ -141,6 +142,7 @@ const RightSide = ({
               key={author._id} 
               name={author.name} 
               authorId={author._id}
+              writerNumber={author.writerNumber}
               isSelected={author._id === selectedId}
               onClick={() => handleCardClick(author._id, 'author', author)} 
               onEdit={() => onEditAuthor && onEditAuthor(author)} 

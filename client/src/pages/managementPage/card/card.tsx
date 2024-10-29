@@ -9,6 +9,8 @@ interface CardProps {
   userId?: string;
   authorId?: string;
   bookNumber?: number;
+  userNumber?: number;
+  writerNumber?: number;
   name?: string;
   isSelected?: boolean;
   onClick?: () => void;
@@ -23,7 +25,9 @@ const Card: React.FC<CardProps> = ({
   userId,
   authorId,
   bookNumber,
+  writerNumber,
   name,
+  userNumber,
   isSelected,
   onClick,
   onEdit,
@@ -142,12 +146,22 @@ const Card: React.FC<CardProps> = ({
           {bookId && (
             <div>
               <h2>{title}</h2>
-              <p>Author: {authorName}</p>
-              <p>Book Number: {bookNumber}</p>
+              <p>שם סופר: {authorName}</p>
+              <p>מזהה: {bookNumber}</p>
             </div>
           )}
-          {userId && <p>Name: {name}</p>}
-          {authorId && <p>Author: {name}</p>}
+          {userId && (
+            <div>
+              <h2>{name}</h2>
+              <p>מזהה: {userNumber}</p>
+            </div>
+          )}
+          {authorId && (
+            <div>
+              <h2>{name}</h2>
+              <p>מזהה: {writerNumber}</p>
+            </div>
+          )}
           <div className={styles.buttonGroup}>
             <button className={styles.button} onClick={() => setIsEditing(true)}>
               Edit
