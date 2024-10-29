@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Card from '../card/card';
 
 interface ReaderType {
@@ -55,7 +56,7 @@ interface RightSideProps {
 }
 
 const RightSide = ({
-  users,
+  users: initialUsers,
   books,
   authors,
   selectedCategory,
@@ -70,12 +71,31 @@ const RightSide = ({
   onDeleteAuthor,
 }: RightSideProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [users, setUsers] = useState<UserType[] | undefined>(initialUsers);
+  const loggedUserId = localStorage.getItem('loggedUserId'); // מזהה המשתמש המחובר
+  const navigate = useNavigate(); // ניתוב מחדש לעמוד LogIn
+
+  useEffect(() => {
+    setUsers(initialUsers); // מתעדכן כאשר initialUsers משתנה
+  }, [initialUsers]);
 
   const handleCardClick = (id: string, type: 'user' | 'book' | 'author', item: any) => {
     setSelectedId(id);
     if (type === 'user' && onUserSelect) onUserSelect(item);
     if (type === 'book' && onBookSelect) onBookSelect(item);
     if (type === 'author' && onAuthorSelect) onAuthorSelect(item);
+  };
+
+  const handleDeleteUser = (userId: string) => {
+    if (onDeleteUser) {
+      onDeleteUser(userId);
+      if (userId === loggedUserId) {
+        localStorage.removeItem('loggedUserId'); 
+        navigate('/login', { replace: true }); // עדכון הניווט
+      } else {
+        setUsers((prevUsers) => prevUsers?.filter(user => user._id !== userId));
+      }
+    }
   };
 
   return (
@@ -90,12 +110,12 @@ const RightSide = ({
               isSelected={user._id === selectedId}
               onClick={() => handleCardClick(user._id, 'user', user)} 
               onEdit={() => onEditUser && onEditUser(user)} 
-              onDelete={() => onDeleteUser && onDeleteUser(user._id)} 
+              onDelete={user._id === loggedUserId ? () => handleDeleteUser(user._id) : undefined} 
             />
           ))}
         </div>
       )}
-
+  
       {selectedCategory === 'book' && books && (
         <div>
           {books.map((book) => (
@@ -108,29 +128,29 @@ const RightSide = ({
               isSelected={book._id === selectedId}
               onClick={() => handleCardClick(book._id, 'book', book)} 
               onEdit={() => onEditBook && onEditBook(book)}
-              onDelete={() => onDeleteBook && onDeleteBook(book._id)} 
+              onDelete={onDeleteBook ? () => onDeleteBook(book._id) : undefined} 
             />
           ))}
         </div>
       )}
-
+  
       {selectedCategory === 'author' && authors && (
         <div>
           {authors.map((author) => (
             <Card 
               key={author._id} 
               name={author.name} 
-              authorId={author._id}  // Ensure this is passed
+              authorId={author._id}
               isSelected={author._id === selectedId}
               onClick={() => handleCardClick(author._id, 'author', author)} 
               onEdit={() => onEditAuthor && onEditAuthor(author)} 
-              onDelete={() => onDeleteAuthor && onDeleteAuthor(author._id)} 
+              onDelete={onDeleteAuthor ? () => onDeleteAuthor(author._id) : undefined} 
             />
           ))}
         </div>
       )}
     </div>
-  );
+  );  
 };
 
 export default RightSide;

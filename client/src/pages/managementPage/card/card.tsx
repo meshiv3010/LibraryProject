@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Card.module.css';
+import { useNavigate } from 'react-router-dom';
 
 interface CardProps {
   title?: string;
@@ -31,6 +32,8 @@ const Card: React.FC<CardProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedName, setEditedName] = useState(name);
+  const loggedUserId = localStorage.getItem('loggedUserId'); // מזהה המשתמש המחובר
+  const navigate = useNavigate();
 
   // פונקציה לקביעת נקודת הקצה וה-ID
   const getEndpointAndId = () => {
@@ -77,28 +80,29 @@ const Card: React.FC<CardProps> = ({
   };
   
   const handleDelete = async () => {
-    try {
-      const { endpoint, id } = getEndpointAndId();
-      if (!endpoint || !id) return;
-  
-      const response = await fetch(`http://localhost:3000/${endpoint}/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Failed to delete ${endpoint}`);
+    const { endpoint, id } = getEndpointAndId(); // הפונקציה שמחזירה את הנקודת קצה וה-ID
+    if (id) {
+      try {
+        const response = await fetch(`http://localhost:3000/${endpoint}/${id}`, {
+          method: 'DELETE',
+        });
+        if (!response.ok) {
+          throw new Error('Failed to delete');
+        }
+        
+        // אם קטגוריית היוזרים, נבצע עדכון כדי להבטיח שהיוזר הנוכחי הוא זה שנמחק
+        if (endpoint === 'users' && id === loggedUserId) {
+          console.log('Current user deleted successfully. Redirecting to login...');
+          // הפניה למסך ההתחברות
+          navigate('/login');
+        } else {
+          // נניח שיש לוגיקה לעדכון הסטייט לאחר מחיקה של ספרים או סופרים
+          console.log(`${endpoint} with ID ${id} deleted successfully.`);
+          // כאן תוכל להוסיף לוגיקה לעדכון הסטייט
+        }
+      } catch (error) {
+        console.error('Error deleting item:', error);
       }
-  
-      console.log(`Deleted ${endpoint} with ID: ${id}`);
-  
-      if (onDelete && id) {
-        onDelete(id);
-      }
-    } catch (error) {
-      console.error(`Error deleting ${bookId ? 'book' : userId ? 'user' : 'author'}:`, error);
     }
   };
 
@@ -148,9 +152,18 @@ const Card: React.FC<CardProps> = ({
             <button className={styles.button} onClick={() => setIsEditing(true)}>
               Edit
             </button>
-            <button className={styles.button} onClick={handleDelete}>
-              Delete
-            </button>
+            {/* כפתור Delete יוצג רק עבור יוזרים מחוברים */}
+            {userId && loggedUserId === userId ? (
+              <button className={styles.button} onClick={handleDelete}>
+                Delete
+              </button>
+            ) : (
+              (bookId || authorId) && (
+                <button className={styles.button} onClick={handleDelete}>
+                  Delete
+                </button>
+              )
+            )}
           </div>
         </div>
       )}

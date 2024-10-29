@@ -6,6 +6,7 @@ import style from './user.module.css';
 const User = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<any>(null);
+  const loggedUserId = localStorage.getItem('loggedUserId');
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -20,6 +21,10 @@ const User = () => {
   const handleUserSelect = (user: any) => {
     console.log('Selected user:', user);
     setSelectedUser(user);
+  };
+
+  const handleUserDelete = (userId: string) => {
+    setUsers(prevUsers => prevUsers.filter(user => user._id !== userId));
   };
 
   return (
@@ -39,6 +44,7 @@ const User = () => {
           users={users} 
           selectedCategory="user" 
           onUserSelect={handleUserSelect} 
+          onDeleteUser={handleUserDelete} 
         />
       </div>
     </div>
