@@ -50,13 +50,17 @@ export class AuthorService {
     if (!author) {
         throw new NotFoundException('Author not found');
     }
+
+    // מחיקה של כל ספר של הסופר מהמסד ומהרשומות של המשתמשים
     for (const bookId of author.books) {
-        await this.bookService.deleteBook(bookId);
-        await this.userService.removeBookFromAllUsers(bookId);
+        await this.bookService.deleteBook(bookId);  // מחיקת הספר עצמו
+        await this.userService.removeBookFromAllUsers(bookId); // הסרת הספר מכל המשתמשים
     }
+
+    // מחיקת הסופר עצמו לאחר מחיקת הספרים
     await this.authorModel.findByIdAndDelete(authorId).exec();
-    console.log(`Deleted author ${authorId}.`);
-}
+    console.log(`Deleted author ${authorId} and all their books.`);
+  }
 async removeBookFromAuthor(authorId: Types.ObjectId, bookId: Types.ObjectId): Promise<void> {
   await this.authorModel.findByIdAndUpdate(
     authorId,

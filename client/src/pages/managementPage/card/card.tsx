@@ -12,7 +12,7 @@ interface CardProps {
   isSelected?: boolean;
   onClick?: () => void;
   onEdit?: (newName: string, newTitle: string) => void;
-  onDelete?: () => void;
+  onDelete?: (id: string) => void;  // נוסיף את ה-ID לפריט למחיקה
 }
 
 const Card: React.FC<CardProps> = ({
@@ -31,28 +31,23 @@ const Card: React.FC<CardProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedName, setEditedName] = useState(name);
+
+  // פונקציה לקביעת נקודת הקצה וה-ID
+  const getEndpointAndId = () => {
+    if (bookId) {
+      return { endpoint: 'books', id: bookId, payload: { title: editedTitle } };
+    } else if (userId) {
+      return { endpoint: 'users', id: userId, payload: { name: editedName } };
+    } else if (authorId) {
+      return { endpoint: 'authors', id: authorId, payload: { name: editedName } };
+    }
+    return { endpoint: '', id: '', payload: {} };
+  };
+
   const handleSave = async () => {
     try {
-      let endpoint;
-      let id;
-      let payload;
-  
-      if (bookId) {
-        endpoint = 'books';
-        id = bookId;
-        payload = { title: editedTitle };
-      } else if (userId) {
-        endpoint = 'users';
-        id = userId;
-        payload = { name: editedName };
-      } else if (authorId) {
-        endpoint = 'authors'; 
-        id = authorId; 
-        payload = { name: editedName };
-      }
-  
-      // Debugging output
-      console.log(`Updating ${endpoint} with ID: ${id} and payload:`, payload);
+      const { endpoint, id, payload } = getEndpointAndId();
+      if (!endpoint || !id) return;
   
       const response = await fetch(`http://localhost:3000/${endpoint}/${id}`, {
         method: 'PUT',
@@ -69,12 +64,9 @@ const Card: React.FC<CardProps> = ({
       const updatedData = await response.json();
       console.log(`Updated ${endpoint}:`, updatedData);
   
-      // Update displayed fields
       if (bookId) {
         setEditedTitle(updatedData.title);
-      } else if (userId) {
-        setEditedName(updatedData.name);
-      } else if (authorId) {
+      } else if (userId || authorId) {
         setEditedName(updatedData.name);
       }
     } catch (error) {
@@ -83,8 +75,32 @@ const Card: React.FC<CardProps> = ({
   
     setIsEditing(false);
   };
- 
   
+  const handleDelete = async () => {
+    try {
+      const { endpoint, id } = getEndpointAndId();
+      if (!endpoint || !id) return;
+  
+      const response = await fetch(`http://localhost:3000/${endpoint}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to delete ${endpoint}`);
+      }
+  
+      console.log(`Deleted ${endpoint} with ID: ${id}`);
+  
+      if (onDelete && id) {
+        onDelete(id);
+      }
+    } catch (error) {
+      console.error(`Error deleting ${bookId ? 'book' : userId ? 'user' : 'author'}:`, error);
+    }
+  };
 
   return (
     <div className={`${styles.card} ${isSelected ? styles.selected : ''}`} onClick={onClick}>
@@ -127,12 +143,12 @@ const Card: React.FC<CardProps> = ({
             </div>
           )}
           {userId && <p>Name: {name}</p>}
-          {authorId && <p>Author: {name}</p>} {/* הוספת הצגת השם של הסופר */}
+          {authorId && <p>Author: {name}</p>}
           <div className={styles.buttonGroup}>
             <button className={styles.button} onClick={() => setIsEditing(true)}>
               Edit
             </button>
-            <button className={styles.button} onClick={onDelete}>
+            <button className={styles.button} onClick={handleDelete}>
               Delete
             </button>
           </div>
