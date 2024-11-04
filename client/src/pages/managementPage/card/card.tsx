@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styles from './Card.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+
 
 interface CardProps {
   title?: string;
@@ -38,6 +40,8 @@ const Card: React.FC<CardProps> = ({
   const [editedName, setEditedName] = useState(name);
   const loggedUserId = localStorage.getItem('loggedUserId'); // מזהה המשתמש המחובר
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
 
   // פונקציה לקביעת נקודת הקצה וה-ID
   const getEndpointAndId = () => {
@@ -53,35 +57,35 @@ const Card: React.FC<CardProps> = ({
 
   const handleSave = async () => {
     try {
-      const { endpoint, id, payload } = getEndpointAndId();
-      if (!endpoint || !id) return;
-  
-      const response = await fetch(`http://localhost:3000/${endpoint}/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Failed to update ${endpoint}`);
-      }
-  
-      const updatedData = await response.json();
-      console.log(`Updated ${endpoint}:`, updatedData);
-  
-      if (bookId) {
-        setEditedTitle(updatedData.title);
-      } else if (userId || authorId) {
-        setEditedName(updatedData.name);
-      }
+        const { endpoint, id, payload } = getEndpointAndId();
+        if (!endpoint || !id) return;
+
+        const response = await fetch(`http://localhost:3000/${endpoint}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) throw new Error(`Failed to update ${endpoint}`);
+
+        const updatedData = await response.json();
+        console.log(`Updated ${endpoint}:`, updatedData);
+
+        if (bookId) {
+            setEditedTitle(updatedData.title);
+        } else if (userId || authorId) {
+            setEditedName(updatedData.name);
+        }
+
+        // עדכון מטמון כדי לגרום ל-React Query לרענן את המידע
+        queryClient.invalidateQueries({ queryKey: ['users'] });
     } catch (error) {
-      console.error(`Error updating ${bookId ? 'book' : userId ? 'user' : 'author'}:`, error);
+        console.error(`Error updating ${bookId ? 'book' : userId ? 'user' : 'author'}:`, error);
     }
-  
+
     setIsEditing(false);
   };
+
   
   const handleDelete = async () => {
     const { endpoint, id } = getEndpointAndId(); // הפונקציה שמחזירה את הנקודת קצה וה-ID

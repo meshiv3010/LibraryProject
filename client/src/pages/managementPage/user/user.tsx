@@ -1,44 +1,53 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import LeftSide from '../leftSide/leftSide';
 import RightSide from '../rightSide/rightSide';
 import style from './user.module.css';
+import { fetchUsers, deleteUser, User as UserType } from '../../../api';
 
-const User = () => {
-  const [users, setUsers] = useState<any[]>([]);
-  const [selectedUser, setSelectedUser] = useState<any>(null);
-  const loggedUserId = localStorage.getItem('loggedUserId');
+interface UserProps {
+  currentUser: UserType;
+}
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await fetch('http://localhost:3000/users');
-      const usersData = await response.json();
-      setUsers(usersData);
-    };
+const User: React.FC<UserProps> = ({ currentUser }) => {
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+  const queryClient = useQueryClient();
 
-    fetchUsers();
-  }, []);
+  const { data: users = [], isLoading, error } = useQuery<UserType[], Error>({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+  });
 
-  const handleUserSelect = (user: any) => {
+  const deleteUserMutation = useMutation({
+    mutationFn: (userId: string) => deleteUser(userId), // פונקציה לקבלת userId
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] }); // תיקון טיפוס invalidateQueries
+    },
+  });
+
+  const handleUserSelect = (user: UserType) => {
     console.log('Selected user:', user);
     setSelectedUser(user);
   };
 
   const handleUserDelete = (userId: string) => {
-    setUsers(prevUsers => prevUsers.filter(user => user._id !== userId));
+    deleteUserMutation.mutate(userId);
   };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching users: {error.message}</div>;
 
   return (
     <div className={style.container}>
       <div className={style.leftSide}>
         {selectedUser && (
           <LeftSide 
-            userName={selectedUser?.name} 
-            userBooks={selectedUser?.readBooks} 
+            userName={selectedUser.name} 
+            userBooks={selectedUser.readBooks} 
             selectedCategory="user"
           />
         )}
       </div>
-
       <div className={style.rightSide}>
         <RightSide 
           users={users} 
