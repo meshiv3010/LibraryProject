@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styles from './Card.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import { deleteUser , deleteBook, deleteAuthor } from '../../../api';
+
 
 
 interface CardProps {
@@ -57,62 +59,83 @@ const Card: React.FC<CardProps> = ({
 
   const handleSave = async () => {
     try {
-        const { endpoint, id, payload } = getEndpointAndId();
-        if (!endpoint || !id) return;
-
-        const response = await fetch(`http://localhost:3000/${endpoint}/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) throw new Error(`Failed to update ${endpoint}`);
-
-        const updatedData = await response.json();
-        console.log(`Updated ${endpoint}:`, updatedData);
-
-        if (bookId) {
-            setEditedTitle(updatedData.title);
-        } else if (userId || authorId) {
-            setEditedName(updatedData.name);
-        }
-
-        // עדכון מטמון כדי לגרום ל-React Query לרענן את המידע
+      const { endpoint, id, payload } = getEndpointAndId();
+      if (!endpoint || !id) return;
+  
+      const response = await fetch(`http://localhost:3000/${endpoint}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) throw new Error(`Failed to update ${endpoint}`);
+  
+      const updatedData = await response.json();
+      console.log(`Updated ${endpoint}:`, updatedData);
+  
+      if (bookId) {
+        setEditedTitle(updatedData.title);
+      } else if (userId || authorId) {
+        setEditedName(updatedData.name);
+      }
+  
+      // עדכון מטמון כדי לגרום ל-React Query לרענן את המידע
+      if (bookId) {
+        queryClient.invalidateQueries({ queryKey: ['books'] });
+      } else if (userId) {
         queryClient.invalidateQueries({ queryKey: ['users'] });
+      } else if (authorId) {
+        queryClient.invalidateQueries({ queryKey: ['authors'] });
+      }
+  
     } catch (error) {
-        console.error(`Error updating ${bookId ? 'book' : userId ? 'user' : 'author'}:`, error);
+      console.error(`Error updating ${bookId ? 'book' : userId ? 'user' : 'author'}:`, error);
     }
-
+  
     setIsEditing(false);
   };
 
   
   const handleDelete = async () => {
     const { endpoint, id } = getEndpointAndId(); // הפונקציה שמחזירה את הנקודת קצה וה-ID
+    
+    // אם מדובר במשתמש, נוודא שהמשתמש המחובר מנסה למחוק את עצמו בלבד
+    if (endpoint === 'users' && id !== loggedUserId) {
+      console.log('You can only delete your own account');
+      alert('You can only delete your own account');
+      return;
+    }
+  
     if (id) {
       try {
-        const response = await fetch(`http://localhost:3000/${endpoint}/${id}`, {
-          method: 'DELETE',
-        });
-        if (!response.ok) {
-          throw new Error('Failed to delete');
-        }
-        
-        // אם קטגוריית היוזרים, נבצע עדכון כדי להבטיח שהיוזר הנוכחי הוא זה שנמחק
+        // אם מדובר במחיקת משתמש
         if (endpoint === 'users' && id === loggedUserId) {
-          console.log('Current user deleted successfully. Redirecting to login...');
-          // הפניה למסך ההתחברות
+          console.log('Deleting the current user...');
+          // מחיקת משתמש
+          await deleteUser(id);
+          
+          // הפנייה למסך התחברות אם המשתמש מחק את עצמו
           navigate('/login');
-        } else {
-          // נניח שיש לוגיקה לעדכון הסטייט לאחר מחיקה של ספרים או סופרים
-          console.log(`${endpoint} with ID ${id} deleted successfully.`);
-          // כאן תוכל להוסיף לוגיקה לעדכון הסטייט
         }
+        // אם מדובר בספר או סופר, נבצע את המחיקה
+        else if (endpoint === 'books') {
+          await deleteBook(id);
+          console.log('Book deleted successfully');
+          // ניתן להוסיף לוגיקה לעדכון הסטייט או המטמון לאחר מחיקת ספר
+        } else if (endpoint === 'authors') {
+          await deleteAuthor(id);
+          console.log('Author deleted successfully');
+          // ניתן להוסיף לוגיקה לעדכון הסטייט או המטמון לאחר מחיקת סופר
+        }
+  
+        // עדכון המטמון (React Query)
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
       } catch (error) {
         console.error('Error deleting item:', error);
       }
     }
   };
+  
 
   return (
     <div className={`${styles.card} ${isSelected ? styles.selected : ''}`} onClick={onClick}>

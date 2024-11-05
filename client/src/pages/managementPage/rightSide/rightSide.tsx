@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../card/card';
+import { useQueryClient } from '@tanstack/react-query';
+
 
 interface ReaderType {
   _id: string;
@@ -74,6 +76,7 @@ const RightSide = ({
   const [users, setUsers] = useState<UserType[] | undefined>(initialUsers);
   const loggedUserId = localStorage.getItem('loggedUserId'); // מזהה המשתמש המחובר
   const navigate = useNavigate(); // ניתוב מחדש לעמוד LogIn
+  const queryClient = useQueryClient(); 
 
   useEffect(() => {
     setUsers(initialUsers); // מתעדכן כאשר initialUsers משתנה
@@ -97,6 +100,15 @@ const RightSide = ({
       }
     }
   };
+
+  const handleDeleteBook = (bookId: string) => {
+    if (onDeleteBook) {
+      onDeleteBook(bookId);
+      queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.refetchQueries({ queryKey: ['books'] }); // רענון נוסף של השאילתה
+    }
+  };
+  
 
   return (
     <div>
@@ -129,7 +141,7 @@ const RightSide = ({
               isSelected={book._id === selectedId}
               onClick={() => handleCardClick(book._id, 'book', book)} 
               onEdit={() => onEditBook && onEditBook(book)}
-              onDelete={onDeleteBook ? () => onDeleteBook(book._id) : undefined} 
+              onDelete={() => handleDeleteBook(book._id)}
             />
           ))}
         </div>

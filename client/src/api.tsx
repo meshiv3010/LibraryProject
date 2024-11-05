@@ -24,7 +24,7 @@ export interface User {
   favBook?: { title: string };
 }
 
-interface Book {
+export interface Book {
   _id: string;
   bookNumber: number;
   title: string;
