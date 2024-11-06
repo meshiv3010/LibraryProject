@@ -102,13 +102,13 @@ const RightSide = ({
   };
 
   const handleDeleteBook = (bookId: string) => {
-    if (onDeleteBook) {
-      onDeleteBook(bookId);
-      queryClient.invalidateQueries({ queryKey: ['books'] });
-      queryClient.refetchQueries({ queryKey: ['books'] }); // רענון נוסף של השאילתה
-    }
-  };
-  
+  if (onDeleteBook) {
+    onDeleteBook(bookId);
+    queryClient.invalidateQueries({ queryKey: ['books'] });
+    queryClient.refetchQueries({ queryKey: ['books'] }); // רענון נוסף של השאילתה
+  }
+};
+
 
   return (
     <div>

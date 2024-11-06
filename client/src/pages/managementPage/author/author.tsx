@@ -1,28 +1,28 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { fetchAuthors } from '../../../api';
 import LeftSide from '../leftSide/leftSide';
 import RightSide from '../rightSide/rightSide';
-import style from './author.module.css'; // ודא שאתה מייבא את ה-CSS הנכון
+import style from './author.module.css';
+import { Author as AuthorType} from '../../../api';
 
-const Author = () => {
-  const [authors, setAuthors] = useState<any[]>([]);
-  const [selectedAuthor, setSelectedAuthor] = useState<any>(null);
+const Author: React.FC = () => {
+  const [selectedAuthor, setSelectedAuthor] = useState<AuthorType | null>(null);
 
-  useEffect(() => {
-    const fetchAuthors = async () => {
-      const response = await fetch('http://localhost:3000/authors');
-      const authorsData = await response.json();
-      setAuthors(authorsData);
-    };
-
-    fetchAuthors();
-  }, []);
-
+  // שימוש ב-React Query לשליפת סופרים
+  const { data: authors, isLoading, error } = useQuery({
+    queryKey: ['authors'],
+    queryFn: fetchAuthors,
+  });
+  
   // פונקציה לבחירת סופר
-  const handleAuthorSelect = (author: any) => {
-    console.log('Selected author:', author); // בדיקה שהנתונים נכונים, כולל ספרים
+  const handleAuthorSelect = (author: AuthorType) => {
     setSelectedAuthor(author);
   };
+
+  if (isLoading) return <p>Loading authors...</p>;
+  if (error) return <p>Error loading authors</p>;
 
   return (
     <div className={style.container}>

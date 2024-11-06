@@ -28,14 +28,15 @@ export interface Book {
   _id: string;
   bookNumber: number;
   title: string;
-  author: Author;
+  author: Author; // זה יכול להיות כך אם אתה רוצה להפוך את הספר למקום שמחובר למחבר
   readers: ReaderType[];
 }
 
-interface Author {
+export interface Author {
   _id: string;
   name: string;
   writerNumber: number;
+  books?: Book[];
 }
 
 // יצירת אליאס של UserType המבוסס על User
@@ -53,7 +54,7 @@ export const fetchBooks = async (): Promise<Book[]> => {
 
 export const fetchAuthors = async (): Promise<Author[]> => {
   const response = await axios.get('http://localhost:3000/authors');
-  return response.data;
+  return response.data; // Ensure this includes the `books` property for each author
 };
 
 
