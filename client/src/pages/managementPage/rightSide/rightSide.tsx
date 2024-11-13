@@ -110,61 +110,63 @@ const RightSide = ({
 };
 
 
-  return (
-    <div>
-      {selectedCategory === 'user' && users && (
-        <div>
-          {users.map((user) => (
-            <Card 
-              key={user._id} 
-              name={user.name} 
-              userId={user._id}
-              userNumber={user.userNumber}
-              isSelected={user._id === selectedId}
-              onClick={() => handleCardClick(user._id, 'user', user)} 
-              onEdit={() => onEditUser && onEditUser(user)} 
-              onDelete={user._id === loggedUserId ? () => handleDeleteUser(user._id) : undefined} 
-            />
-          ))}
-        </div>
-      )}
-  
-      {selectedCategory === 'book' && books && (
-        <div>
-          {books.map((book) => (
-            <Card 
-              key={book._id} 
-              title={book.title} 
-              authorName={book.author.name} 
-              bookId={book._id} 
-              bookNumber={book.bookNumber}
-              isSelected={book._id === selectedId}
-              onClick={() => handleCardClick(book._id, 'book', book)} 
-              onEdit={() => onEditBook && onEditBook(book)}
-              onDelete={() => handleDeleteBook(book._id)}
-            />
-          ))}
-        </div>
-      )}
-  
-      {selectedCategory === 'author' && authors && (
-        <div>
-          {authors.map((author) => (
-            <Card 
-              key={author._id} 
-              name={author.name} 
-              authorId={author._id}
-              writerNumber={author.writerNumber}
-              isSelected={author._id === selectedId}
-              onClick={() => handleCardClick(author._id, 'author', author)} 
-              onEdit={() => onEditAuthor && onEditAuthor(author)} 
-              onDelete={onDeleteAuthor ? () => onDeleteAuthor(author._id) : undefined} 
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );  
-};
+return (
+  <div>
+    {selectedCategory === 'user' && users && (
+      <div>
+        {users.map((user) => (
+          <Card 
+            key={user._id} 
+            name={user.name} 
+            userId={user._id}
+            userNumber={user.userNumber}
+            showActions={true}
+            isSelected={user._id === selectedId}
+            onClick={() => handleCardClick(user._id, 'user', user)} 
+            onEdit={() => onEditUser && onEditUser(user)} 
+            onDelete={user._id === loggedUserId ? () => handleDeleteUser(user._id) : undefined} 
+          />
+        ))}
+      </div>
+    )}
 
+    {selectedCategory === 'book' && books && (
+      <div>
+        {books.map((book) => (
+          <Card 
+            key={book._id} 
+            title={book.title} 
+            authorName={book.author.name} 
+            bookId={book._id} 
+            bookNumber={book.bookNumber}
+            showActions={true}
+            isSelected={book._id === selectedId}
+            onClick={() => handleCardClick(book._id, 'book', book)} 
+            onEdit={() => onEditBook && onEditBook(book)}
+            onDelete={() => handleDeleteBook(book._id)}
+          />
+        ))}
+      </div>
+    )}
+
+    {selectedCategory === 'author' && authors && (
+      <div>
+        {authors.map((author) => (
+          <Card 
+            key={author._id} 
+            name={author.name} 
+            authorId={author._id}
+            writerNumber={author.writerNumber}
+            showActions={true}
+            isSelected={author._id === selectedId}
+            onClick={() => handleCardClick(author._id, 'author', author)} 
+            onEdit={() => onEditAuthor && onEditAuthor(author)}
+            onDelete={() => onDeleteAuthor && onDeleteAuthor(author._id)}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+);
+};
 export default RightSide;

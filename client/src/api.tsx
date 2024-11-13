@@ -7,7 +7,6 @@ export interface ReaderType {
   readBooks: string[];
   favBook: string;
 }
-
 export interface User {
   _id: string;
   name: string;
@@ -77,4 +76,8 @@ export const deleteBook = async (bookId: string): Promise<void> => {
 
 export const updateEntity = async (endpoint: string, id: string, payload: object): Promise<void> => {
   await axios.put(`http://localhost:3000/${endpoint}/${id}`, payload);
+};
+
+export const updateFavoriteBook = async (userId: string, bookId: string): Promise<void> => {
+  await axios.patch(`http://localhost:3000/users/${userId}/favBook/${bookId}`);
 };

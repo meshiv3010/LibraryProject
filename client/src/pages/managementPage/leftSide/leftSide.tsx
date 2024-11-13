@@ -1,5 +1,6 @@
 import React from 'react';
 import style from './leftSide.module.css';
+import Card from '../card/card'; // נייבא את קומפוננטת ה-Card
 
 interface LeftSideProps {
   userName?: string;
@@ -17,9 +18,16 @@ const LeftSide = ({ userName, userBooks, bookTitle, bookAuthor, authorName, auth
       {selectedCategory === 'user' && userName && (
         <div>
           <h2>שם משתמש: {userName}</h2>
-          <div>
+          <div className={style.cardContainer}>
             {userBooks?.map((book) => (
-              <h3 key={book._id}>{book.title} - {book.author.name}</h3>
+              <Card
+                key={book._id}
+                title={book.title}
+                authorName={book.author.name}
+                bookId={book._id}
+                bookNumber={book.bookNumber}
+                showActions={false}
+              />
             ))}
           </div>
         </div>
@@ -29,15 +37,28 @@ const LeftSide = ({ userName, userBooks, bookTitle, bookAuthor, authorName, auth
         <div>
           <h2>שם ספר: {bookTitle}</h2>
           <h3>סופר: {bookAuthor}</h3>
+          <div className={style.cardContainer}>
+            <Card
+              title={bookTitle}
+              authorName={bookAuthor}
+              showActions={false}
+            />
+          </div>
         </div>
       )}
 
       {selectedCategory === 'author' && authorName && (
         <div>
           <h2>שם סופר: {authorName}</h2>
-          <div>
+          <div className={style.cardContainer}>
             {authorBooks?.map((book) => (
-              <h3 key={book._id}>{book.title}</h3>
+              <Card
+                key={book._id}
+                title={book.title}
+                authorName={book.author.name}
+                bookId={book._id}
+                showActions={false}
+              />
             ))}
           </div>
         </div>

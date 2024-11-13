@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import styles from './Card.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { deleteUser , deleteBook, deleteAuthor } from '../../../api';
-
-
+import { deleteUser, deleteBook, deleteAuthor } from '../../../api';
 
 interface CardProps {
   title?: string;
@@ -19,7 +17,8 @@ interface CardProps {
   isSelected?: boolean;
   onClick?: () => void;
   onEdit?: (newName: string, newTitle: string) => void;
-  onDelete?: (id: string) => void;  // נוסיף את ה-ID לפריט למחיקה
+  onDelete?: (id: string) => void;
+  showActions?: boolean; // פרופס חדש
 }
 
 const Card: React.FC<CardProps> = ({
@@ -36,16 +35,15 @@ const Card: React.FC<CardProps> = ({
   onClick,
   onEdit,
   onDelete,
+  showActions = false, // ברירת מחדל: false
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedName, setEditedName] = useState(name);
-  const loggedUserId = localStorage.getItem('loggedUserId'); // מזהה המשתמש המחובר
+  const loggedUserId = localStorage.getItem('loggedUserId');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-
-  // פונקציה לקביעת נקודת הקצה וה-ID
   const getEndpointAndId = () => {
     if (bookId) {
       return { endpoint: 'books', id: bookId, payload: { title: editedTitle } };
@@ -61,81 +59,61 @@ const Card: React.FC<CardProps> = ({
     try {
       const { endpoint, id, payload } = getEndpointAndId();
       if (!endpoint || !id) return;
-  
+
       const response = await fetch(`http://localhost:3000/${endpoint}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-  
+
       if (!response.ok) throw new Error(`Failed to update ${endpoint}`);
-  
+
       const updatedData = await response.json();
       console.log(`Updated ${endpoint}:`, updatedData);
-  
+
       if (bookId) {
         setEditedTitle(updatedData.title);
       } else if (userId || authorId) {
         setEditedName(updatedData.name);
       }
-  
-      // עדכון מטמון כדי לגרום ל-React Query לרענן את המידע
-      if (bookId) {
-        queryClient.invalidateQueries({ queryKey: ['books'] });
-      } else if (userId) {
-        queryClient.invalidateQueries({ queryKey: ['users'] });
-      } else if (authorId) {
-        queryClient.invalidateQueries({ queryKey: ['authors'] });
-      }
-  
+
+      queryClient.invalidateQueries({ queryKey: [endpoint] });
     } catch (error) {
       console.error(`Error updating ${bookId ? 'book' : userId ? 'user' : 'author'}:`, error);
     }
-  
+
     setIsEditing(false);
   };
 
-  
   const handleDelete = async () => {
-    const { endpoint, id } = getEndpointAndId(); // הפונקציה שמחזירה את הנקודת קצה וה-ID
-    
-    // אם מדובר במשתמש, נוודא שהמשתמש המחובר מנסה למחוק את עצמו בלבד
+    const { endpoint, id } = getEndpointAndId();
+
     if (endpoint === 'users' && id !== loggedUserId) {
       console.log('You can only delete your own account');
       alert('You can only delete your own account');
       return;
     }
-  
+
     if (id) {
       try {
-        // אם מדובר במחיקת משתמש
         if (endpoint === 'users' && id === loggedUserId) {
           console.log('Deleting the current user...');
-          // מחיקת משתמש
           await deleteUser(id);
-          
-          // הפנייה למסך התחברות אם המשתמש מחק את עצמו
           navigate('/login');
-        }
-        // אם מדובר בספר או סופר, נבצע את המחיקה
-        else if (endpoint === 'books') {
+        } else if (endpoint === 'books') {
           await deleteBook(id);
           console.log('Book deleted successfully');
-          // ניתן להוסיף לוגיקה לעדכון הסטייט או המטמון לאחר מחיקת ספר
         } else if (endpoint === 'authors') {
           await deleteAuthor(id);
           console.log('Author deleted successfully');
-          // ניתן להוסיף לוגיקה לעדכון הסטייט או המטמון לאחר מחיקת סופר
         }
-  
-        // עדכון המטמון (React Query)
+
         queryClient.invalidateQueries({ queryKey: [endpoint] });
       } catch (error) {
         console.error('Error deleting item:', error);
       }
     }
   };
-  
 
   return (
     <div className={`${styles.card} ${isSelected ? styles.selected : ''}`} onClick={onClick}>
@@ -189,23 +167,30 @@ const Card: React.FC<CardProps> = ({
               <p>מזהה: {writerNumber}</p>
             </div>
           )}
-          <div className={styles.buttonGroup}>
-            <button className={styles.button} onClick={() => setIsEditing(true)}>
-              Edit
-            </button>
-            {/* כפתור Delete יוצג רק עבור יוזרים מחוברים */}
-            {userId && loggedUserId === userId ? (
-              <button className={styles.button} onClick={handleDelete}>
-                Delete
+          {showActions && (
+            <div className={styles.buttonGroup}>
+              <button
+                className={styles.button}
+                onClick={() => {
+                  setIsEditing(true);
+                  console.log('Edit mode enabled');
+                }}
+              >
+                Edit
               </button>
-            ) : (
-              (bookId || authorId) && (
+              {userId && loggedUserId === userId ? (
                 <button className={styles.button} onClick={handleDelete}>
                   Delete
                 </button>
-              )
-            )}
-          </div>
+              ) : (
+                (bookId || authorId) && (
+                  <button className={styles.button} onClick={handleDelete}>
+                    Delete
+                  </button>
+                )
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>
