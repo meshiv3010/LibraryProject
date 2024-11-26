@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAuthors } from '../../../api';
@@ -27,12 +26,14 @@ const Author: React.FC = () => {
   return (
     <div className={style.container}>
       <div className={style.leftSide}>
-        {selectedAuthor && (
+        {selectedAuthor ? (
           <LeftSide 
             authorName={selectedAuthor?.name} // בדוק אם השם נשלח
             authorBooks={selectedAuthor?.books} // בדוק אם הספרים נשלחים
             selectedCategory="author"
           />
+        ) : (
+          <div>בחר סופר</div>
         )}
       </div>
 
@@ -43,7 +44,6 @@ const Author: React.FC = () => {
           onAuthorSelect={handleAuthorSelect} 
         />
       </div>
-      
     </div>
   );
 };

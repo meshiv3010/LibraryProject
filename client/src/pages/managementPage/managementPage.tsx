@@ -7,16 +7,21 @@ import User from './user/user';
 import Book from './book/book';
 import Author from './author/author';
 import style from './ManagementPage.module.css';
-import { fetchUsers, User as UserType } from '../../api';
+import { fetchUsers, fetchBooks, User as UserType, Book as BookType } from '../../api';
 
 const ManagementPage = () => {
   const location = useLocation();
   const { userId } = location.state || {};
   const [activity, setActivity] = useState<string>('user');
 
-  const { data: users = [], isLoading, error } = useQuery<UserType[], Error>({
+  const { data: users = [], isLoading: usersLoading, error: usersError } = useQuery<UserType[], Error>({
     queryKey: ['users'],
     queryFn: fetchUsers,
+  });
+
+  const { data: books = [], isLoading: booksLoading, error: booksError } = useQuery<BookType[], Error>({
+    queryKey: ['books'],
+    queryFn: fetchBooks,
   });
 
   const currentUser = users.find((user) => user._id === userId);
@@ -26,8 +31,9 @@ const ManagementPage = () => {
     console.log(`Selected activity: ${category}`);
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error fetching users: {error.message}</div>;
+  if (usersLoading || booksLoading) return <div>Loading...</div>;
+  if (usersError) return <div>Error fetching users: {usersError.message}</div>;
+  if (booksError) return <div>Error fetching books: {booksError.message}</div>;
   if (!currentUser) return <div>User not found</div>;
 
   return (
@@ -36,7 +42,7 @@ const ManagementPage = () => {
       <div className={style.activityContainer}>
         <div className={style.activity}>
           {activity === 'user' && <User currentUser={currentUser} />}
-          {activity === 'book' && <Book />}
+          {activity === 'book' && <Book books={books} />}
           {activity === 'author' && <Author />}
         </div>
         <Categories onCategorySelect={handleCategorySelect} />

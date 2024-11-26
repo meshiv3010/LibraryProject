@@ -139,6 +139,7 @@ return (
             authorName={book.author.name} 
             bookId={book._id} 
             bookNumber={book.bookNumber}
+            // הסר את העברת נתוני הקוראים
             showActions={true}
             isSelected={book._id === selectedId}
             onClick={() => handleCardClick(book._id, 'book', book)} 

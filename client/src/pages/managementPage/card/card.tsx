@@ -15,15 +15,18 @@ interface CardProps {
   writerNumber?: number;
   name?: string;
   isSelected?: boolean;
+  readers?: { _id: string; name: string; userNumber: number }[];
   onClick?: () => void;
-  onEdit?: (newName: string, newTitle: string) => void;
-  onDelete?: (id: string) => void;
-  showActions?: boolean; // פרופס חדש
+  onEdit?: () => void;
+  onDelete?: () => void;
+  showActions?: boolean;
+  category?: 'BOOK' | 'USER' | 'AUTHOR';
 }
 
 const Card: React.FC<CardProps> = ({
   title,
   authorName,
+  readers,
   bookId,
   userId,
   authorId,
@@ -33,9 +36,8 @@ const Card: React.FC<CardProps> = ({
   userNumber,
   isSelected,
   onClick,
-  onEdit,
-  onDelete,
-  showActions = false, // ברירת מחדל: false
+  showActions = false,
+  category,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
@@ -148,11 +150,14 @@ const Card: React.FC<CardProps> = ({
         </div>
       ) : (
         <div>
-          {bookId && (
-            <div>
-              <h2>{title}</h2>
-              <p>שם סופר: {authorName}</p>
-              <p>מזהה: {bookNumber}</p>
+          {title && <h3>{title}</h3>}
+          {authorName && <h4>{authorName}</h4>}
+          {readers && readers.length > 0 && (
+            <div>              <ul>
+                <li key={readers[0]._id}>
+                  {readers[0].name}
+                </li>
+              </ul>
             </div>
           )}
           {userId && (
@@ -167,29 +172,30 @@ const Card: React.FC<CardProps> = ({
               <p>מזהה: {writerNumber}</p>
             </div>
           )}
-          {showActions && (
-            <div className={styles.buttonGroup}>
-              <button
-                className={styles.button}
-                onClick={() => {
-                  setIsEditing(true);
-                  console.log('Edit mode enabled');
-                }}
-              >
-                Edit
+        </div>
+      )}
+
+      {showActions && (
+        <div className={styles.buttonGroup}>
+          <button
+            className={styles.button}
+            onClick={() => {
+              setIsEditing(true);
+              console.log('Edit mode enabled');
+            }}
+          >
+            Edit
+          </button>
+          {userId && loggedUserId === userId ? (
+            <button className={styles.button} onClick={handleDelete}>
+              Delete
+            </button>
+          ) : (
+            (bookId || authorId) && (
+              <button className={styles.button} onClick={handleDelete}>
+                Delete
               </button>
-              {userId && loggedUserId === userId ? (
-                <button className={styles.button} onClick={handleDelete}>
-                  Delete
-                </button>
-              ) : (
-                (bookId || authorId) && (
-                  <button className={styles.button} onClick={handleDelete}>
-                    Delete
-                  </button>
-                )
-              )}
-            </div>
+            )
           )}
         </div>
       )}
