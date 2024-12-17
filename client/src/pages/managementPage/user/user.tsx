@@ -42,9 +42,11 @@ const User: React.FC<UserProps> = ({ currentUser }) => {
       <div className={style.leftSide}>
         {selectedUser && (
           <LeftSide 
-            userName={selectedUser.name} 
-            userBooks={selectedUser.readBooks} 
-            selectedCategory="user"
+          userName={selectedUser.name} 
+          userBooks={selectedUser.readBooks} 
+          favBookId={selectedUser.favBook ? selectedUser.favBook._id : null} // טיפול במצב בו אין ספר מועדף
+          userId={selectedUser._id} // מזהה המשתמש
+          selectedCategory="user"
           />
         )}
       </div>

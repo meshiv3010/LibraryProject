@@ -7,7 +7,18 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* הוספת צל */
   }
   
-  
+  .favoriteIcon {
+    cursor: pointer;
+    margin-top: 8px;
+    display: flex;
+    justify-content: center;
+  }
+  .bookCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
   ul {
     list-style-type: none; /* ביטול הנקודות */
     padding: 0; /* ביטול הרווח הפנימי */

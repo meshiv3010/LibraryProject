@@ -55,3 +55,10 @@
   background-color: red;
   color: white;
 }
+
+.fav-icon {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 1.5rem;
+  margin-top: 10px;
+}

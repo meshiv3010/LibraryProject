@@ -20,7 +20,13 @@ export interface User {
     };
     bookNumber: number;
   }>;
-  favBook?: { title: string };
+  favBook?: {
+    _id: string;
+    title: string;
+    bookNumber: number;
+    author: string; // או { _id: string; } אם תרצה את האובייקט המלא
+    readers: string[];
+  };
 }
 
 export interface Book {

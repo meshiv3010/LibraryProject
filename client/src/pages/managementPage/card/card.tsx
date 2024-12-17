@@ -3,6 +3,8 @@ import styles from './Card.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { deleteUser, deleteBook, deleteAuthor } from '../../../api';
+import { FaStar, FaRegStar } from 'react-icons/fa';
+import { updateFavoriteBook } from '../../../api';
 
 interface CardProps {
   title?: string;
@@ -13,6 +15,7 @@ interface CardProps {
   bookNumber?: number;
   userNumber?: number;
   writerNumber?: number;
+  selectedCategory?: string;
   name?: string;
   isSelected?: boolean;
   readers?: { _id: string; name: string; userNumber: number }[];
@@ -21,6 +24,8 @@ interface CardProps {
   onDelete?: () => void;
   showActions?: boolean;
   category?: 'BOOK' | 'USER' | 'AUTHOR';
+  isFavBook?: boolean;
+  isLeftSide?: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -31,17 +36,20 @@ const Card: React.FC<CardProps> = ({
   userId,
   authorId,
   bookNumber,
+  selectedCategory,
   writerNumber,
   name,
   userNumber,
   isSelected,
+  isFavBook,
   onClick,
   showActions = false,
-  category,
+  isLeftSide = false,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedName, setEditedName] = useState(name);
+  const [isFavorite, setIsFavorite] = useState(isFavBook); // סטייט לניהול מצב הכוכב
   const loggedUserId = localStorage.getItem('loggedUserId');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -117,6 +125,20 @@ const Card: React.FC<CardProps> = ({
     }
   };
 
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // מונע את קריאת האירועים עבור שאר האלמנטים
+    setIsFavorite(!isFavorite); // משנה את מצב האייקון בצד הלקוח
+    if (bookId && userId) {
+      try {
+        await updateFavoriteBook(userId, bookId);
+        alert('הספר המועדף עודכן בהצלחה!');
+        queryClient.invalidateQueries({ queryKey: ['books'] }); // מעדכן את ה-cache
+      } catch (error) {
+        console.error('Error updating favorite book:', error);
+      }
+    }
+  };
+
   return (
     <div className={`${styles.card} ${isSelected ? styles.selected : ''}`} onClick={onClick}>
       {isEditing ? (
@@ -150,10 +172,25 @@ const Card: React.FC<CardProps> = ({
         </div>
       ) : (
         <div>
-          {title && <h3>{title}</h3>}
+          {title && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <h3>{title}</h3>
+              {selectedCategory === 'user' && isLeftSide !== undefined && (
+                <span onClick={handleFavoriteClick}>
+                  {isFavorite ? (
+                    <FaStar color="gold" className={styles.favIcon} />
+                  ) : (
+                    <FaRegStar color="gray" className={styles.favIcon} />
+                  )}
+                </span>
+              )}
+            </div>
+          )}
+
           {authorName && <h4>{authorName}</h4>}
           {readers && readers.length > 0 && (
-            <div>              <ul>
+            <div>
+              <ul>
                 <li key={readers[0]._id}>
                   {readers[0].name}
                 </li>
