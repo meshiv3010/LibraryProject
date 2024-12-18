@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import styles from './Card.module.css';
 import { useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 import { deleteUser, deleteBook, deleteAuthor } from '../../../api';
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import { updateFavoriteBook } from '../../../api';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
 
 interface CardProps {
   title?: string;
@@ -18,6 +19,7 @@ interface CardProps {
   selectedCategory?: string;
   name?: string;
   isSelected?: boolean;
+  loggedUserId?: string;
   readers?: { _id: string; name: string; userNumber: number }[];
   onClick?: () => void;
   onEdit?: () => void;
@@ -39,6 +41,7 @@ const Card: React.FC<CardProps> = ({
   selectedCategory,
   writerNumber,
   name,
+  loggedUserId,
   userNumber,
   isSelected,
   isFavBook,
@@ -49,8 +52,7 @@ const Card: React.FC<CardProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedName, setEditedName] = useState(name);
-  const [isFavorite, setIsFavorite] = useState(isFavBook); // סטייט לניהול מצב הכוכב
-  const loggedUserId = localStorage.getItem('loggedUserId');
+  const [isFavorite, setIsFavorite] = useState(isFavBook);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -95,6 +97,8 @@ const Card: React.FC<CardProps> = ({
     setIsEditing(false);
   };
 
+  const isLoggedInUser = loggedUserId === userId;
+
   const handleDelete = async () => {
     const { endpoint, id } = getEndpointAndId();
 
@@ -125,19 +129,29 @@ const Card: React.FC<CardProps> = ({
     }
   };
 
+
+  const updateFavBook = useMutation<void, Error, { userId: string; bookId: string }>({
+    mutationFn: ({ userId, bookId }: { userId: string; bookId: string }) =>
+      updateFavoriteBook(userId, bookId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+    onError: (error) => {
+      console.error('Error updating favorite book:', error);
+    },
+  });
+  
+
+  
   const handleFavoriteClick = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // מונע את קריאת האירועים עבור שאר האלמנטים
-    setIsFavorite(!isFavorite); // משנה את מצב האייקון בצד הלקוח
-    if (bookId && userId) {
-      try {
-        await updateFavoriteBook(userId, bookId);
-        alert('הספר המועדף עודכן בהצלחה!');
-        queryClient.invalidateQueries({ queryKey: ['books'] }); // מעדכן את ה-cache
-      } catch (error) {
-        console.error('Error updating favorite book:', error);
-      }
+    e.stopPropagation();
+    setIsFavorite(!isFavorite); // משתנה מצב האייקון בצד הלקוח
+    if (userId && bookId && loggedUserId) {
+      updateFavBook.mutate({ userId, bookId }); // מעבירים את שני הפרמטרים
     }
   };
+
+
 
   return (
     <div className={`${styles.card} ${isSelected ? styles.selected : ''}`} onClick={onClick}>
@@ -150,14 +164,14 @@ const Card: React.FC<CardProps> = ({
               onChange={(e) => setEditedTitle(e.target.value)}
               placeholder="Edit Title"
             />
-          ) : (
+          ) : authorId ? (
             <input
               type="text"
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
-              placeholder="Edit Name"
+              placeholder="Edit Author Name"
             />
-          )}
+          ) : null}
           <div className={styles.buttonGroup}>
             <button className={`${styles.button} ${styles.saveButton}`} onClick={handleSave}>
               Save
@@ -175,7 +189,7 @@ const Card: React.FC<CardProps> = ({
           {title && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <h3>{title}</h3>
-              {selectedCategory === 'user' && isLeftSide !== undefined && (
+              {selectedCategory === 'user' && isLeftSide !== undefined && isLoggedInUser && (
                 <span onClick={handleFavoriteClick}>
                   {isFavorite ? (
                     <FaStar color="gold" className={styles.favIcon} />
@@ -238,6 +252,7 @@ const Card: React.FC<CardProps> = ({
       )}
     </div>
   );
+
 };
 
 export default Card;

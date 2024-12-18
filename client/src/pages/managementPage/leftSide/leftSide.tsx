@@ -1,39 +1,37 @@
 import React from 'react';
 import style from './leftSide.module.css';
 import Card from '../card/card';
-import {updateFavoriteBook} from '../../../api'
-import { FaRegStar, FaStar } from 'react-icons/fa';
-
 
 interface LeftSideProps {
   userName?: string;
   userBooks?: any[];
   bookTitle?: string;
   bookAuthor?: string;
-  favBookId: string | null | undefined;  userId?: string;
+  favBookId: string | null | undefined;
+  userId?: string; 
+  loggedUserId?: string;
   bookReaders?: { _id: string; name: string; userNumber: number }[];
   authorName?: string;
   authorBooks?: any[];
   selectedCategory: 'user' | 'book' | 'author';
 }
 
-const LeftSide = ({ 
-  userName, 
-  userBooks, 
-  bookTitle, 
-  bookAuthor, 
+const LeftSide = ({
+  userName,
+  userBooks,
+  bookTitle,
+  bookAuthor,
   favBookId,
-  userId, // מזהה המשתמש
-  bookReaders, 
-  authorName, 
-  authorBooks, 
-  selectedCategory 
+  loggedUserId,
+  userId, 
+  bookReaders,
+  authorName,
+  authorBooks,
+  selectedCategory,
 }: LeftSideProps) => {
-
-
   return (
     <div className={style.leftSide}>
-       {selectedCategory === 'user' && userName && (
+      {selectedCategory === 'user' && userName && (
         <div>
           <h2>הספרים שקרא {userName}:</h2>
           <div className={style.cardContainer}>
@@ -44,10 +42,11 @@ const LeftSide = ({
                     title={book.title}
                     authorName={book.author.name}
                     bookId={book._id}
+                    userId={userId} // ה-ID של המשתמש הנבחר
+                    loggedUserId={loggedUserId} // ה-ID של המשתמש המחובר
                     showActions={false}
                     selectedCategory="user"
                   />
-                  
                 </div>
               ))
             ) : (
@@ -57,7 +56,6 @@ const LeftSide = ({
         </div>
       )}
 
-
       {selectedCategory === 'book' && bookTitle && (
         <div>
           <h2>הקוראים של {bookTitle}:</h2>
@@ -65,9 +63,10 @@ const LeftSide = ({
             {bookReaders && bookReaders.length > 0 ? (
               bookReaders.map((reader) => (
                 <Card
-                  key={reader._id} 
-                  readers={[reader]}  
-                  showActions={false} 
+                  key={reader._id}
+                  readers={[reader]}
+                  showActions={false}
+                  userId={userId} // מזהה המשתמש מועבר לקומפוננטת Card
                 />
               ))
             ) : (
@@ -91,6 +90,7 @@ const LeftSide = ({
                   showActions={false}
                   isFavBook={favBookId === book._id}
                   isLeftSide={true}
+                  userId={userId} // מזהה המשתמש מועבר לקומפוננטת Card
                 />
               ))
             ) : (

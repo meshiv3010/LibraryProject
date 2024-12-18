@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../card/card';
 import { useQueryClient } from '@tanstack/react-query';
+import {UserLogged} from '../../../types'
 
 
 interface ReaderType {
@@ -10,21 +11,6 @@ interface ReaderType {
   userNumber: number;
   readBooks: string[];
   favBook: string;
-}
-
-interface UserType {
-  _id: string;
-  name: string;
-  userNumber: number;
-  readBooks: Array<{
-    _id: string;
-    title: string;
-    author: {
-      _id: string;
-      name: string;
-    };
-    bookNumber: number;
-  }>;
 }
 
 interface Author {
@@ -42,14 +28,14 @@ interface Book {
 }
 
 interface RightSideProps {
-  users?: UserType[];
+  users?: UserLogged[];
   books?: Book[];
   authors?: Author[];
   selectedCategory: 'user' | 'book' | 'author';
   onBookSelect?: (book: Book) => void;
-  onUserSelect?: (user: UserType) => void;
+  onUserSelect?: (user: UserLogged) => void;
   onAuthorSelect?: (author: Author) => void;
-  onEditUser?: (user: UserType) => void;
+  onEditUser?: (user: UserLogged) => void;
   onEditBook?: (book: Book) => void;
   onEditAuthor?: (author: Author) => void;
   onDeleteUser?: (userId: string) => void;
@@ -73,7 +59,7 @@ const RightSide = ({
   onDeleteAuthor,
 }: RightSideProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [users, setUsers] = useState<UserType[] | undefined>(initialUsers);
+  const [users, setUsers] = useState<UserLogged[] | undefined>(initialUsers);
   const loggedUserId = localStorage.getItem('loggedUserId'); // מזהה המשתמש המחובר
   const navigate = useNavigate(); // ניתוב מחדש לעמוד LogIn
   const queryClient = useQueryClient(); 

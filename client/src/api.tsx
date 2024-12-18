@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {UserLogged} from './types'
 
 export interface ReaderType {
   _id: string;
@@ -7,27 +8,7 @@ export interface ReaderType {
   readBooks: string[];
   favBook: string;
 }
-export interface User {
-  _id: string;
-  name: string;
-  userNumber: number;
-  readBooks: Array<{
-    _id: string;
-    title: string;
-    author: {
-      _id: string;
-      name: string;
-    };
-    bookNumber: number;
-  }>;
-  favBook?: {
-    _id: string;
-    title: string;
-    bookNumber: number;
-    author: string; // או { _id: string; } אם תרצה את האובייקט המלא
-    readers: string[];
-  };
-}
+
 
 export interface Book {
   _id: string;
@@ -45,7 +26,7 @@ export interface Author {
 }
 
 // יצירת אליאס של UserType המבוסס על User
-export type UserType = User;
+export type UserType = UserLogged;
 
 export const fetchUsers = async (): Promise<UserType[]> => {
   const response = await axios.get('http://localhost:3000/users');

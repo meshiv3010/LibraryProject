@@ -7,14 +7,15 @@ import User from './user/user';
 import Book from './book/book';
 import Author from './author/author';
 import style from './ManagementPage.module.css';
-import { fetchUsers, fetchBooks, User as UserType, Book as BookType } from '../../api';
+import { fetchUsers, fetchBooks, Book as BookType } from '../../api';
+import {UserLogged} from '../../types'
 
 const ManagementPage = () => {
   const location = useLocation();
   const { userId } = location.state || {};
   const [activity, setActivity] = useState<string>('user');
 
-  const { data: users = [], isLoading: usersLoading, error: usersError } = useQuery<UserType[], Error>({
+  const { data: users = [], isLoading: usersLoading, error: usersError } = useQuery<UserLogged[], Error>({
     queryKey: ['users'],
     queryFn: fetchUsers,
   });
@@ -41,7 +42,7 @@ const ManagementPage = () => {
       <Title userName={currentUser.name || ''} favBook={currentUser.favBook?.title || null} />
       <div className={style.activityContainer}>
         <div className={style.activity}>
-          {activity === 'user' && <User currentUser={currentUser} />}
+          {activity === 'user' && <User currentUser={currentUser}  />}
           {activity === 'book' && <Book books={books} />}
           {activity === 'author' && <Author />}
         </div>

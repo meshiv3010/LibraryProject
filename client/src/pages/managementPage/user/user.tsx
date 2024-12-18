@@ -3,59 +3,67 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import LeftSide from '../leftSide/leftSide';
 import RightSide from '../rightSide/rightSide';
 import style from './user.module.css';
-import { fetchUsers, deleteUser, User as UserType } from '../../../api';
+import { fetchUsers, deleteUser } from '../../../api';
+import { UserLogged } from '../../../types';
 
 interface UserProps {
-  currentUser: UserType;
+  currentUser: UserLogged; // התאמה לנתונים המתקבלים מ-ManagementPage
 }
 
-const User: React.FC<UserProps> = ({ currentUser }) => {
-  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+const User = ({ currentUser }: UserProps) => {
+  const [selectedUser, setSelectedUser] = useState<UserLogged | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: users = [], isLoading, error } = useQuery<UserType[], Error>({
+  // Fetching the list of users
+  const { data: users = [], isLoading, error } = useQuery<UserLogged[], Error>({
     queryKey: ['users'],
     queryFn: fetchUsers,
   });
 
+  // Mutation for deleting a user
   const deleteUserMutation = useMutation({
-    mutationFn: (userId: string) => deleteUser(userId), // פונקציה לקבלת userId
+    mutationFn: (userId: string) => deleteUser(userId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] }); // תיקון טיפוס invalidateQueries
+      queryClient.invalidateQueries({ queryKey: ['users'] });
     },
   });
 
-  const handleUserSelect = (user: UserType) => {
+  // Handle selecting a user
+  const handleUserSelect = (user: UserLogged) => {
     console.log('Selected user:', user);
     setSelectedUser(user);
   };
 
+  // Handle deleting a user
   const handleUserDelete = (userId: string) => {
     deleteUserMutation.mutate(userId);
   };
 
+  // Handling loading and error states
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching users: {error.message}</div>;
 
   return (
     <div className={style.container}>
+      {/* LeftSide Component */}
       <div className={style.leftSide}>
-        {selectedUser && (
-          <LeftSide 
-          userName={selectedUser.name} 
-          userBooks={selectedUser.readBooks} 
-          favBookId={selectedUser.favBook ? selectedUser.favBook._id : null} // טיפול במצב בו אין ספר מועדף
-          userId={selectedUser._id} // מזהה המשתמש
+        <LeftSide
+          userName={selectedUser?.name } // שם המשתמש הנבחר או המשתמש המחובר
+          userBooks={selectedUser?.readBooks } // ספרים של המשתמש הנבחר או המחובר
+          favBookId={selectedUser?.favBook?._id || null} // הספר המועדף של המשתמש הנבחר או המחובר
+          userId={selectedUser?._id} 
+          loggedUserId={currentUser._id}
           selectedCategory="user"
-          />
-        )}
+        />
       </div>
+
+      {/* RightSide Component */}
       <div className={style.rightSide}>
-        <RightSide 
-          users={users} 
-          selectedCategory="user" 
-          onUserSelect={handleUserSelect} 
-          onDeleteUser={handleUserDelete} 
+        <RightSide
+          users={users}
+          selectedCategory="user"
+          onUserSelect={handleUserSelect}
+          onDeleteUser={handleUserDelete}
         />
       </div>
     </div>

@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { fetchUsers, User } from '../../api';
+import { fetchUsers } from '../../api';
 import style from './LoginPage.module.css';
 import LibraryName from '../../components/LibraryName';
+import {UserLogged} from '../../types'
+
 
 const LogIn: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<string>('');
   const navigate = useNavigate();
 
-  const { data: users = [], isLoading, error } = useQuery<User[], Error>({
+  const { data: users = [], isLoading, error } = useQuery<UserLogged[], Error>({
     queryKey: ['users'],
     queryFn: fetchUsers,
   });
