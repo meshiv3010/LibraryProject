@@ -111,6 +111,7 @@ return (
             onClick={() => handleCardClick(user._id, 'user', user)} 
             onEdit={() => onEditUser && onEditUser(user)} 
             onDelete={user._id === loggedUserId ? () => handleDeleteUser(user._id) : undefined} 
+            isLeftSide={false}
           />
         ))}
       </div>
@@ -131,6 +132,7 @@ return (
             onClick={() => handleCardClick(book._id, 'book', book)} 
             onEdit={() => onEditBook && onEditBook(book)}
             onDelete={() => handleDeleteBook(book._id)}
+            isLeftSide={false}
           />
         ))}
       </div>
@@ -149,6 +151,7 @@ return (
             onClick={() => handleCardClick(author._id, 'author', author)} 
             onEdit={() => onEditAuthor && onEditAuthor(author)}
             onDelete={() => onDeleteAuthor && onDeleteAuthor(author._id)}
+            
           />
         ))}
       </div>

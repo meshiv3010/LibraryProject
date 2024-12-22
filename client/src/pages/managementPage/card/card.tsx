@@ -5,6 +5,7 @@ import { deleteUser, deleteBook, deleteAuthor } from '../../../api';
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import { updateFavoriteBook } from '../../../api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import LeftSide from '../leftSide/leftSide';
 
 
 interface CardProps {
@@ -188,7 +189,7 @@ const Card: React.FC<CardProps> = ({
         <div>
           {title && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h3>{title}</h3>
+              <h3>{'מזהה: '+bookNumber +'  שם:  '+title }</h3>
               {selectedCategory === 'user' && isLeftSide !== undefined && isLoggedInUser && (
                 <span onClick={handleFavoriteClick}>
                   {isFavorite ? (
@@ -206,21 +207,19 @@ const Card: React.FC<CardProps> = ({
             <div>
               <ul>
                 <li key={readers[0]._id}>
-                  {readers[0].name}
+                  {'   מזהה:' + readers[0].userNumber + '    שם: ' + readers[0].name}
                 </li>
               </ul>
             </div>
           )}
-          {userId && (
+          {isLeftSide==false && userId && (
             <div>
-              <h2>{name}</h2>
-              <p>מזהה: {userNumber}</p>
+              <h2>{'מזהה: ' + userNumber + '  שם: ' + name}</h2>
             </div>
           )}
           {authorId && (
             <div>
               <h2>{name}</h2>
-              <p>מזהה: {writerNumber}</p>
             </div>
           )}
         </div>

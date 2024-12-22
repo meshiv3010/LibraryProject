@@ -68,3 +68,7 @@ export const updateEntity = async (endpoint: string, id: string, payload: object
 export const updateFavoriteBook = async (userId: string, bookId: string): Promise<void> => {
   await axios.patch(`http://localhost:3000/users/${userId}/favBook/${bookId}`);
 };
+
+export const addBookToUser = async (userId: string, bookId: string): Promise<void> => {
+  await axios.patch(`http://localhost:3000/users/${userId}/books/${bookId}`);
+};

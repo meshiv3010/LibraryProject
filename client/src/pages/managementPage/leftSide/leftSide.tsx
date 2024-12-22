@@ -7,7 +7,7 @@ interface LeftSideProps {
   userBooks?: any[];
   bookTitle?: string;
   bookAuthor?: string;
-  favBookId: string | null | undefined;
+  favBookId?: string | null | undefined;
   userId?: string; 
   loggedUserId?: string;
   bookReaders?: { _id: string; name: string; userNumber: number }[];
@@ -40,12 +40,15 @@ const LeftSide = ({
                 <div key={book._id} className={style.bookCard}>
                   <Card
                     title={book.title}
+                    bookNumber={book.bookNumber}
                     authorName={book.author.name}
                     bookId={book._id}
                     userId={userId} // ה-ID של המשתמש הנבחר
                     loggedUserId={loggedUserId} // ה-ID של המשתמש המחובר
                     showActions={false}
                     selectedCategory="user"
+                    isLeftSide={true}
+
                   />
                 </div>
               ))
@@ -67,6 +70,8 @@ const LeftSide = ({
                   readers={[reader]}
                   showActions={false}
                   userId={userId} // מזהה המשתמש מועבר לקומפוננטת Card
+                  isLeftSide={true}
+
                 />
               ))
             ) : (
@@ -86,6 +91,7 @@ const LeftSide = ({
                   key={book._id}
                   title={book.title}
                   authorName={book.author.name}
+                  bookNumber={book.bookNumber}
                   bookId={book._id}
                   showActions={false}
                   isFavBook={favBookId === book._id}
