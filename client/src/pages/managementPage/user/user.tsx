@@ -64,6 +64,8 @@ const User = ({ currentUser }: UserProps) => {
           selectedCategory="user"
           onUserSelect={handleUserSelect}
           onDeleteUser={handleUserDelete}
+          loggedUserId={currentUser._id} // מזהה המשתמש המחובר
+
         />
       </div>
     </div>

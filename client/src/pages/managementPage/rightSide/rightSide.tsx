@@ -31,6 +31,7 @@ interface RightSideProps {
   users?: UserLogged[];
   books?: Book[];
   authors?: Author[];
+  loggedUserId?: string;
   selectedCategory: 'user' | 'book' | 'author';
   onBookSelect?: (book: Book) => void;
   onUserSelect?: (user: UserLogged) => void;
@@ -48,6 +49,7 @@ const RightSide = ({
   books,
   authors,
   selectedCategory,
+  loggedUserId,
   onBookSelect,
   onUserSelect,
   onAuthorSelect,
@@ -60,7 +62,6 @@ const RightSide = ({
 }: RightSideProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [users, setUsers] = useState<UserLogged[] | undefined>(initialUsers);
-  const loggedUserId = localStorage.getItem('loggedUserId'); // מזהה המשתמש המחובר
   const navigate = useNavigate(); // ניתוב מחדש לעמוד LogIn
   const queryClient = useQueryClient(); 
 
@@ -95,7 +96,6 @@ const RightSide = ({
   }
 };
 
-
 return (
   <div>
     {selectedCategory === 'user' && users && (
@@ -112,6 +112,7 @@ return (
             onEdit={() => onEditUser && onEditUser(user)} 
             onDelete={user._id === loggedUserId ? () => handleDeleteUser(user._id) : undefined} 
             isLeftSide={false}
+            loggedUserId={loggedUserId}
           />
         ))}
       </div>
@@ -133,6 +134,7 @@ return (
             onEdit={() => onEditBook && onEditBook(book)}
             onDelete={() => handleDeleteBook(book._id)}
             isLeftSide={false}
+            loggedUserId={loggedUserId}
           />
         ))}
       </div>
@@ -151,7 +153,7 @@ return (
             onClick={() => handleCardClick(author._id, 'author', author)} 
             onEdit={() => onEditAuthor && onEditAuthor(author)}
             onDelete={() => onDeleteAuthor && onDeleteAuthor(author._id)}
-            
+            loggedUserId={loggedUserId}
           />
         ))}
       </div>
