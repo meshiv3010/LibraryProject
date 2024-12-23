@@ -48,11 +48,11 @@ const User = ({ currentUser }: UserProps) => {
       {/* LeftSide Component */}
       <div className={style.leftSide}>
         <LeftSide
-          userName={selectedUser?.name } // שם המשתמש הנבחר או המשתמש המחובר
-          userBooks={selectedUser?.readBooks } // ספרים של המשתמש הנבחר או המחובר
-          favBookId={selectedUser?.favBook?._id || null} // הספר המועדף של המשתמש הנבחר או המחובר
-          userId={selectedUser?._id} 
-          loggedUserId={currentUser._id}
+          userName={selectedUser?.name || currentUser.name} // שם המשתמש הנבחר או המשתמש המחובר
+          userBooks={selectedUser?.readBooks || currentUser.readBooks} // ספרים של המשתמש הנבחר או המחובר
+          favBookId={selectedUser?.favBook?._id || currentUser.favBook?._id || null} // הספר המועדף של המשתמש הנבחר או המחובר
+          userId={selectedUser?._id || currentUser._id} // מזהה המשתמש הנבחר או המשתמש המחובר
+          loggedUserId={currentUser._id} // מזהה המשתמש המחובר
           selectedCategory="user"
         />
       </div>
