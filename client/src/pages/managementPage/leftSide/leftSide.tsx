@@ -1,8 +1,8 @@
 import React from 'react';
 import style from './leftSide.module.css';
 import Card from '../card/card';
-import { fetchUsers, fetchBooks, addBookToUser} from '../../../api'
-import {useState, useEffect} from 'react';
+import { fetchUsers, fetchBooks, addBookToUser } from '../../../api';
+import { useState, useEffect } from 'react';
 
 interface LeftSideProps {
   userName?: string;
@@ -31,46 +31,52 @@ const LeftSide = ({
   authorBooks,
   selectedCategory,
 }: LeftSideProps) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [unreadBooks, setUnreadBooks] = useState<any[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [unreadBooks, setUnreadBooks] = useState<any[]>([]);
 
-    useEffect(() => {
-      if (isModalOpen && userId) {
-        const fetchUnreadBooks = async () => {
-          try {
-            const allBooks = await fetchBooks();
-            const users = await fetchUsers();
-            const currentUser = users.find((user) => user._id === userId);
+  // Close modal when userId changes
+  useEffect(() => {
+    setIsModalOpen(false);
+  }, [userId]);
 
-            if (currentUser) {
-              const readBooksIds = currentUser.readBooks.map((book) => book._id);
-              const unread = allBooks.filter(
-                (book) => !readBooksIds.includes(book._id)
-              );
-              setUnreadBooks(unread);
-            }
-          } catch (error) {
-            console.error('Error fetching unread books:', error);
-          }
-        };
-
-        fetchUnreadBooks();
-      }
-    }, [isModalOpen, userId]);
-
-    const handleAddBookToUser = async (bookId: string) => {
-      if (userId) {
+  useEffect(() => {
+    if (isModalOpen && userId) {
+      const fetchUnreadBooks = async () => {
         try {
-          await addBookToUser(userId, bookId);
-          setUnreadBooks((prevBooks) => prevBooks.filter((book) => book._id !== bookId));
-          alert('הספר נוסף בהצלחה!');
-        } catch (error) {
-          console.error('Error adding book to user:', error);
-          alert('שגיאה בהוספת הספר למשתמש.');
-        }
-      }
-    };
+          const allBooks = await fetchBooks();
+          const users = await fetchUsers();
+          const currentUser = users.find((user) => user._id === userId);
 
+          if (currentUser) {
+            const readBooksIds = currentUser.readBooks.map((book) => book._id);
+            const unread = allBooks.filter(
+              (book) => !readBooksIds.includes(book._id)
+            );
+            setUnreadBooks(unread);
+          }
+        } catch (error) {
+          console.error('Error fetching unread books:', error);
+        }
+      };
+
+      fetchUnreadBooks();
+    }
+  }, [isModalOpen, userId]);
+
+  const handleAddBookToUser = async (bookId: string) => {
+    if (userId) {
+      try {
+        await addBookToUser(userId, bookId);
+        setUnreadBooks((prevBooks) =>
+          prevBooks.filter((book) => book._id !== bookId)
+        );
+        alert('הספר נוסף בהצלחה!');
+      } catch (error) {
+        console.error('Error adding book to user:', error);
+        alert('שגיאה בהוספת הספר למשתמש.');
+      }
+    }
+  };
 
   return (
     <div className={style.leftSide}>
@@ -82,7 +88,6 @@ const LeftSide = ({
           הוסף ספר
         </button>
       )}
-
 
       {isModalOpen && (
         <div className={style.modal}>
@@ -115,6 +120,7 @@ const LeftSide = ({
         </div>
       )}
 
+      {/* Render cards based on selectedCategory */}
       {selectedCategory === 'user' && userName && (
         <div>
           <h2>הספרים שקרא {userName}:</h2>
@@ -127,12 +133,11 @@ const LeftSide = ({
                     bookNumber={book.bookNumber}
                     authorName={book.author.name}
                     bookId={book._id}
-                    userId={userId} // ה-ID של המשתמש הנבחר
-                    loggedUserId={loggedUserId} // ה-ID של המשתמש המחובר
+                    userId={userId}
+                    loggedUserId={loggedUserId}
                     showActions={false}
                     selectedCategory="user"
                     isLeftSide={true}
-
                   />
                 </div>
               ))
@@ -153,9 +158,8 @@ const LeftSide = ({
                   key={reader._id}
                   readers={[reader]}
                   showActions={false}
-                  userId={userId} // מזהה המשתמש מועבר לקומפוננטת Card
+                  userId={userId}
                   isLeftSide={true}
-
                 />
               ))
             ) : (
@@ -180,7 +184,7 @@ const LeftSide = ({
                   showActions={false}
                   isFavBook={favBookId === book._id}
                   isLeftSide={true}
-                  userId={userId} // מזהה המשתמש מועבר לקומפוננטת Card
+                  userId={userId}
                 />
               ))
             ) : (
