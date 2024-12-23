@@ -74,7 +74,7 @@ const LeftSide = ({
 
   return (
     <div className={style.leftSide}>
-      {userId === loggedUserId && (
+      {selectedCategory === 'user' && userId === loggedUserId && (
         <button
           className={style.addButton}
           onClick={() => setIsModalOpen(true)}
@@ -82,6 +82,7 @@ const LeftSide = ({
           הוסף ספר
         </button>
       )}
+
 
       {isModalOpen && (
         <div className={style.modal}>

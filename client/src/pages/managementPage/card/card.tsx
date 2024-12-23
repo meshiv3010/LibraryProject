@@ -5,8 +5,6 @@ import { deleteUser, deleteBook, deleteAuthor } from '../../../api';
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import { updateFavoriteBook } from '../../../api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import LeftSide from '../leftSide/leftSide';
-
 
 interface CardProps {
   title?: string;
@@ -29,6 +27,7 @@ interface CardProps {
   category?: 'BOOK' | 'USER' | 'AUTHOR';
   isFavBook?: boolean;
   isLeftSide?: boolean;
+  isModalOpen?: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -49,6 +48,7 @@ const Card: React.FC<CardProps> = ({
   onClick,
   showActions = false,
   isLeftSide = false,
+  isModalOpen = false,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
@@ -56,6 +56,12 @@ const Card: React.FC<CardProps> = ({
   const [isFavorite, setIsFavorite] = useState(isFavBook);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const isLoggedInUser = loggedUserId === userId;
+
+  const renderActions =
+  !isModalOpen &&
+  (showActions || (selectedCategory === 'USER' && isLoggedInUser)) &&
+  !isLeftSide; 
 
   const getEndpointAndId = () => {
     if (bookId) {
@@ -98,8 +104,6 @@ const Card: React.FC<CardProps> = ({
     setIsEditing(false);
   };
 
-  const isLoggedInUser = loggedUserId === userId;
-
   const handleDelete = async () => {
     const { endpoint, id } = getEndpointAndId();
 
@@ -130,7 +134,6 @@ const Card: React.FC<CardProps> = ({
     }
   };
 
-
   const updateFavBook = useMutation<void, Error, { userId: string; bookId: string }>({
     mutationFn: ({ userId, bookId }: { userId: string; bookId: string }) =>
       updateFavoriteBook(userId, bookId),
@@ -141,18 +144,14 @@ const Card: React.FC<CardProps> = ({
       console.error('Error updating favorite book:', error);
     },
   });
-  
 
-  
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsFavorite(!isFavorite); // משתנה מצב האייקון בצד הלקוח
+    setIsFavorite(!isFavorite);
     if (userId && bookId && loggedUserId) {
-      updateFavBook.mutate({ userId, bookId }); // מעבירים את שני הפרמטרים
+      updateFavBook.mutate({ userId, bookId });
     }
   };
-
-
 
   return (
     <div className={`${styles.card} ${isSelected ? styles.selected : ''}`} onClick={onClick}>
@@ -173,6 +172,7 @@ const Card: React.FC<CardProps> = ({
               placeholder="Edit Author Name"
             />
           ) : null}
+
           <div className={styles.buttonGroup}>
             <button className={`${styles.button} ${styles.saveButton}`} onClick={handleSave}>
               Save
@@ -187,45 +187,27 @@ const Card: React.FC<CardProps> = ({
         </div>
       ) : (
         <div>
-          {title && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h3>{'מזהה: '+bookNumber +'  שם:  '+title }</h3>
-              {selectedCategory === 'user' && isLeftSide !== undefined && isLoggedInUser && (
-                <span onClick={handleFavoriteClick}>
-                  {isFavorite ? (
-                    <FaStar color="gold" className={styles.favIcon} />
-                  ) : (
-                    <FaRegStar color="gray" className={styles.favIcon} />
-                  )}
-                </span>
-              )}
-            </div>
-          )}
-
+          {title && <h3>{`מזהה: ${bookNumber}  שם: ${title}`}</h3>}
           {authorName && <h4>{authorName}</h4>}
           {readers && readers.length > 0 && (
-            <div>
-              <ul>
-                <li key={readers[0]._id}>
-                  {'   מזהה:' + readers[0].userNumber + '    שם: ' + readers[0].name}
+            <ul>
+              {readers.map((reader) => (
+                <li key={reader._id}>
+                  {`מזהה: ${reader.userNumber}  שם: ${reader.name}`}
                 </li>
-              </ul>
-            </div>
+              ))}
+            </ul>
           )}
-          {isLeftSide==false && userId && (
-            <div>
-              <h2>{'מזהה: ' + userNumber + '  שם: ' + name}</h2>
-            </div>
-          )}
-          {authorId && (
-            <div>
-              <h2>{name}</h2>
-            </div>
+          {!isLeftSide && (
+            <>
+              {userId && <h2>{`מזהה: ${userNumber}  שם: ${name}`}</h2>}
+              {authorId && <h2>{name}</h2>}
+            </>
           )}
         </div>
       )}
 
-      {showActions && (
+      {renderActions && (
         <div className={styles.buttonGroup}>
           <button
             className={styles.button}
@@ -236,22 +218,15 @@ const Card: React.FC<CardProps> = ({
           >
             Edit
           </button>
-          {userId && loggedUserId === userId ? (
+          {((userId && loggedUserId === userId) || bookId || authorId) && (
             <button className={styles.button} onClick={handleDelete}>
               Delete
             </button>
-          ) : (
-            (bookId || authorId) && (
-              <button className={styles.button} onClick={handleDelete}>
-                Delete
-              </button>
-            )
           )}
         </div>
       )}
     </div>
   );
-
 };
 
 export default Card;
