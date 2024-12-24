@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Card.module.css';
-import { useNavigate } from 'react-router-dom';
-import { deleteUser, deleteBook, deleteAuthor } from '../../../api';
 import { FaStar, FaRegStar } from 'react-icons/fa';
-import { updateFavoriteBook } from '../../../api';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { deleteUser, deleteBook, deleteAuthor, updateFavoriteBook } from '../../../api';
 
 interface CardProps {
   title?: string;
@@ -23,11 +22,17 @@ interface CardProps {
   onClick?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
+  onAddBook?: () => void;
   showActions?: boolean;
   category?: 'BOOK' | 'USER' | 'AUTHOR';
   isFavBook?: boolean;
-  isLeftSide?: boolean;
+  isLeftSide: boolean;
   isModalOpen?: boolean;
+}
+
+interface UpdateFavoriteBookInput {
+  userId: string;
+  bookId: string;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -46,22 +51,24 @@ const Card: React.FC<CardProps> = ({
   isSelected,
   isFavBook,
   onClick,
+  onAddBook,
   showActions = false,
-  isLeftSide = false,
+  isLeftSide,
   isModalOpen = false,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedName, setEditedName] = useState(name);
-  const [isFavorite, setIsFavorite] = useState(isFavBook);
+  const [isFavorite, setIsFavorite] = useState(isFavBook); // initialize with isFavBook
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
   const isLoggedInUser = loggedUserId === userId;
 
   const renderActions =
-  !isModalOpen &&
-  (showActions || (selectedCategory === 'USER' && isLoggedInUser)) &&
-  !isLeftSide; 
+    !isModalOpen &&
+    (showActions || (selectedCategory === 'USER' && isLoggedInUser)) &&
+    !isLeftSide;
 
   const getEndpointAndId = () => {
     if (bookId) {
@@ -134,9 +141,8 @@ const Card: React.FC<CardProps> = ({
     }
   };
 
-  const updateFavBook = useMutation<void, Error, { userId: string; bookId: string }>({
-    mutationFn: ({ userId, bookId }: { userId: string; bookId: string }) =>
-      updateFavoriteBook(userId, bookId),
+  const updateFavBook = useMutation<void, Error, UpdateFavoriteBookInput>({
+    mutationFn: ({ userId, bookId }) => updateFavoriteBook(userId, bookId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },
@@ -144,6 +150,7 @@ const Card: React.FC<CardProps> = ({
       console.error('Error updating favorite book:', error);
     },
   });
+  
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -152,6 +159,13 @@ const Card: React.FC<CardProps> = ({
       updateFavBook.mutate({ userId, bookId });
     }
   };
+
+  useEffect(() => {
+    // Ensure initial favorite state matches the actual favorite book from DB
+    if (isFavBook !== undefined) {
+      setIsFavorite(isFavBook);
+    }
+  }, [isFavBook]);
 
   return (
     <div className={`${styles.card} ${isSelected ? styles.selected : ''}`} onClick={onClick}>
@@ -172,7 +186,7 @@ const Card: React.FC<CardProps> = ({
               placeholder="Edit Author Name"
             />
           ) : null}
-
+  
           <div className={styles.buttonGroup}>
             <button className={`${styles.button} ${styles.saveButton}`} onClick={handleSave}>
               Save
@@ -204,9 +218,24 @@ const Card: React.FC<CardProps> = ({
               {authorId && <h2>{name}</h2>}
             </>
           )}
+  
+          {showActions && onAddBook && (
+            <button onClick={onAddBook}>הוסף ספר</button>
+          )}
         </div>
       )}
 
+      {/* Displaying the favorite star icon if it's the logged-in user's book */}
+      {isLeftSide && loggedUserId === userId && selectedCategory === 'user' && (
+        <div onClick={handleFavoriteClick} className={styles.favoriteIcon}>
+          {isFavorite ? (
+            <FaStar color="gold" />
+          ) : (
+            <FaRegStar />
+          )}
+        </div>
+      )}
+  
       {renderActions && (
         <div className={styles.buttonGroup}>
           <button

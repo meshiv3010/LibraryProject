@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import style from './leftSide.module.css';
 import Card from '../card/card';
 import { fetchUsers, fetchBooks, addBookToUser } from '../../../api';
-import { useState, useEffect } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface LeftSideProps {
   userName?: string;
@@ -16,6 +16,12 @@ interface LeftSideProps {
   authorName?: string;
   authorBooks?: any[];
   selectedCategory: 'user' | 'book' | 'author';
+  setUserBooks: React.Dispatch<React.SetStateAction<any[]>>;
+}
+
+interface AddBookInput {
+  userId: string;
+  bookId: string;
 }
 
 const LeftSide = ({
@@ -30,14 +36,40 @@ const LeftSide = ({
   authorName,
   authorBooks,
   selectedCategory,
+  setUserBooks,
 }: LeftSideProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [unreadBooks, setUnreadBooks] = useState<any[]>([]);
+  const queryClient = useQueryClient();
 
-  // Close modal when userId changes
-  useEffect(() => {
-    setIsModalOpen(false);
-  }, [userId]);
+  const { mutate: addBookMutation } = useMutation<void, Error, AddBookInput>({
+    mutationFn: ({ userId, bookId }) => addBookToUser(userId, bookId),
+    onSuccess: async (data, { userId, bookId }) => {
+      // ביטול המטמון לנתוני המשתמשים
+      await queryClient.invalidateQueries({ queryKey: ['users'] });
+  
+      // שליפת נתוני המשתמשים מחדש
+      const users = await fetchUsers();
+      const updatedUser = users.find((user) => user._id === userId);
+  
+      if (updatedUser) {
+        setUserBooks(updatedUser.readBooks); // עדכון ספרי המשתמש
+      }
+  
+      alert('הספר נוסף בהצלחה!');
+      setIsModalOpen(false); // סגירת המודאל לאחר ההוספה
+    },
+    onError: (error) => {
+      alert('שגיאה בהוספת הספר למשתמש.');
+      console.error('Error adding book to user:', error);
+    },
+  });
+
+  const handleAddBookToUser = (bookId: string) => {
+    if (userId) {
+      addBookMutation({ userId, bookId });
+    }
+  };
 
   useEffect(() => {
     if (isModalOpen && userId) {
@@ -49,9 +81,7 @@ const LeftSide = ({
 
           if (currentUser) {
             const readBooksIds = currentUser.readBooks.map((book) => book._id);
-            const unread = allBooks.filter(
-              (book) => !readBooksIds.includes(book._id)
-            );
+            const unread = allBooks.filter((book) => !readBooksIds.includes(book._id));
             setUnreadBooks(unread);
           }
         } catch (error) {
@@ -63,28 +93,10 @@ const LeftSide = ({
     }
   }, [isModalOpen, userId]);
 
-  const handleAddBookToUser = async (bookId: string) => {
-    if (userId) {
-      try {
-        await addBookToUser(userId, bookId);
-        setUnreadBooks((prevBooks) =>
-          prevBooks.filter((book) => book._id !== bookId)
-        );
-        alert('הספר נוסף בהצלחה!');
-      } catch (error) {
-        console.error('Error adding book to user:', error);
-        alert('שגיאה בהוספת הספר למשתמש.');
-      }
-    }
-  };
-
   return (
     <div className={style.leftSide}>
       {selectedCategory === 'user' && userId === loggedUserId && (
-        <button
-          className={style.addButton}
-          onClick={() => setIsModalOpen(true)}
-        >
+        <button className={style.addButton} onClick={() => setIsModalOpen(true)}>
           הוסף ספר
         </button>
       )}
@@ -104,42 +116,39 @@ const LeftSide = ({
                     bookId={book._id}
                     showActions={true}
                     isLeftSide={true}
+                    onAddBook={() => handleAddBookToUser(book._id)}
                   />
                 ))
               ) : (
                 <div>אין ספרים להוספה</div>
               )}
             </div>
-            <button
-              className={style.closeButton}
-              onClick={() => setIsModalOpen(false)}
-            >
+            <button className={style.closeButton} onClick={() => setIsModalOpen(false)}>
               סגור
             </button>
           </div>
         </div>
       )}
 
-      {/* Render cards based on selectedCategory */}
       {selectedCategory === 'user' && userName && (
         <div>
           <h2>הספרים שקרא {userName}:</h2>
           <div className={style.cardContainer}>
             {userBooks && userBooks.length > 0 ? (
               userBooks.map((book) => (
-                <div key={book._id} className={style.bookCard}>
-                  <Card
-                    title={book.title}
-                    bookNumber={book.bookNumber}
-                    authorName={book.author.name}
-                    bookId={book._id}
-                    userId={userId}
-                    loggedUserId={loggedUserId}
-                    showActions={false}
-                    selectedCategory="user"
-                    isLeftSide={true}
-                  />
-                </div>
+                <Card
+                  key={book._id}
+                  title={book.title}
+                  bookNumber={book.bookNumber}
+                  authorName={book.author.name}
+                  bookId={book._id}
+                  userId={userId}
+                  loggedUserId={loggedUserId}
+                  showActions={false}
+                  selectedCategory="user"
+                  isLeftSide={true}
+                  isFavBook={favBookId === book._id} // כאן אנו משווים אם הספר הנוכחי הוא הספר המועדף
+                />
               ))
             ) : (
               <div>אין ספרים עבור משתמש זה</div>
@@ -178,17 +187,14 @@ const LeftSide = ({
                 <Card
                   key={book._id}
                   title={book.title}
-                  authorName={book.author.name}
                   bookNumber={book.bookNumber}
                   bookId={book._id}
                   showActions={false}
-                  isFavBook={favBookId === book._id}
                   isLeftSide={true}
-                  userId={userId}
                 />
               ))
             ) : (
-              <div>אין ספרים לסופר זה</div>
+              <div>אין ספרים עבור סופר זה</div>
             )}
           </div>
         </div>

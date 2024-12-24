@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import LeftSide from '../leftSide/leftSide';
 import RightSide from '../rightSide/rightSide';
 import style from './user.module.css';
-import { fetchUsers, deleteUser } from '../../../api';
+import { fetchUsers, deleteUser, addBookToUser } from '../../../api';
 import { UserLogged } from '../../../types';
 
 interface UserProps {
@@ -12,12 +12,14 @@ interface UserProps {
 
 const User = ({ currentUser }: UserProps) => {
   const [selectedUser, setSelectedUser] = useState<UserLogged | null>(null);
+  const [userBooks, setUserBooks] = useState<any[]>(currentUser.readBooks || []);
   const queryClient = useQueryClient();
 
   // Fetching the list of users
   const { data: users = [], isLoading, error } = useQuery<UserLogged[], Error>({
     queryKey: ['users'],
     queryFn: fetchUsers,
+    refetchOnWindowFocus: true,
   });
 
   // Mutation for deleting a user
@@ -30,13 +32,29 @@ const User = ({ currentUser }: UserProps) => {
 
   // Handle selecting a user
   const handleUserSelect = (user: UserLogged) => {
-    console.log('Selected user:', user);
     setSelectedUser(user);
+    setUserBooks(user.readBooks); // עדכון ספרים כאשר בוחרים משתמש אחר
   };
 
-  // Handle deleting a user
-  const handleUserDelete = (userId: string) => {
-    deleteUserMutation.mutate(userId);
+  // Mutation for adding a book to the user
+  const { mutate: addBookMutation } = useMutation<any, Error, { userId: string; bookId: string }>({
+    mutationFn: ({ userId, bookId }) => addBookToUser(userId, bookId),
+    onSuccess: (data) => {
+      setUserBooks(data.readBooks); // עדכון ספרי המשתמש לאחר הוספה
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      alert('הספר נוסף בהצלחה!');
+    },
+    onError: (error) => {
+      alert('שגיאה בהוספת הספר למשתמש.');
+      console.error('Error adding book to user:', error);
+    },
+  });
+
+  // Handle adding a book to the selected user
+  const handleAddBookToUser = (bookId: string) => {
+    if (selectedUser) {
+      addBookMutation({ userId: selectedUser._id, bookId });
+    }
   };
 
   // Handling loading and error states
@@ -45,27 +63,23 @@ const User = ({ currentUser }: UserProps) => {
 
   return (
     <div className={style.container}>
-      {/* LeftSide Component */}
       <div className={style.leftSide}>
         <LeftSide
-          userName={selectedUser?.name || currentUser.name} // שם המשתמש הנבחר או המשתמש המחובר
-          userBooks={selectedUser?.readBooks || currentUser.readBooks} // ספרים של המשתמש הנבחר או המחובר
-          favBookId={selectedUser?.favBook?._id || currentUser.favBook?._id || null} // הספר המועדף של המשתמש הנבחר או המחובר
-          userId={selectedUser?._id || currentUser._id} // מזהה המשתמש הנבחר או המשתמש המחובר
-          loggedUserId={currentUser._id} // מזהה המשתמש המחובר
+          userName={selectedUser?.name || currentUser.name}
+          userBooks={userBooks}
+          favBookId={selectedUser?.favBook?._id || currentUser.favBook?._id || null}
+          userId={selectedUser?._id || currentUser._id}
+          loggedUserId={currentUser._id}
           selectedCategory="user"
+          setUserBooks={setUserBooks} // העברת הפונקציה setUserBooks לקומפוננטת LeftSide
         />
       </div>
-
-      {/* RightSide Component */}
       <div className={style.rightSide}>
         <RightSide
           users={users}
           selectedCategory="user"
           onUserSelect={handleUserSelect}
-          onDeleteUser={handleUserDelete}
-          loggedUserId={currentUser._id} // מזהה המשתמש המחובר
-
+          loggedUserId={currentUser._id}
         />
       </div>
     </div>

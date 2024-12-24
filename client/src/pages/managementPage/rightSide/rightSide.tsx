@@ -154,6 +154,7 @@ return (
             onEdit={() => onEditAuthor && onEditAuthor(author)}
             onDelete={() => onDeleteAuthor && onDeleteAuthor(author._id)}
             loggedUserId={loggedUserId}
+            isLeftSide={false}
           />
         ))}
       </div>
