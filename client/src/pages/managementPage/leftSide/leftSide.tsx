@@ -16,7 +16,7 @@ interface LeftSideProps {
   authorName?: string;
   authorBooks?: any[];
   selectedCategory: 'user' | 'book' | 'author';
-  setUserBooks: React.Dispatch<React.SetStateAction<any[]>>;
+  setUserBooks?: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
 interface AddBookInput {
@@ -47,15 +47,15 @@ const LeftSide = ({
     onSuccess: async (data, { userId, bookId }) => {
       // ביטול המטמון לנתוני המשתמשים
       await queryClient.invalidateQueries({ queryKey: ['users'] });
-  
+    
       // שליפת נתוני המשתמשים מחדש
       const users = await fetchUsers();
       const updatedUser = users.find((user) => user._id === userId);
-  
-      if (updatedUser) {
+    
+      if (updatedUser && setUserBooks) { // בדיקה אם setUserBooks קיים
         setUserBooks(updatedUser.readBooks); // עדכון ספרי המשתמש
       }
-  
+    
       alert('הספר נוסף בהצלחה!');
       setIsModalOpen(false); // סגירת המודאל לאחר ההוספה
     },

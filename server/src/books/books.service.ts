@@ -30,6 +30,21 @@ export class BookService {
         return newBook.save();
     }
 
+    async addReaderToBook(bookId: Types.ObjectId, userId: Types.ObjectId): Promise<Book> {
+        // עדכון הספר כדי להוסיף את המשתמש לרשימת הקוראים
+        const book = await this.bookModel.findByIdAndUpdate(
+            bookId,
+            { $addToSet: { readers: userId } }, // הוספת המשתמש ל-readers אם הוא לא קיים
+            { new: true } // החזרת הספר המעודכן
+        ).exec();
+    
+        if (!book) {
+            throw new NotFoundException('Book not found'); // אם לא נמצא ספר
+        }
+    
+        return book;
+    }
+    
     async getAllBooks(): Promise<Book[]> {
         // חיפוש ספרים עם populate על readers
         const books = await this.bookModel.find()
@@ -44,7 +59,7 @@ export class BookService {
                 select: 'writerNumber name'  // פרטים שנרצה לאכלס עבור הסופרים
             })
             .exec();
-        
+            
         return books;
     }
     

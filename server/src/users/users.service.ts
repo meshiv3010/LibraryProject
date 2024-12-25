@@ -30,22 +30,24 @@ export class UserService {
         // עדכון המשתמש כדי להוסיף את ה-bookId ל-readBooks
         const user = await this.userModel.findByIdAndUpdate(
             userId,
-            { $addToSet: { readBooks: bookId } },
-            { new: true }
+            { $addToSet: { readBooks: bookId } }, // הוספת bookId אם הוא לא קיים
+            { new: true } // החזרת המשתמש המעודכן
         ).exec();
     
         if (!user) {
-            throw new NotFoundException('User not found');
+            throw new NotFoundException('User not found'); // אם לא נמצא משתמש
         }
+    
+        // עדכון הספר כדי להוסיף את המשתמש ל-readers
+        await this.bookService.addReaderToBook(bookId, userId);
     
         // שליפת המשתמש עם אכלוס פרטי הספרים ב-readBooks
         const populatedUser = await this.userModel.findById(user._id)
             .populate('readBooks') // אכלוס פרטי הספרים
             .exec();
     
-        return populatedUser;
+        return populatedUser; // החזרת המשתמש עם הספרים המאוכלסים
     }
-    
     
     async setFavoriteBook(userId: Types.ObjectId, bookId: Types.ObjectId): Promise<User> {
         // שליפת המשתמש מהמאגר
