@@ -45,17 +45,18 @@ const LeftSide = ({
   const { mutate: addBookMutation } = useMutation<void, Error, AddBookInput>({
     mutationFn: ({ userId, bookId }) => addBookToUser(userId, bookId),
     onSuccess: async (data, { userId, bookId }) => {
-      // ביטול המטמון לנתוני המשתמשים
+      // ביטול המטמון לנתוני המשתמשים והספרים
       await queryClient.invalidateQueries({ queryKey: ['users'] });
-    
+      await queryClient.invalidateQueries({ queryKey: ['books'] });
+  
       // שליפת נתוני המשתמשים מחדש
       const users = await fetchUsers();
       const updatedUser = users.find((user) => user._id === userId);
-    
-      if (updatedUser && setUserBooks) { // בדיקה אם setUserBooks קיים
+  
+      if (updatedUser && setUserBooks) {
         setUserBooks(updatedUser.readBooks); // עדכון ספרי המשתמש
       }
-    
+  
       alert('הספר נוסף בהצלחה!');
       setIsModalOpen(false); // סגירת המודאל לאחר ההוספה
     },
