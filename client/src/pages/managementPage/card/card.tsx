@@ -215,7 +215,7 @@ const Card: React.FC<CardProps> = ({
           {!isLeftSide && (
             <>
               {userId && <h2>{`מזהה: ${userNumber}  שם: ${name}`}</h2>}
-              {authorId && <h2>{name}</h2>}
+              {authorId && <h2>{'מזהה: ' + writerNumber + '  :שם ' + name}</h2>}
             </>
           )}
   
