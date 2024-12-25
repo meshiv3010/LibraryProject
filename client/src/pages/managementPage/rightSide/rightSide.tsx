@@ -60,6 +60,7 @@ const RightSide = ({
   onDeleteBook,
   onDeleteAuthor,
 }: RightSideProps) => {
+
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [users, setUsers] = useState<UserLogged[] | undefined>(initialUsers);
   const navigate = useNavigate(); // ניתוב מחדש לעמוד LogIn
@@ -92,6 +93,7 @@ const RightSide = ({
   if (onDeleteBook) {
     onDeleteBook(bookId);
     queryClient.invalidateQueries({ queryKey: ['books'] });
+    queryClient.invalidateQueries({ queryKey: ['users'] });
     queryClient.refetchQueries({ queryKey: ['books'] }); // רענון נוסף של השאילתה
   }
 };
