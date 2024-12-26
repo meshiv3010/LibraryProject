@@ -1,6 +1,6 @@
-import { Injectable ,NotFoundException} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model ,ObjectId,Types} from 'mongoose';
+import { Model, ObjectId, Types } from 'mongoose';
 import { User } from './user.schema';
 import { CreateUserDto } from './dto/createUser.dto';
 import { BookService } from 'src/books/books.service';
@@ -16,13 +16,12 @@ export class UserService {
     }
 
     async getAllUsers(): Promise<User[]> {
-        const users = await this.userModel.find().populate('favBook').populate({path: 'readBooks', populate:{path: 'author'}}).exec();
-
+        const users = await this.userModel.find().populate('favBook').populate({ path: 'readBooks', populate: { path: 'author' } }).exec();
         return users;
     }
 
-    async getBooksDetailsWithAuthors(userId: Types.ObjectId): Promise<User > {
-        const user = await this.userModel.findById(userId).populate('favBook').populate({path: 'readBooks', populate:{path: 'author'}}).exec();
+    async getBooksDetailsWithAuthors(userId: Types.ObjectId): Promise<User> {
+        const user = await this.userModel.findById(userId).populate('favBook').populate({ path: 'readBooks', populate: { path: 'author' } }).exec();
         return user;
     }
 
@@ -33,22 +32,22 @@ export class UserService {
             { $addToSet: { readBooks: bookId } }, // הוספת bookId אם הוא לא קיים
             { new: true } // החזרת המשתמש המעודכן
         ).exec();
-    
+
         if (!user) {
             throw new NotFoundException('User not found'); // אם לא נמצא משתמש
         }
-    
+
         // עדכון הספר כדי להוסיף את המשתמש ל-readers
         await this.bookService.addReaderToBook(bookId, userId);
-    
+
         // שליפת המשתמש עם אכלוס פרטי הספרים ב-readBooks
         const populatedUser = await this.userModel.findById(user._id)
             .populate('readBooks') // אכלוס פרטי הספרים
             .exec();
-    
+
         return populatedUser; // החזרת המשתמש עם הספרים המאוכלסים
     }
-    
+
     async setFavoriteBook(userId: Types.ObjectId, bookId: Types.ObjectId): Promise<User> {
         // שליפת המשתמש מהמאגר
         const user = await this.userModel.findById(userId).exec();
@@ -56,8 +55,8 @@ export class UserService {
             throw new NotFoundException('User not found');
         }
         const updateData = (user.favBook && user.favBook.equals(bookId))
-        ? { favBook: null }
-        : { favBook: bookId };
+            ? { favBook: null }
+            : { favBook: bookId };
         // עדכון המשתמש
         const updatedUser = await this.userModel.findByIdAndUpdate(userId, updateData, { new: true })
             .populate('favBook')
@@ -76,22 +75,46 @@ export class UserService {
     }
 
     async removeBookFromUser(userId: Types.ObjectId, bookId: Types.ObjectId): Promise<User> {
-        const user = await this.userModel.findByIdAndUpdate(
-            userId,
-            { $pull: { readBooks: bookId } }, // הסרה של bookId מהרשימה
-            { new: true } // החזרת מסמך המשתמש המעודכן
-        ).exec();
+        // שליפת המשתמש
+        const user = await this.userModel.findById(userId).exec();
     
         if (!user) {
             throw new NotFoundException('User not found');
         }
     
+        // בדיקה אם הספר המוסר הוא הספר המועדף
+        const isFavoriteBook = user.favBook && user.favBook.equals(bookId);
+    
+        // הסרת הספר מרשימת ה-readBooks
+        await this.userModel.findByIdAndUpdate(
+            userId,
+            { $pull: { readBooks: bookId } }, // הסרה של bookId מהרשימה
+            { new: true } // החזרת מסמך המשתמש המעודכן
+        ).exec();
+    
+        // אם הספר המוסר הוא הספר המועדף, נמחק אותו גם משדה favBook
+        if (isFavoriteBook) {
+            // עדכון של שדה favBook להמנע משמירת ערך לא תקין אם הספר המועדף הוסר
+            await this.userModel.findByIdAndUpdate(
+                userId,
+                { $unset: { favBook: "" } }, // הסרת הספר משדה favBook
+                { new: true }
+            ).exec();
+        }
+    
         // עדכון מסמך הספר להסרת המשתמש מרשימת הקוראים
         await this.bookService.removeReaderFromBook(bookId, userId);
     
-        return user;
+        // שליפת המשתמש המעודכן עם פרטי הספרים
+        const updatedUser = await this.userModel.findById(userId)
+            .populate('favBook') // לאכלס את favBook
+            .populate('readBooks') // לאכלס את readBooks
+            .exec();
+    
+        return updatedUser;
     }
 
+    
     async removeBookFromAllUsers(bookId: Types.ObjectId): Promise<void> {
         await this.userModel.updateMany(
             { 
@@ -106,6 +129,7 @@ export class UserService {
             }
         ).exec();
     }
+
     async updateUser(userId: Types.ObjectId, updateData: Partial<Omit<User, 'userNumber'>>): Promise<User> {
         // שליפת המשתמש והוצאת userNumber מהעדכון
         const user = await this.userModel.findById(userId).exec();
