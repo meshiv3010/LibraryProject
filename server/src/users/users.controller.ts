@@ -40,6 +40,18 @@ export class UserController {
         return this.userService.setFavoriteBook(userId, bookId);
     }
 
+    @Delete(':userId/books/:bookId')
+    async removeBookFromUser(
+        @Param('userId') userId: Types.ObjectId,
+        @Param('bookId') bookId: Types.ObjectId
+    ) {
+        try {
+            return await this.userService.removeBookFromUser(userId, bookId);
+        } catch (error) {
+            throw new NotFoundException('User or book not found');
+        }
+    }  
+
     @Delete(':id')
     async deleteUser(@Param('id') id: Types.ObjectId): Promise<{ message: string }> {
         try {

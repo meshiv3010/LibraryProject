@@ -77,6 +77,20 @@ export class BookService {
         return book.author.name; // מחזיר את שם הסופר
     }
 
+    async removeReaderFromBook(bookId: Types.ObjectId, userId: Types.ObjectId): Promise<Book> {
+        const book = await this.bookModel.findByIdAndUpdate(
+            bookId,
+            { $pull: { readers: userId } }, // הסרת המשתמש מהרשימה
+            { new: true } // החזרת מסמך הספר המעודכן
+        ).exec();
+    
+        if (!book) {
+            throw new NotFoundException('Book not found');
+        }
+    
+        return book;
+    }
+    
     async deleteBook(bookId: Types.ObjectId): Promise<Book> {
         // שליפת הספר
         const book = await this.bookModel.findById(bookId).populate('author').exec();

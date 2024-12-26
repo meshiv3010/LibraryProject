@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import style from './leftSide.module.css';
 import Card from '../card/card';
-import { fetchUsers, fetchBooks, addBookToUser } from '../../../api';
+import { fetchUsers, fetchBooks, addBookToUser, removeBookFromUser } from '../../../api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface LeftSideProps {
@@ -40,23 +40,23 @@ const LeftSide = ({
 }: LeftSideProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [unreadBooks, setUnreadBooks] = useState<any[]>([]);
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient();  // מיקום נכון של ה-hook בתוך הקומפוננטה
 
   const { mutate: addBookMutation } = useMutation<void, Error, AddBookInput>({
     mutationFn: ({ userId, bookId }) => addBookToUser(userId, bookId),
     onSuccess: async (data, { userId, bookId }) => {
       // ביטול המטמון לנתוני המשתמשים והספרים
-      await queryClient.invalidateQueries({ queryKey: ['users'] });
-      await queryClient.invalidateQueries({ queryKey: ['books'] });
-  
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({ queryKey: ['books'] });
+
       // שליפת נתוני המשתמשים מחדש
       const users = await fetchUsers();
       const updatedUser = users.find((user) => user._id === userId);
-  
+
       if (updatedUser && setUserBooks) {
         setUserBooks(updatedUser.readBooks); // עדכון ספרי המשתמש
       }
-  
+
       alert('הספר נוסף בהצלחה!');
       setIsModalOpen(false); // סגירת המודאל לאחר ההוספה
     },
@@ -65,6 +65,34 @@ const LeftSide = ({
       console.error('Error adding book to user:', error);
     },
   });
+
+  const handleRemoveBookFromUser = async (bookId: string) => {
+    if (userId && bookId) {  // לבדוק אם userId ו- bookId קיימים
+      try {
+        // שליחה ל-API כדי להסיר את הספר מהמשתמש
+        await removeBookFromUser(userId, bookId);  // פונקציה שתיצור ב-API
+        alert('הספר הוסר בהצלחה!');
+
+        // עדכון רשימת הספרים אחרי המחיקה
+        if (userBooks && setUserBooks) {  // לבדוק אם userBooks ו- setUserBooks לא undefined
+          const updatedBooks = userBooks.filter((book) => book._id !== bookId);
+          setUserBooks(updatedBooks);  // עדכון רשימת הספרים בקומפוננטה
+        } else {
+          console.error('setUserBooks או userBooks לא מוגדרים');
+        }
+
+        // רענון של העמוד - invalidation של השאילתות
+        queryClient.invalidateQueries({ queryKey: ['users'] });  // רענון נתונים של המשתמשים
+        queryClient.invalidateQueries({ queryKey: ['books'] });  // רענון נתונים של הספרים
+
+      } catch (error) {
+        console.error('שגיאה בהסרת הספר:', error);
+        alert('שגיאה בהסרת הספר.');
+      }
+    } else {
+      alert('שגיאה: חסר מידע על המשתמש או הספר.');
+    }
+  };
 
   const handleAddBookToUser = (bookId: string) => {
     if (userId) {
@@ -148,7 +176,8 @@ const LeftSide = ({
                   showActions={false}
                   selectedCategory="user"
                   isLeftSide={true}
-                  isFavBook={favBookId === book._id} // כאן אנו משווים אם הספר הנוכחי הוא הספר המועדף
+                  isFavBook={favBookId === book._id} 
+                  onRemoveBookFromUser={handleRemoveBookFromUser} 
                 />
               ))
             ) : (

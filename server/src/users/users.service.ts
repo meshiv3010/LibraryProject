@@ -75,6 +75,23 @@ export class UserService {
         await this.userModel.deleteOne({ _id: userId }).exec();
     }
 
+    async removeBookFromUser(userId: Types.ObjectId, bookId: Types.ObjectId): Promise<User> {
+        const user = await this.userModel.findByIdAndUpdate(
+            userId,
+            { $pull: { readBooks: bookId } }, // הסרה של bookId מהרשימה
+            { new: true } // החזרת מסמך המשתמש המעודכן
+        ).exec();
+    
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+    
+        // עדכון מסמך הספר להסרת המשתמש מרשימת הקוראים
+        await this.bookService.removeReaderFromBook(bookId, userId);
+    
+        return user;
+    }
+
     async removeBookFromAllUsers(bookId: Types.ObjectId): Promise<void> {
         await this.userModel.updateMany(
             { 

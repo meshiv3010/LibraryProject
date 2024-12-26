@@ -61,6 +61,11 @@
     await axios.delete(`http://localhost:3000/books/${bookId}`);
   };
 
+  export const removeBookFromUser = async (userId: string, bookId: string): Promise<void> => {
+    await axios.delete(`http://localhost:3000/users/${userId}/books/${bookId}`);
+  };
+
+
   export const updateEntity = async (endpoint: string, id: string, payload: object): Promise<void> => {
     await axios.put(`http://localhost:3000/${endpoint}/${id}`, payload);
   };

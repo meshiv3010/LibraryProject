@@ -19,6 +19,7 @@ interface CardProps {
   isSelected?: boolean;
   loggedUserId?: string;
   readers?: { _id: string; name: string; userNumber: number }[];
+  onRemoveBookFromUser?: (bookId: string) => void; 
   onClick?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -50,6 +51,7 @@ const Card: React.FC<CardProps> = ({
   userNumber,
   isSelected,
   isFavBook,
+  onRemoveBookFromUser,
   onClick,
   onAddBook,
   showActions = false,
@@ -62,6 +64,8 @@ const Card: React.FC<CardProps> = ({
   const [isFavorite, setIsFavorite] = useState(isFavBook); // initialize with isFavBook
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [userBooks, setUserBooks] = useState<{ _id: string, title: string }[]>([]);
+
 
   const isLoggedInUser = loggedUserId === userId;
 
@@ -80,7 +84,13 @@ const Card: React.FC<CardProps> = ({
     }
     return { endpoint: '', id: '', payload: {} };
   };
-
+  
+  const handleRemoveBookFromUser = () => {
+    if (bookId && userId && onRemoveBookFromUser) {  // בודק אם הפונקציה קיימת
+      onRemoveBookFromUser(bookId);  // שולח את ה- bookId לפונקציה בקומפוננטת הורה
+    }
+  };
+  
   const handleSave = async () => {
     try {
       const { endpoint, id, payload } = getEndpointAndId();
@@ -151,7 +161,7 @@ const Card: React.FC<CardProps> = ({
     },
   });
   
-
+  
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsFavorite(!isFavorite);
@@ -227,13 +237,14 @@ const Card: React.FC<CardProps> = ({
 
       {/* Displaying the favorite star icon if it's the logged-in user's book */}
       {isLeftSide && loggedUserId === userId && selectedCategory === 'user' && (
+        <div className={styles.actions}>
         <div onClick={handleFavoriteClick} className={styles.favoriteIcon}>
-          {isFavorite ? (
-            <FaStar color="gold" />
-          ) : (
-            <FaRegStar />
-          )}
+          {isFavorite ? <FaStar color="gold" /> : <FaRegStar />}
         </div>
+        <button className={styles.button} onClick={handleRemoveBookFromUser}>
+            הסר ספר
+          </button>
+      </div>
       )}
   
       {renderActions && (
