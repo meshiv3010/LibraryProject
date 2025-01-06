@@ -13,7 +13,6 @@ const Book = ({ books }: BookProps) => {
   const [selectedBook, setSelectedBook] = useState<BookType | null>(null);
   const queryClient = useQueryClient();
 
-  // מחיקת ספר
   const deleteBookMutation = useMutation({
     mutationFn: (bookId: string) => deleteBook(bookId),
     onSuccess: () => {
@@ -24,13 +23,10 @@ const Book = ({ books }: BookProps) => {
     },
   });
 
-  // בחירת ספר
   const handleBookSelect = (book: BookType) => {
-    console.log('Selected book:', book);
     setSelectedBook(book);
   };
 
-  // מחיקת ספר
   const handleBookDelete = (bookId: string) => {
     deleteBookMutation.mutate(bookId);
   };
@@ -39,23 +35,20 @@ const Book = ({ books }: BookProps) => {
 
   return (
     <div className={style.container}>
-      {/* צד שמאל - פרטי ספר */}
       <div className={style.leftSide}>
         {selectedBook ? (
           <LeftSide
             bookTitle={selectedBook.title}
             bookAuthor={selectedBook.author?.name}
-            bookReaders={selectedBook.readers.length > 0
-              ? selectedBook.readers
-              : []}
+            bookReaders={selectedBook.readers.length > 0 ? selectedBook.readers : []}
             selectedCategory="book"
+            selectedBookId={selectedBook._id} // Pass the selected book ID here
           />
         ) : (
           <div>בחר ספר</div>
         )}
       </div>
 
-      {/* צד ימין - רשימת ספרים */}
       <div className={style.rightSide}>
         <RightSide
           books={books}

@@ -3,7 +3,7 @@ import styles from './Card.module.css';
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { deleteUser, deleteBook, deleteAuthor, updateFavoriteBook } from '../../../api';
+import { deleteUser, deleteBook, deleteAuthor, updateFavoriteBook,removeBookFromUser_bookCategory } from '../../../api';
 
 interface CardProps {
   title?: string;
@@ -14,6 +14,7 @@ interface CardProps {
   bookNumber?: number;
   userNumber?: number;
   writerNumber?: number;
+  selectedBookId?: string; 
   selectedCategory?: string;
   name?: string;
   isSelected?: boolean;
@@ -40,11 +41,12 @@ const Card: React.FC<CardProps> = ({
   title,
   authorName,
   readers,
-  bookId,
   userId,
   authorId,
   bookNumber,
   selectedCategory,
+  selectedBookId,
+  bookId,
   writerNumber,
   name,
   loggedUserId,
@@ -217,7 +219,19 @@ const Card: React.FC<CardProps> = ({
             <ul>
               {readers.map((reader) => (
                 <li key={reader._id}>
-                  {`מזהה: ${reader.userNumber}  שם: ${reader.name}`}
+                  {`מזהה: ${reader.userNumber}  !@שם: ${reader.name}`}
+                  <button
+                    onClick={() => {
+                      if (selectedBookId) {
+                        removeBookFromUser_bookCategory(reader._id, selectedBookId);
+                      } else {
+                        console.error('Book ID or Selected Book ID is undefined');
+                        console.log('BOOK ID:'+selectedBookId+ 'READER ID:' + reader._id);
+                      }
+                    }}
+                  >
+                    מחיקה
+                  </button>
                 </li>
               ))}
             </ul>

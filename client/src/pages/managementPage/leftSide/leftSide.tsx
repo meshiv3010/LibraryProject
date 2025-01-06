@@ -9,6 +9,7 @@ interface LeftSideProps {
   userBooks?: any[];
   bookTitle?: string;
   bookAuthor?: string;
+  selectedBookId?: string;
   favBookId?: string | null | undefined;
   userId?: string;
   loggedUserId?: string;
@@ -29,6 +30,7 @@ const LeftSide = ({
   userBooks,
   bookTitle,
   bookAuthor,
+  selectedBookId, 
   favBookId,
   loggedUserId,
   userId,
@@ -199,6 +201,7 @@ const LeftSide = ({
                   showActions={false}
                   userId={userId}
                   isLeftSide={true}
+                  selectedBookId={selectedBookId}
                 />
               ))
             ) : (
