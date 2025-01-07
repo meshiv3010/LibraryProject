@@ -4,6 +4,11 @@ import { FaStar, FaRegStar } from 'react-icons/fa';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { deleteUser, deleteBook, deleteAuthor, updateFavoriteBook,removeBookFromUser_bookCategory } from '../../../api';
+import { MdDelete } from "react-icons/md";
+import { FaEdit } from "react-icons/fa";
+
+
+
 
 interface CardProps {
   title?: string;
@@ -231,7 +236,7 @@ const Card: React.FC<CardProps> = ({
                         }
                       }}
                     >
-                      הסר יוזר
+                     <MdDelete size={20} />
                     </button>
                   )}
                 </li>
@@ -258,8 +263,8 @@ const Card: React.FC<CardProps> = ({
           {isFavorite ? <FaStar color="gold" /> : <FaRegStar />}
         </div>
         <button className={styles.button} onClick={handleRemoveBookFromUser}>
-            הסר ספר
-          </button>
+         <MdDelete size={20} />
+        </button>
       </div>
       )}
   
@@ -272,11 +277,11 @@ const Card: React.FC<CardProps> = ({
               console.log('Edit mode enabled');
             }}
           >
-            Edit
+            <FaEdit size={20} />
           </button>
           {((userId && loggedUserId === userId) || bookId || authorId) && (
             <button className={styles.button} onClick={handleDelete}>
-              Delete
+              <MdDelete size={20} />
             </button>
           )}
         </div>
