@@ -4,15 +4,18 @@ import LeftSide from '../leftSide/leftSide';
 import RightSide from '../rightSide/rightSide';
 import style from './book.module.css';
 import { deleteBook, Book as BookType } from '../../../api';
+import { UserLogged } from '../../../types';
 
 type BookProps = {
   books: BookType[]; // תקבל את רשימת הספרים מתוך ה-ManagementPage
+  currentUser: UserLogged; // התאמה לנתו��ים המתקבלים מ-ManagementPage
 };
 
-const Book = ({ books }: BookProps) => {
+const Book = ({ books, currentUser }: BookProps) => { // כאן הוספנו את currentUser כחלק מה-props
   const [selectedBook, setSelectedBook] = useState<BookType | null>(null);
   const queryClient = useQueryClient();
 
+  console.log(currentUser._id);
   const deleteBookMutation = useMutation({
     mutationFn: (bookId: string) => deleteBook(bookId),
     onSuccess: () => {
@@ -43,6 +46,7 @@ const Book = ({ books }: BookProps) => {
             bookReaders={selectedBook.readers.length > 0 ? selectedBook.readers : []}
             selectedCategory="book"
             selectedBookId={selectedBook._id} // Pass the selected book ID here
+            loggedUserId={currentUser._id}
           />
         ) : (
           <div>בחר ספר</div>

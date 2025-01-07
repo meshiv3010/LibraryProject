@@ -43,7 +43,7 @@ const ManagementPage = () => {
       <div className={style.activityContainer}>
         <div className={style.activity}>
           {activity === 'user' && <User currentUser={currentUser}  />}
-          {activity === 'book' && <Book books={books} />}
+          {activity === 'book' && <Book books={books} currentUser={currentUser} />}
           {activity === 'author' && <Author />}
         </div>
         <Categories onCategorySelect={handleCategorySelect} />

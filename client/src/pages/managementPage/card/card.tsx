@@ -220,18 +220,20 @@ const Card: React.FC<CardProps> = ({
               {readers.map((reader) => (
                 <li key={reader._id}>
                   {`מזהה: ${reader.userNumber}  !@שם: ${reader.name}`}
-                  <button
-                    onClick={() => {
-                      if (selectedBookId) {
-                        removeBookFromUser_bookCategory(reader._id, selectedBookId);
-                      } else {
-                        console.error('Book ID or Selected Book ID is undefined');
-                        console.log('BOOK ID:'+selectedBookId+ 'READER ID:' + reader._id);
-                      }
-                    }}
-                  >
-                    מחיקה
-                  </button>
+                  {loggedUserId == reader._id && (  // Only show the delete button for the logged-in user
+                    <button
+                      onClick={() => {
+                        if (selectedBookId) {
+                          removeBookFromUser_bookCategory(reader._id, selectedBookId);
+                        } else {
+                          console.error('Book ID or Selected Book ID is undefined');
+                          console.log('BOOK ID:' + selectedBookId + 'READER ID:' + reader._id);
+                        }
+                      }}
+                    >
+                      הסר יוזר
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>

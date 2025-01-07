@@ -201,6 +201,7 @@ const LeftSide = ({
                   showActions={false}
                   userId={userId}
                   isLeftSide={true}
+                  loggedUserId={loggedUserId}
                   selectedBookId={selectedBookId}
                 />
               ))
