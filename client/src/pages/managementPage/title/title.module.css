@@ -1,11 +1,66 @@
 .title {
   position: absolute;
-  top: 0; /* מיקום בחלק העליון של העמוד */
-  left: 0; /* מיושרת להתחלה */
-  width: 100%; /* אם תרצי שהיא תתפוס את כל רוחב העמוד */
-  display: flex; /* שימוש ב-flexbox */
+  top: 0;
+  left: 20;
+  width: 100%;
+  display: flex;
   justify-content: space-between; /* מרחק בין הצדדים */
-  align-items: flex-start; /* מיישר את התוכן בחלק העליון */
-  padding: 20px; /* אפשר להוסיף padding אם יש צורך */
-  border: 2px solid black;
+  align-items: center; /* יישור למרכז אנכי */
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* הצללה */
+}
+
+.leftSection h1 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 32px; /* גודל טקסט */
+  color: black; 
+  margin: 0 0 10px; /* מרווח תחתון */
+  font-weight: bold; /* טקסט מודגש */
+  text-align: left; /* יישור שמאלה */
+  
+
+}
+
+.leftSection h2 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 32px; /* גודל טקסט */
+  color: black; 
+  margin: 0 0 10px; /* מרווח תחתון */
+  font-weight: bold; /* טקסט מודגש */
+  text-align: left; /* יישור שמאלה */
+}
+
+.leftSection h3 {
+  font-size: 24px; /* גודל טקסט לכותרת המשנית */
+  color: #555; /* צבע עדין יותר */
+  margin: 0 0 20px; /* מרווח לפני הכפתור */
+}
+
+.leftSection button {
+  background-color: #d9534f; /* צבע רקע אדום */
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 10px 20px; /* ריווח פנימי */
+  border-radius: 5px; /* פינות מעוגלות */
+  font-size: 16px; /* גודל טקסט */
+  cursor: pointer; /* מצביע יד */
+  transition: background-color 0.3s ease; /* מעבר חלק */
+}
+
+.leftSection button:hover {
+  background-color: #c9302c; /* צבע כהה יותר בריחוף */
+}
+
+.leftSection button:active {
+  background-color: #ac2925; /* צבע כהה יותר בלחיצה */
+  transform: scale(0.98); /* אפקט לחיצה קל */
+}
+
+.rightSection {
+  display: flex;
+  align-items: center; /* יישור למרכז אנכי */
+}
+
+.rightSection svg {
+  width: 60px; /* התאמה לגודל הספרייה */
+  height: auto;
 }

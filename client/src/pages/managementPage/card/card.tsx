@@ -195,17 +195,20 @@ const Card: React.FC<CardProps> = ({
               onChange={(e) => setEditedTitle(e.target.value)}
               placeholder="Edit Title"
             />
-          ) : authorId ? (
+          ) : authorId || userId ? (
             <input
               type="text"
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
-              placeholder="Edit Author Name"
+              placeholder={authorId ? "Edit Author Name" : "Edit User Name"}
             />
           ) : null}
-  
+
           <div className={styles.buttonGroup}>
-            <button className={`${styles.button} ${styles.saveButton}`} onClick={handleSave}>
+            <button
+              className={`${styles.button} ${styles.saveButton}`}
+              onClick={handleSave}
+            >
               Save
             </button>
             <button

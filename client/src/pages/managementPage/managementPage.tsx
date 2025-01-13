@@ -38,18 +38,22 @@ const ManagementPage = () => {
   if (!currentUser) return <div>User not found</div>;
 
   return (
-    <div className={style.container}>
-      <Title userName={currentUser.name || ''} favBook={currentUser.favBook?.title || null} />
-      <div className={style.activityContainer}>
-        <div className={style.activity}>
-          {activity === 'user' && <User currentUser={currentUser}  />}
-          {activity === 'book' && <Book books={books} currentUser={currentUser} />}
-          {activity === 'author' && <Author />}
+    <div className={style.background}>
+      <div className={style.container}>
+        {/* הוסף תצוגה עבור הכותרת */}
+        <Title userName={currentUser.name || ''} favBook={currentUser.favBook?.title || null} />
+        <div className={style.activityContainer}>
+          {/* יישר את האזור הפעיל והקטגוריות */}
+          <div className={style.activity}>
+            {activity === 'user' && <User currentUser={currentUser} />}
+            {activity === 'book' && <Book books={books} currentUser={currentUser} />}
+            {activity === 'author' && <Author />}
+          </div>
+          <Categories onCategorySelect={handleCategorySelect} />
         </div>
-        <Categories onCategorySelect={handleCategorySelect} />
       </div>
     </div>
-  );
+  );  
 };
 
 export default ManagementPage;

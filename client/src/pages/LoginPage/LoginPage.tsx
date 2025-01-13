@@ -27,15 +27,36 @@ const LogIn: React.FC = () => {
   if (error) return <div>שגיאה בטעינת המשתמשים: {error.message}</div>;
 
   return (
-    <div className={style.container}>
-      <h1><LibraryName fontSize="100px" /></h1>
-      <select onChange={(e) => setSelectedUser(e.target.value)} value={selectedUser}>
-        <option value="">בחר יוזר</option>
-        {users.map((user) => (
-          <option key={user._id} value={user._id}>{user.name}</option>
-        ))}
-      </select>
-      <button onClick={handleLogin} disabled={!selectedUser}>התחבר</button>
+    <div className={style.background}>
+      <div className={style.container}>
+        <h1><LibraryName fontSize="150px" /></h1>
+        <br />
+        <br />
+        <br />
+        <br />
+        <select
+          className={style.select}
+          onChange={(e) => setSelectedUser(e.target.value)}
+          value={selectedUser}
+        >
+          <option className={style.option} value="">בחר יוזר</option>
+          {users.map((user) => (
+            <option key={user._id} value={user._id} className={style.option}>
+              {user.name}
+            </option>
+          ))}
+        </select>
+        <br />
+        <br />
+        <br />
+        <button 
+          onClick={handleLogin} 
+          disabled={!selectedUser} 
+          className={style.button}
+        >
+          התחבר
+        </button>
+      </div>
     </div>
   );
 };

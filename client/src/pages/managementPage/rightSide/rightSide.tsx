@@ -99,9 +99,9 @@ const RightSide = ({
 };
 
 return (
-  <div>
+  <div className="RightSide">
     {selectedCategory === 'user' && users && (
-      <div>
+      <div className="CardContainer">
         {users.map((user) => (
           <Card 
             key={user._id} 
@@ -121,7 +121,7 @@ return (
     )}
 
     {selectedCategory === 'book' && books && (
-      <div>
+      <div className="CardContainer">
         {books.map((book) => (
           <Card 
             key={book._id} 
@@ -129,7 +129,6 @@ return (
             authorName={book.author.name} 
             bookId={book._id} 
             bookNumber={book.bookNumber}
-            // הסר את העברת נתוני הקוראים
             showActions={true}
             isSelected={book._id === selectedId}
             onClick={() => handleCardClick(book._id, 'book', book)} 
@@ -143,7 +142,7 @@ return (
     )}
 
     {selectedCategory === 'author' && authors && (
-      <div>
+      <div className="CardContainer">
         {authors.map((author) => (
           <Card 
             key={author._id} 

@@ -1,13 +1,31 @@
-.categories {
-    position: relative; /* מיקום יחסית לעמוד */
-    right: 0%;
-    width: 33%; /* ניתן לשנות את הרוחב לפי הצורך */
-    margin-top: 50px; /* מרווח מלמעלה כדי שיהיה מתחת לכותרת */
-    height: 100vh;
-    padding: 10px;
-   /* background-color: #f0f0f0; /* רקע אופציונלי */   right: 0%;
-   border: 2px solid black;
+.categoryItem button {
+  width: 100%; /* הכפתור יתפוס את כל הרוחב של האזור */
+  padding: 10px 15px; /* ריווח פנימי */
+  margin-bottom: 10px; /* ריווח בין כפתורים */
+  background-color: #d2b48c; /* רקע חום בהיר */
+  color: #333; /* צבע טקסט כהה */
+  border: 2px solid #8b4513; /* מסגרת חומה כהה */
+  border-radius: 5px; /* פינות מעוגלות */
+  font-size: 18px; /* גודל טקסט */
+  cursor: pointer; /* מצביע יד */
+  transition: all 0.3s ease; /* מעבר חלק */
 }
+
+.categoryItem button:hover {
+  background-color: #8b4513; /* צבע כהה יותר בריחוף */
+  color: white; /* צבע טקסט לבן בריחוף */
+  border-color: #a0522d; /* שינוי צבע מסגרת בריחוף */
+}
+
+.categoryItem button:active {
+  background-color: #a0522d; /* צבע רקע לחיצה */
+  border-color: #8b4513; /* צבע מסגרת לחיצה */
+  transform: scale(0.98); /* אפקט לחיצה קל */
+}
+
 .active {
-    background-color: lightblue; /* או כל צבע אחר שתרצה */
-  }
+  background-color: #f5deb3; /* צבע קרמי לכפתור נבחר */
+  color: #333; /* צבע טקסט כהה */
+  border-color: #8b4513; /* מסגרת כהה */
+  font-weight: bold; /* טקסט מודגש */
+}

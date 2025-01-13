@@ -11,29 +11,28 @@
   justify-content: space-between; /* פיזור האלמנטים */
   align-items: flex-start; /* יישור מלמעלה */
   width: 100%; /* גובה מלא של עמוד */
-  margin-top: 20px; /* רווח מעל ה-container */
-  border: 2px solid #ccc; /* מסגרת של 2 פיקסלים בצבע אפור */
+  margin-top: 0px; /* רווח מעל ה-container */
   border-radius: 8px; /* רדיוס פינה */
-  padding: 10px; /* ריווח פנימי */
+  padding: 0px; /* ריווח פנימי */
 }
 
 .activity {
-  flex: 1; /* ייתן ל-leftSide יותר מקום */
-  margin-top: 50px;
+  margin-top: 0%;
+  flex: 14; /* ייקח את כל השטח הפנוי */
   margin-right: 20px; /* ריווח בין activity לקטגוריות */
 }
 
+.background {
+  background-image: url('../../../public/images/cd5f5011e548b72e2dc93a05660af767.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 100%;
+  width: 100%;
+}
+
 .categories {
+  margin-top: 20%;
   min-width: 200px; /* רוחב מינימלי לקטגוריות */
-}
-
-
-
-
-.activity {
-  flex: 14; /* ייקח את כל השטח הפנוי */
-}
-
-.categories {
   margin-left: 20px; /* מרווח בין ה-Activity לקטגוריות */
 }
+

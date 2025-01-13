@@ -1,7 +1,60 @@
 .container {
     flex-direction: column;
     display: flex;
-    justify-content: center;
+    justify-content:first baseline;
     align-items: center;
     height: 100vh;
+    margin-right: 60px; /* ריווח בין activity לקטגוריות */
+
+
 }
+
+.background {
+    background-image: url('../../../public/images/cd5f5011e548b72e2dc93a05660af767.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  .select {
+    width: 200px;
+    height: 40px;
+    background-color: #e6e5d2ea;
+    color: #333;
+    border: 2px solid black;
+    border-radius: 4px;
+    font-size: 24px;
+    padding: 5px;
+    text-align: center; /* מרכז את הטקסט אופקית */
+    line-height: 40px; /* מיישר את הטקסט אנכית */
+}
+
+  
+  .option {
+    background-color: #e6e5d2ea;
+    color: #000;
+    font-size: 24px;
+
+  }
+  .button {
+    background-color: black; /* צבע רקע */
+    color: white; /* צבע טקסט */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button:hover {
+    background-color: rgb(62, 58, 58);
+  }
+  
+  .button:disabled {
+    background-color: #ddd;
+    color: #aaa;
+    cursor: not-allowed;
+  }
+    

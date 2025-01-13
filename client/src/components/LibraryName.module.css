@@ -1,4 +1,8 @@
 .libraryName {
-    color: blue;
+    color: #674329; 
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    align-items:first baseline;
+    justify-content: center;
     font-weight: bold;
   }

@@ -1,10 +1,17 @@
 .RightSide {
-    position: relative; /* מיקום יחסית לעמוד */
-    width: 33%; /* ניתן לשנות את הרוחב לפי הצורך */
-    margin-top: 30px; /* מרווח מלמעלה כדי שיהיה מתחת לכותרת */
+    position: relative; /* המיקום נשאר יחסית */
+    width: 33%; /* נשאר ללא שינוי */
+    margin-top: 0; /* הסר מרווח מיותר מלמעלה */
     padding: 10px;
-   /* background-color: #f0f0f0; /* רקע אופציונלי */
-   height: 100vh;
-   border: 2px solid black;
+    height: calc(100vh - 20px); /* התאמת הגובה כך שהכרטיסיות יתפסו את כל המסך פחות מרווח */
+    overflow-y: auto; /* הוספת גלילה במקרה שהכרטיסיות עולות על הגובה */
+    border: 2px solid black;
+    box-sizing: border-box; /* וידוא שכל הפיקסלים מתחשבים בגבול ובמילוי */
 }
-  
+
+.CardContainer {
+    display: flex;
+    flex-direction: column; /* מציג את הכרטיסיות אחת מעל השנייה */
+    gap: 10px; /* מרווח בין הכרטיסיות */
+    padding-top: 10px; /* מרווח מינימלי כדי לא לגעת בגבולות */
+}
