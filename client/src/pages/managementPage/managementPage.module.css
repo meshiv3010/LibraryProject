@@ -9,12 +9,13 @@
   display: flex; /* פריסה אופקית */
   flex-direction: row; /* פריסה אופקית */
   justify-content: space-between; /* פיזור האלמנטים */
-  align-items: flex-start; /* יישור מלמעלה */
-  width: 100%; /* גובה מלא של עמוד */
-  margin-top: 0px; /* רווח מעל ה-container */
+  align-items: flex-start; /* יישור אנכי אחיד */
+  width: 100%; /* רוחב מלא */
+  margin-top: 50px; /* רווח מעל כל האזור */
   border-radius: 8px; /* רדיוס פינה */
   padding: 0px; /* ריווח פנימי */
 }
+
 
 .activity {
   margin-top: 0%;
@@ -31,8 +32,15 @@
 }
 
 .categories {
-  margin-top: 20%;
-  min-width: 200px; /* רוחב מינימלי לקטגוריות */
-  margin-left: 20px; /* מרווח בין ה-Activity לקטגוריות */
+  margin-top: 0; /* הסר רווח אנכי */
+  min-width: 200px; /* רוחב מינימלי */
+  margin-left: 20px; /* מרווח ימני */
+}
+
+.leftSide, .rightSide {
+  margin-top: 0; /* הסר רווחים מיותרים */
+  display: flex; /* שימוש בפריסה גמישה */
+  flex-direction: column; /* פריסה אנכית */
+  justify-content: flex-start; /* יישור מלמעלה */
 }
 

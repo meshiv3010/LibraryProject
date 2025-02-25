@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Card.module.css';
-import { FaStar, FaRegStar } from 'react-icons/fa';
+import { FaEdit, FaStar, FaRegStar } from 'react-icons/fa';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { deleteUser, deleteBook, deleteAuthor, updateFavoriteBook,removeBookFromUser_bookCategory } from '../../../api';
 import { MdDelete } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
-
 
 
 

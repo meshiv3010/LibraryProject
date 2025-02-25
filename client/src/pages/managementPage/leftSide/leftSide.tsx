@@ -3,6 +3,8 @@ import style from './leftSide.module.css';
 import Card from '../card/card';
 import { fetchUsers, fetchBooks, addBookToUser, removeBookFromUser } from '../../../api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { IoAddSharp } from "react-icons/io5";
+
 
 interface LeftSideProps {
   userName?: string;
@@ -128,8 +130,8 @@ const LeftSide = ({
     <div className={style.leftSide}>
       {selectedCategory === 'user' && userId === loggedUserId && (
         <button className={style.addButton} onClick={() => setIsModalOpen(true)}>
-          הוסף ספר
-        </button>
+        <IoAddSharp className="plus-icon" size={20} />
+      </button>
       )}
 
       {isModalOpen && (

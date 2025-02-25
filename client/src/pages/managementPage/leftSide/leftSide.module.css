@@ -1,30 +1,48 @@
 .leftSide {
-    width: 70%; /* מרחיב את הקומפוננטה ל-50% מרוחב העמוד */
-    height: 100vh; /* הגדרה שתכסה את כל גובה החלון */
-    border: 2px solid black;
-    padding: 20px;
-    margin-top: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* הוספת צל */
-  }
-  
-  .favoriteIcon {
-    cursor: pointer;
-    margin-top: 8px;
-    display: flex;
-    justify-content: center;
-  }
-  .bookCard {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  ul {
-    list-style-type: none; /* ביטול הנקודות */
-    padding: 0; /* ביטול הרווח הפנימי */
-  }
-  
-  li {
-    margin-bottom: 10px; /* רווח תחתון בין הכרטיסיות */
-  }
-  
+  width: 70%; /* מרחיב את הקומפוננטה */
+  height: 100vh; /* מכסה את כל גובה החלון */
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* הוספת צל */
+}
+
+.leftSide h2 {
+  text-align: right; /* יישור הטקסט לימין */
+  font-family: Arial, sans-serif; /* גופן Arial */
+  color: black; /* צבע טקסט שחור */
+  margin-bottom: 16px; /* רווח תחתון */
+}
+
+.favoriteIcon {
+  cursor: pointer;
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.bookCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+ul {
+  list-style-type: none; /* ביטול הנקודות */
+  padding: 0; /* ביטול הרווח הפנימי */
+}
+
+li {
+  margin-bottom: 10px; /* רווח תחתון בין הכרטיסיות */
+}
+
+.plus-icon {
+  color: #007bff; /* שינוי צבע האייקון */
+}
+
+.addButton {
+  background-color: #f0f0f0; /* רקע הכפתור */
+  border: none;               /* הסרת גבול הכפתור */
+  padding: 10px;              /* ריווח סביב האייקון */
+  border-radius: 5px;         /* עיגול הפינות */
+}
