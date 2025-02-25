@@ -40,21 +40,25 @@ const ManagementPage = () => {
   return (
     <div className={style.background}>
       <div className={style.container}>
-        {/* הוסף תצוגה עבור הכותרת */}
-        <Title userName={currentUser.name || ''} favBook={currentUser.favBook?.title || null} />
+        {/* עטיפת ה-Title עם div שמגדיר רוחב מלא */}
+        <div className={style.titleWrapper}>
+          <Title userName={currentUser.name || ''} favBook={currentUser.favBook?.title || null} />
+        </div>
+
         <div className={style.activityContainer}>
-        <div className={`${style.leftSide} ${style.activity}`}>
-          {activity === 'user' && <User currentUser={currentUser} />}
-          {activity === 'book' && <Book books={books} currentUser={currentUser} />}
-          {activity === 'author' && <Author />}
+          <div className={`${style.leftSide} ${style.activity}`}>
+            {activity === 'user' && <User currentUser={currentUser} />}
+            {activity === 'book' && <Book books={books} currentUser={currentUser} />}
+            {activity === 'author' && <Author />}
+          </div>
+          <div className={style.categories}>
+            <Categories onCategorySelect={handleCategorySelect} />
+          </div>
         </div>
-        <div className={style.categories}>
-          <Categories onCategorySelect={handleCategorySelect} />
-        </div>
-      </div>
       </div>
     </div>
-  );  
+);
+
 };
 
 export default ManagementPage;
