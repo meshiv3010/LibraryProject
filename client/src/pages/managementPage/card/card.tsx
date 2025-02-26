@@ -7,7 +7,6 @@ import { deleteUser, deleteBook, deleteAuthor, updateFavoriteBook,removeBookFrom
 import { MdDelete } from "react-icons/md";
 
 
-
 interface CardProps {
   title?: string;
   authorName?: string;

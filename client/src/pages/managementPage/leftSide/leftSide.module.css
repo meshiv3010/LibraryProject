@@ -45,4 +45,5 @@ li {
   border: none;               /* הסרת גבול הכפתור */
   padding: 10px;              /* ריווח סביב האייקון */
   border-radius: 5px;         /* עיגול הפינות */
+  cursor: pointer;
 }
