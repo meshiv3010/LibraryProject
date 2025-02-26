@@ -219,13 +219,13 @@ const Card: React.FC<CardProps> = ({
         </div>
       ) : (
         <div>
-          {title && <h3>{`מזהה: ${bookNumber}  שם: ${title}`}</h3>}
-          {authorName && <h4>{authorName}</h4>}
+          {title && <h2>{`מזהה: ${bookNumber}  שם: ${title}`}</h2>}
+          {authorName && <h3>{authorName}</h3>}
           {readers && readers.length > 0 && (
             <ul>
               {readers.map((reader) => (
                 <li key={reader._id}>
-                  {`מזהה: ${reader.userNumber}  !@שם: ${reader.name}`}
+                 {<h2>{`מזהה: ${reader.userNumber}  שם: ${reader.name}`}</h2>}
                   {loggedUserId == reader._id && (  // Only show the delete button for the logged-in user
                     <button
                       onClick={() => {

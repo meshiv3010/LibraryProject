@@ -58,7 +58,6 @@ const ManagementPage = () => {
       </div>
     </div>
 );
-
 };
 
 export default ManagementPage;

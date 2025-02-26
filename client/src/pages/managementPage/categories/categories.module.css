@@ -1,12 +1,13 @@
 .categoryItem button {
   width: 100%; /* הכפתור יתפוס את כל הרוחב של האזור */
-  padding: 10px 15px; /* ריווח פנימי */
+  padding: 10px; /* ריווח פנימי */
   margin-bottom: 10px; /* ריווח בין כפתורים */
   background-color: #d2b48c; /* רקע חום בהיר */
   color: #333; /* צבע טקסט כהה */
   border: 2px solid #8b4513; /* מסגרת חומה כהה */
   border-radius: 5px; /* פינות מעוגלות */
   font-size: 18px; /* גודל טקסט */
+  font-family: Arial; /* יישור לכל הטקסט לגופן Arial */
   cursor: pointer; /* מצביע יד */
   transition: all 0.3s ease; /* מעבר חלק */
 }

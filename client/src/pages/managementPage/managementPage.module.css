@@ -12,19 +12,17 @@ html, body {
   display: flex;
   justify-content: center; /* מרכז את התוכן */
   align-items: center;
-  padding: 20px;
+  padding: 10px;
   border-radius: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
   box-sizing: border-box; /* מונע גלילה מיותרת */
-  background-color: transparent; /* הסרת הרקע השחור */
 }
 
 .container {
   display: flex;
   flex-direction: column; /* מסדר את ה-Title למעלה ואת שאר התוכן מתחת */
-  align-items: center;
   justify-content: flex-start;
-  padding: 20px;
+  padding: 10px;
   height: 100vh;
   width: 100%;
   box-sizing: border-box;
@@ -42,14 +40,34 @@ html, body {
 }
 
 .activityContainer {
+  height: 100%; /* גובה מלא */
   display: flex;
   flex-direction: row;
+  align-items: stretch; /* מבטיח שהאלמנטים יהיו בגובה אחיד */
   justify-content: space-between;
-  align-items: flex-start;
   width: 100%;
-  margin-top: 20px; /* הפחתת רווח כדי למנוע גלילה */
-  border-radius: 8px;
-  padding: 10px;
+  margin-top: 0px;
   box-sizing: border-box;
-  overflow-x: hidden; /* הוספתי למנוע גלילה אופקית בתוך הקונטיינר */
+  overflow-x: hidden;
+  
+}
+
+.leftSide {
+  width: 80%; 
+  align-items: flex-start;
+  justify-content: flex-end;
+  display: flex;
+  margin-top:0%;
+  height: 100%; /* הוספת גובה מלא */
+
+
+}
+
+.categories {
+  width: 20%; /* תופס את ה-30% הנותרים */
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  min-height: 100%; /* גובה מינימלי לכל האלמנט */
+  margin-top: 0%;
 }

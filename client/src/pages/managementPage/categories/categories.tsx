@@ -24,9 +24,6 @@ const Categories = ({ onCategorySelect, selectedCategory }: CategoriesProps) => 
       <br />
       <br />
       <br />
-      <br />
-      <br />
-      <br />
 
       <div>
         {categories.map((category) => (

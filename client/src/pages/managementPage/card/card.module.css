@@ -9,18 +9,19 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin: 16px auto;
   transition: border-color 0.3s ease;
-  font-family: Arial, sans-serif; /* הגדרת גופן Arial לכל הכרטיסיה */
+  font-family: Arial; /* הגדרת גופן Arial לכל הכרטיסיה */
   color: black; /* הגדרת צבע טקסט שחור לכל הטקסט */
 }
 
-.card h2,
-.card h3,
-.card h4,
+.h2,
+.h3,
+.h4,
 .card p,
 .card ul li {
-  font-family: Arial, sans-serif; /* יישור לכל הטקסט לגופן Arial */
+  font-family: Arial; /* יישור לכל הטקסט לגופן Arial */
   color: black; /* צבע שחור לכל סוגי הטקסט */
   margin: 4px 0; /* מרווח אחיד בין האלמנטים */
+  font-size: 18 px;
 }
 
 .selected {

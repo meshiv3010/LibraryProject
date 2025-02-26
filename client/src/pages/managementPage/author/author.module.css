@@ -1,9 +1,9 @@
 .container {
   display: flex;
-  justify-content: center;  /* מרכז את התוכן לרוחב */
   align-items: flex-start;  /* מוודא שהתוכן יתחיל מלמעלה */
   height: 100vh;           /* נותן גובה של 100% למסך */
-  margin-top: 30vh;        /* מגדיר שהקומפוננטות יתחילו מ-40% מגובה העמוד */
+  margin-top: 0vh;        /* מגדיר שהקומפוננטות יתחילו מ-40% מגובה העמוד */
+  width: 100%;
 }
 
 .leftSide {
