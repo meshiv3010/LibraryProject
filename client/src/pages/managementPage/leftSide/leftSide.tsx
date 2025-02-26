@@ -130,14 +130,15 @@ const LeftSide = ({
     <div className={style.leftSide}>
       {selectedCategory === 'user' && userId === loggedUserId && (
         <button className={style.addButton} onClick={() => setIsModalOpen(true)}>
-        <IoAddSharp className="plus-icon" size={20} />
+        <IoAddSharp size={20} />
+
       </button>
       )}
 
       {isModalOpen && (
         <div className={style.modal}>
           <div className={style.modalContent}>
-            <h2>בחר ספר להוספה:</h2>
+            <h2>בחר ספר להוספה</h2>
             <div className={style.cardContainer}>
               {unreadBooks.length > 0 ? (
                 unreadBooks.map((book) => (
@@ -153,7 +154,8 @@ const LeftSide = ({
                   />
                 ))
               ) : (
-                <div>אין ספרים להוספה</div>
+                <h2 style={{ textAlign: 'right', fontSize: '30px' }}>אין ספרים להוספה </h2>
+                
               )}
             </div>
             <button className={style.closeButton} onClick={() => setIsModalOpen(false)}>
@@ -165,27 +167,29 @@ const LeftSide = ({
 
       {selectedCategory === 'user' && userName && (
         <div>
-          <h2>הספרים שקרא {userName}:</h2>
           <div className={style.cardContainer}>
             {userBooks && userBooks.length > 0 ? (
-              userBooks.map((book) => (
-                <Card
-                  key={book._id}
-                  title={book.title}
-                  bookNumber={book.bookNumber}
-                  authorName={book.author.name}
-                  bookId={book._id}
-                  userId={userId}
-                  loggedUserId={loggedUserId}
-                  showActions={false}
-                  selectedCategory="user"
-                  isLeftSide={true}
-                  isFavBook={favBookId === book._id} 
-                  onRemoveBookFromUser={handleRemoveBookFromUser} 
-                />
-              ))
+              <>
+               <h2>הספרים שקרא {userName}</h2>
+               {userBooks.map((book) => (
+                  <Card
+                    key={book._id}
+                    title={book.title}
+                    bookNumber={book.bookNumber}
+                    authorName={book.author.name}
+                    bookId={book._id}
+                    userId={userId}
+                    loggedUserId={loggedUserId}
+                    showActions={false}
+                    selectedCategory="user"
+                    isLeftSide={true}
+                   isFavBook={favBookId === book._id} 
+                    onRemoveBookFromUser={handleRemoveBookFromUser} 
+                  />
+                ))}
+              </>
             ) : (
-              <div>אין ספרים עבור משתמש זה</div>
+              <h2 style={{ textAlign: 'right', fontSize: '30px' }}>אין ספרים עבור משתמש זה </h2>
             )}
           </div>
         </div>
@@ -193,22 +197,24 @@ const LeftSide = ({
 
       {selectedCategory === 'book' && bookTitle && (
         <div>
-          <h2>הקוראים של {bookTitle}:</h2>
           <div className={style.cardContainer}>
             {bookReaders && bookReaders.length > 0 ? (
-              bookReaders.map((reader) => (
-                <Card
-                  key={reader._id}
-                  readers={[reader]}
-                  showActions={false}
-                  userId={userId}
-                  isLeftSide={true}
-                  loggedUserId={loggedUserId}
-                  selectedBookId={selectedBookId}
-                />
-              ))
+              <>
+               <h2>הקוראים של {bookTitle}</h2>
+               {bookReaders.map((reader) => (
+                  <Card
+                    key={reader._id}
+                    readers={[reader]}
+                    showActions={false}
+                    userId={userId}
+                    isLeftSide={true}
+                    loggedUserId={loggedUserId}
+                    selectedBookId={selectedBookId}
+                  />
+                ))}
+              </>
             ) : (
-              <div>אין קוראים לספר זה</div>
+              <h2 style={{ textAlign: 'right', fontSize: '30px' }}>אין קוראים לספר זה</h2>
             )}
           </div>
         </div>
@@ -216,10 +222,11 @@ const LeftSide = ({
 
       {selectedCategory === 'author' && authorName && (
         <div>
-          <h2>הספרים של {authorName}:</h2>
           <div className={style.cardContainer}>
-            {authorBooks && authorBooks.length > 0 ? (
-              authorBooks.map((book) => (
+          {authorBooks && authorBooks.length > 0 ? (
+            <>
+              <h2>הספרים של {authorName}</h2>
+              {authorBooks.map((book) => (
                 <Card
                   key={book._id}
                   title={book.title}
@@ -228,10 +235,11 @@ const LeftSide = ({
                   showActions={false}
                   isLeftSide={true}
                 />
-              ))
-            ) : (
-              <div>אין ספרים עבור סופר זה</div>
-            )}
+              ))}
+            </>
+          ) : (
+            <h2 style={{ textAlign: 'right', fontSize: '30px' }}>אין ספרים עבור סופר זה</h2>
+          )}
           </div>
         </div>
       )}

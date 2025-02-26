@@ -30,7 +30,7 @@ const Categories = ({ onCategorySelect, selectedCategory }: CategoriesProps) => 
           <div key={category.id} className={style.categoryItem}>
             <button
               onClick={() => onCategorySelect(category.name)}
-              className={selectedCategory === category.name ? style.active : ''}
+              className={`${style.categoryButton} ${selectedCategory === category.name ? style.active : ''}`}
             >
               {category.name}
             </button>

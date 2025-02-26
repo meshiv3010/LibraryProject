@@ -33,7 +33,7 @@ const Author: React.FC = () => {
             selectedCategory="author"
           />
         ) : (
-          <div>בחר סופר</div>
+          <h2 style={{ textAlign: 'right', fontSize: '30px' ,fontFamily: 'Arial'}}>בחר סופר</h2>
         )}
       </div>
 

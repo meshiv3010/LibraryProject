@@ -74,7 +74,12 @@
 .fav-icon {
   display: flex;
   justify-content: flex-end;
-  font-size: 1.5rem;
+  font-size: 3.5rem;
   margin-top: 10px;
   color: black; /* צבע שחור לאייקון */
+}
+.customButton {
+  font-size: 18px;
+  font-family: Arial;
+  font-weight: bold;
 }

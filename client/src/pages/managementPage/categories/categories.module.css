@@ -1,32 +1,35 @@
-.categoryItem button {
-  width: 100%; /* הכפתור יתפוס את כל הרוחב של האזור */
-  padding: 10px; /* ריווח פנימי */
-  margin-bottom: 10px; /* ריווח בין כפתורים */
-  background-color: #d2b48c; /* רקע חום בהיר */
-  color: #333; /* צבע טקסט כהה */
-  border: 2px solid #8b4513; /* מסגרת חומה כהה */
-  border-radius: 5px; /* פינות מעוגלות */
-  font-size: 18px; /* גודל טקסט */
-  font-family: Arial; /* יישור לכל הטקסט לגופן Arial */
-  cursor: pointer; /* מצביע יד */
-  transition: all 0.3s ease; /* מעבר חלק */
+.categoryItem {
+  margin-bottom: 10px; /* ריווח בין קטגוריות */
 }
 
-.categoryItem button:hover {
-  background-color: #8b4513; /* צבע כהה יותר בריחוף */
-  color: white; /* צבע טקסט לבן בריחוף */
-  border-color: #a0522d; /* שינוי צבע מסגרת בריחוף */
+.categoryButton {
+  width: 100%;
+  padding: 10px;
+  background-color: #d2b48c;
+  color: #333;
+  border: 2px solid #8b4513;
+  border-radius: 5px;
+  font-size: 18px;
+  font-family: Arial;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.categoryItem button:active {
-  background-color: #a0522d; /* צבע רקע לחיצה */
-  border-color: #8b4513; /* צבע מסגרת לחיצה */
-  transform: scale(0.98); /* אפקט לחיצה קל */
+.categoryButton:hover {
+  background-color: #8b4513;
+  color: white;
+  border-color: #a0522d;
+}
+
+.categoryButton:active {
+  background-color: #a0522d;
+  border-color: #8b4513;
+  transform: scale(0.98);
 }
 
 .active {
-  background-color: #f5deb3; /* צבע קרמי לכפתור נבחר */
-  color: #333; /* צבע טקסט כהה */
-  border-color: #8b4513; /* מסגרת כהה */
-  font-weight: bold; /* טקסט מודגש */
+  background-color: #f5deb3;
+  color: #333;
+  border-color: #8b4513;
+  font-weight: bold;
 }

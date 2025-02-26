@@ -251,7 +251,9 @@ const Card: React.FC<CardProps> = ({
           )}
   
           {showActions && onAddBook && (
-            <button onClick={onAddBook}>הוסף ספר</button>
+            <button onClick={onAddBook} className={styles.customButton}>
+             הוסף ספר
+            </button>
           )}
         </div>
       )}

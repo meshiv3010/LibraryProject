@@ -49,7 +49,7 @@ const Book = ({ books, currentUser }: BookProps) => { // כאן הוספנו א�
             loggedUserId={currentUser._id}
           />
         ) : (
-          <div>בחר ספר</div>
+          <h2 style={{ textAlign: 'right', fontSize: '30px' ,fontFamily: 'Arial'}}>בחר ספר </h2>
         )}
       </div>
 
