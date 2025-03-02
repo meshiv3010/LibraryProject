@@ -130,7 +130,7 @@ const LeftSide = ({
     <div className={style.leftSide}>
       {selectedCategory === 'user' && userId === loggedUserId && (
         <button className={style.addButton} onClick={() => setIsModalOpen(true)}>
-        <IoAddSharp size={20} />
+          <IoAddSharp size={20} className="plus-icon" />
 
       </button>
       )}

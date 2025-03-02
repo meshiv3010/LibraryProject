@@ -5,9 +5,9 @@
 .categoryButton {
   width: 100%;
   padding: 10px;
-  background-color: #d2b48c;
+  background-color: #d1c1ac;
   color: #333;
-  border: 2px solid #8b4513;
+  border: 2px solid #937865;
   border-radius: 5px;
   font-size: 18px;
   font-family: Arial;
@@ -16,20 +16,20 @@
 }
 
 .categoryButton:hover {
-  background-color: #8b4513;
+  background-color: #c2b0a3;
   color: white;
-  border-color: #a0522d;
+  border-color: #ac8b7c;
 }
 
 .categoryButton:active {
-  background-color: #a0522d;
-  border-color: #8b4513;
+  background-color: #a78170;
+  border-color: #a37e64;
   transform: scale(0.98);
 }
 
 .active {
   background-color: #f5deb3;
   color: #333;
-  border-color: #8b4513;
+  border-color: #f6c8a7;
   font-weight: bold;
 }

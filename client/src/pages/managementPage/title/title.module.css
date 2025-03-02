@@ -13,7 +13,7 @@
 .leftSection h1 {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 32px; /* גודל טקסט */
-  color: black;
+  color: #644b2e;
   margin: 0 0 10px; /* מרווח תחתון */
   font-weight: bold; /* טקסט מודגש */
   text-align: left; /* יישור שמאלה */
@@ -22,7 +22,7 @@
 .leftSection h2 {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 32px; /* גודל טקסט */
-  color: black;
+  color: #644b2e;
   margin: 0 0 10px; /* מרווח תחתון */
   font-weight: bold; /* טקסט מודגש */
   text-align: left; /* יישור שמאלה */
@@ -30,7 +30,7 @@
 
 .leftSection h3 {
   font-size: 24px; /* גודל טקסט לכותרת המשנית */
-  color: #555; /* צבע עדין יותר */
+  color: #644b2e;
   margin: 0 0 20px; /* מרווח לפני הכפתור */
 }
 
