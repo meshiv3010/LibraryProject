@@ -1,16 +1,16 @@
 .leftSide {
-  width: 70%; /* מרחיב את הקומפוננטה */
-  height: 100vh; /* מכסה את כל גובה החלון */
+  width: 70%; 
+  height: 100vh; 
   padding: 20px;
   margin-top: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* הוספת צל */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
 .leftSide h2 {
-  text-align: right; /* יישור הטקסט לימין */
-  font-family: Arial, sans-serif; /* גופן Arial */
-  color: black; /* צבע טקסט שחור */
-  margin-bottom: 16px; /* רווח תחתון */
+  text-align: right; 
+  font-family: Arial, sans-serif; 
+  color: black; 
+  margin-bottom: 16px; 
 }
 
 .favoriteIcon {
@@ -28,12 +28,12 @@
 }
 
 ul {
-  list-style-type: none; /* ביטול הנקודות */
-  padding: 0; /* ביטול הרווח הפנימי */
+  list-style-type: none; 
+  padding: 0; 
 }
 
 li {
-  margin-bottom: 10px; /* רווח תחתון בין הכרטיסיות */
+  margin-bottom: 10px; 
 }
 
 .plus-icon {
@@ -42,9 +42,9 @@ li {
 }
 
 .addButton {
-  background-color: #f0f0f0; /* רקע הכפתור */
-  border: none;               /* הסרת גבול הכפתור */
-  padding: 10px;              /* ריווח סביב האייקון */
-  border-radius: 5px;         /* עיגול הפינות */
+  background-color: #f0f0f0; 
+  border: none;         
+  padding: 10px;          
+  border-radius: 5px;        
   cursor: pointer;
 }

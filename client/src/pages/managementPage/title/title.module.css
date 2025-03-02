@@ -1,8 +1,8 @@
 .title {
-  position: relative; /* שיניתי מ-absolute ל-relative */
+  position: relative; 
   top: 0;
-  left: 0; /* זה גם חשוב אם אתה לא רוצה שהיא תצא מהמסך בצד שמאל */
-  width: 100%; /* מבטיח שהכותרת תישאר בתוך המיכל הראשי */
+  left: 0; 
+  width: 100%; 
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -12,53 +12,52 @@
 
 .leftSection h1 {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 32px; /* גודל טקסט */
+  font-size: 32px; 
   color: #644b2e;
-  margin: 0 0 10px; /* מרווח תחתון */
-  font-weight: bold; /* טקסט מודגש */
-  text-align: left; /* יישור שמאלה */
+  margin: 0 0 10px; 
+  font-weight: bold; 
+  text-align: left; 
 }
 
 .leftSection h2 {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 32px; /* גודל טקסט */
+  font-size: 32px; 
   color: #644b2e;
-  margin: 0 0 10px; /* מרווח תחתון */
-  font-weight: bold; /* טקסט מודגש */
-  text-align: left; /* יישור שמאלה */
+  margin: 0 0 10px; 
+  font-weight: bold; 
+    text-align: left; 
 }
 
 .leftSection h3 {
-  font-size: 24px; /* גודל טקסט לכותרת המשנית */
+  font-size: 24px; 
   color: #644b2e;
-  margin: 0 0 20px; /* מרווח לפני הכפתור */
+  margin: 0 0 20px; 
 }
 
 .leftSection button {
-  background-color: #d9534f; /* צבע רקע אדום */
+  background-color: #d9534f; 
   font-family: Arial, Helvetica, sans-serif;
-  padding: 10px 20px; /* ריווח פנימי */
-  border-radius: 5px; /* פינות מעוגלות */
-  font-size: 16px; /* גודל טקסט */
-  cursor: pointer; /* מצביע יד */
-  transition: background-color 0.3s ease; /* מעבר חלק */
+  padding: 10px 20px; 
+    border-radius: 5px;
+  font-size: 16px; 
+  cursor: pointer; 
+  transition: background-color 0.3s ease; 
 }
 
 .leftSection button:hover {
-  background-color: #c9302c; /* צבע כהה יותר בריחוף */
+  background-color: #c9302c; 
 }
 
 .leftSection button:active {
-  background-color: #ac2925; /* צבע כהה יותר בלחיצה */
-  transform: scale(0.98); /* אפקט לחיצה קל */
+  background-color: #ac2925; 
+  transform: scale(0.98); 
 }
 
 .rightSection {
   display: flex;
-  align-items: center; /* יישור למרכז אנכי */
+  align-items: center; 
 }
 
 .rightSection svg {
-  width: 60px; /* התאמה לגודל הספרייה */
-  height: auto;
+  width: 60px; 
 }

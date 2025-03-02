@@ -3,24 +3,24 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow-x: hidden; /* מונע גלילה לצדדים */
+  overflow-x: hidden; 
   box-sizing: border-box;
 }
 
 .titleWrapper {
-  width: 100%; /* מבטיח שהכותרת תישאר בתוך המיכל הראשי */
+  width: 100%; 
   display: flex;
-  justify-content: center; /* מרכז את התוכן */
+  justify-content: center; 
   align-items: center;
   padding: 10px;
   border-radius: 8px;
   margin-bottom: 0px;
-  box-sizing: border-box; /* מונע גלילה מיותרת */
+  box-sizing: border-box; 
 }
 
 .container {
   display: flex;
-  flex-direction: column; /* מסדר את ה-Title למעלה ואת שאר התוכן מתחת */
+  flex-direction: column; 
   justify-content: flex-start;
   padding: 10px;
   height: 100vh;
@@ -32,18 +32,18 @@ html, body {
   background-image: url('../../../public/images/Screenshot 2025-03-02 105316.png');
   background-size: cover;
   background-position: center;
-  height: 100vh; /* שינוי ל-100vh כדי לוודא שהתוכן לא חורג */
-  width: 100vw; /* שינוי ל-100vw כדי למנוע גלילה אופקית */
+  height: 100vh; 
+  width: 100vw; 
   display: flex;
   justify-content: center;
   align-items: flex-start;
 }
 
 .activityContainer {
-  height: 100%; /* גובה מלא */
+  height: 100%; 
   display: flex;
   flex-direction: row;
-  align-items: stretch; /* מבטיח שהאלמנטים יהיו בגובה אחיד */
+  align-items: stretch; 
   justify-content: space-between;
   width: 100%;
   margin-top: 0px;
@@ -58,16 +58,16 @@ html, body {
   justify-content: flex-end;
   display: flex;
   margin-top:0%;
-  height: 100%; /* הוספת גובה מלא */
+  height: 100%; 
 
 
 }
 
 .categories {
-  width: 20%; /* תופס את ה-30% הנותרים */
+  width: 20%; 
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  min-height: 100%; /* גובה מינימלי לכל האלמנט */
+  min-height: 100%; 
   margin-top: 0%;
 }

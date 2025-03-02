@@ -1,17 +1,17 @@
 .RightSide {
-    position: relative; /* המיקום נשאר יחסית */
-    width: 100%; /* נשאר ללא שינוי */
-    margin-top: 0; /* הסר מרווח מיותר מלמעלה */
+    position: relative; 
+    width: 100%; 
+    margin-top: 0; 
     padding: 10px;
     height: 100%; 
-    overflow-y: auto; /* הוספת גלילה במקרה שהכרטיסיות עולות על הגובה */
+    overflow-y: auto; 
     border: 2px solid black;
-    box-sizing: border-box; /* וידוא שכל הפיקסלים מתחשבים בגבול ובמילוי */
+    box-sizing: border-box; 
 }
 
 .CardContainer {
     display: flex;
-    flex-direction: column; /* מציג את הכרטיסיות אחת מעל השנייה */
-    gap: 10px; /* מרווח בין הכרטיסיות */
-    padding-top: 10px; /* מרווח מינימלי כדי לא לגעת בגבולות */
+    flex-direction: column; 
+    gap: 10px; 
+    padding-top: 10px; 
 }

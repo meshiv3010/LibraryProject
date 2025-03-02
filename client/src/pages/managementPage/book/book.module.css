@@ -1,18 +1,18 @@
 .container {
   display: flex;
-  align-items: flex-start;  /* מוודא שהתוכן יתחיל מלמעלה */
-  height: 100vh;           /* נותן גובה של 100% למסך */
-  margin-top: 0vh;        /* מגדיר שהקומפוננטות יתחילו מ-40% מגובה העמוד */
+  align-items: flex-start;  
+  height: 100vh;           
+  margin-top: 0vh;        
   width: 100%;
 }
   
   .leftSide {
-    width: 50%;             /* גודל רוחב עבור הקומפוננטה השמאלית */
-    text-align: left;        /* מיושר לשמאל */
+    width: 50%;             
+    text-align: left;       
   }
   
   .rightSide {
-    width: 50%;             /* גודל רוחב עבור הקומפוננטה הימנית */
-    text-align: right;       /* מיושר לימין */
+    width: 50%;           
+    text-align: right;      
   }
   
