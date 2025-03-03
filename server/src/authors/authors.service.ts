@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, Inject, forwardRef } from '@nestjs/common'; // ודא ייבוא Inject ו-forwardRef
+import { Injectable, NotFoundException, Inject, forwardRef } from '@nestjs/common'; 
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Author } from './author.schema';
@@ -11,7 +11,7 @@ export class AuthorService {
   constructor(
     @InjectModel(Author.name) private authorModel: Model<Author>,
     @Inject(forwardRef(() => BookService)) private readonly bookService: BookService,
-    @Inject(forwardRef(() => UserService)) private readonly userService: UserService // הזרקת UserService עם forwardRef
+    @Inject(forwardRef(() => UserService)) private readonly userService: UserService // Inject UserService with forwardRef
   ) {}
 
 
@@ -21,14 +21,14 @@ export class AuthorService {
       .populate({
         path: 'books',
         populate: {
-          path: 'readers', // אכלוס של הקוראים
-          model: 'User',    // דגם של המשתמשים
-          select: 'userNumber name readBooks favBook' // פרטים שנרצה לאכלס עבור המשתמשים
+          path: 'readers', // Reader location
+          model: 'User',    // User model
+          select: 'userNumber name readBooks favBook' // Details we would like to populate for users
         }
       })
       .exec();
   }
-ד  
+  
 
   async getBooksByAuthor(authorId: Types.ObjectId): Promise<Types.ObjectId[]> {
     const author = await this.authorModel
@@ -51,13 +51,13 @@ export class AuthorService {
         throw new NotFoundException('Author not found');
     }
 
-    // מחיקה של כל ספר של הסופר מהמסד ומהרשומות של המשתמשים
+    // Delete each book by the author from the DB and from the users' records
     for (const bookId of author.books) {
-        await this.bookService.deleteBook(bookId);  // מחיקת הספר עצמו
-        await this.userService.removeBookFromAllUsers(bookId); // הסרת הספר מכל המשתמשים
+        await this.bookService.deleteBook(bookId);  // Deleting the book
+        await this.userService.removeBookFromAllUsers(bookId); // Remove the book from all users
     }
 
-    // מחיקת הסופר עצמו לאחר מחיקת הספרים
+    // Deleting the author after deleting the books
     await this.authorModel.findByIdAndDelete(authorId).exec();
     console.log(`Deleted author ${authorId} and all their books.`);
   }
@@ -74,7 +74,7 @@ async updateAuthor(authorId: Types.ObjectId, updateAuthorDto: UpdateAuthorDto): 
   const updatedAuthor = await this.authorModel.findByIdAndUpdate(
     authorId,
     { $set: updateAuthorDto },
-    { new: true }  // מחזיר את האובייקט המעודכן
+    { new: true }  // Returns the updated object
   ).exec();
 
   if (!updatedAuthor) {

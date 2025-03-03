@@ -9,13 +9,13 @@ import { Author as AuthorType} from '../../../api';
 const Author: React.FC = () => {
   const [selectedAuthor, setSelectedAuthor] = useState<AuthorType | null>(null);
 
-  // שימוש ב-React Query לשליפת סופרים
+  // Retrieving authors
   const { data: authors, isLoading, error } = useQuery({
     queryKey: ['authors'],
     queryFn: fetchAuthors,
   });
   
-  // פונקציה לבחירת סופר
+// Function to select a authors
   const handleAuthorSelect = (author: AuthorType) => {
     setSelectedAuthor(author);
   };
@@ -28,8 +28,8 @@ const Author: React.FC = () => {
       <div className={style.leftSide}>
         {selectedAuthor ? (
           <LeftSide 
-            authorName={selectedAuthor?.name} // בדוק אם השם נשלח
-            authorBooks={selectedAuthor?.books} // בדוק אם הספרים נשלחים
+            authorName={selectedAuthor?.name} // Check if the name was sent
+            authorBooks={selectedAuthor?.books} //Check if the books were sent
             selectedCategory="author"
           />
         ) : (

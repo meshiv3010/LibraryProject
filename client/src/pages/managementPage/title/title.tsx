@@ -14,7 +14,7 @@ const Title = ({ userName, favBook }: TitleProps) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate('/'); // חזרה לעמוד הכניסה
+    navigate('/'); // Return to the login page
   };
 
   return (
@@ -26,7 +26,7 @@ const Title = ({ userName, favBook }: TitleProps) => {
         <RiLogoutBoxLine 
           onClick={handleLogout} 
           className="logoutIcon" 
-          size={30} /* גודל האייקון */
+          size={30} 
         />
         </div>
       <div className={style.rightSection}>

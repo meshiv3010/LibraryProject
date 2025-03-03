@@ -44,25 +44,24 @@ const LeftSide = ({
 }: LeftSideProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [unreadBooks, setUnreadBooks] = useState<any[]>([]);
-  const queryClient = useQueryClient();  // מיקום נכון של ה-hook בתוך הקומפוננטה
+  const queryClient = useQueryClient();  
 
   const { mutate: addBookMutation } = useMutation<void, Error, AddBookInput>({
     mutationFn: ({ userId, bookId }) => addBookToUser(userId, bookId),
     onSuccess: async (data, { userId, bookId }) => {
-      // ביטול המטמון לנתוני המשתמשים והספרים
       queryClient.invalidateQueries({ queryKey: ['users'] });
       queryClient.invalidateQueries({ queryKey: ['books'] });
 
-      // שליפת נתוני המשתמשים מחדש
+    // Re-fetch user data
       const users = await fetchUsers();
       const updatedUser = users.find((user) => user._id === userId);
 
       if (updatedUser && setUserBooks) {
-        setUserBooks(updatedUser.readBooks); // עדכון ספרי המשתמש
+        setUserBooks(updatedUser.readBooks); //Updating user books
       }
 
       alert('הספר נוסף בהצלחה!');
-      setIsModalOpen(false); // סגירת המודאל לאחר ההוספה
+      setIsModalOpen(false); // Closing the modal after adding
     },
     onError: (error) => {
       alert('שגיאה בהוספת הספר למשתמש.');
@@ -71,23 +70,23 @@ const LeftSide = ({
   });
 
   const handleRemoveBookFromUser = async (bookId: string) => {
-    if (userId && bookId) {  // לבדוק אם userId ו- bookId קיימים
+    if (userId && bookId) {  // Checking if userId and bookId exist
       try {
-        // שליחה ל-API כדי להסיר את הספר מהמשתמש
+        // Send to API to remove the book from the user
         await removeBookFromUser(userId, bookId);  // פונקציה שתיצור ב-API
         alert('הספר הוסר בהצלחה!');
 
-        // עדכון רשימת הספרים אחרי המחיקה
-        if (userBooks && setUserBooks) {  // לבדוק אם userBooks ו- setUserBooks לא undefined
+        // Update the book list after deletion
+        if (userBooks && setUserBooks) { //check if userBooks and setUserBooks are not undefined
           const updatedBooks = userBooks.filter((book) => book._id !== bookId);
-          setUserBooks(updatedBooks);  // עדכון רשימת הספרים בקומפוננטה
+          setUserBooks(updatedBooks);  // Update the list of books in the component
         } else {
           console.error('setUserBooks או userBooks לא מוגדרים');
         }
 
-        // רענון של העמוד - invalidation של השאילתות
-        queryClient.invalidateQueries({ queryKey: ['users'] });  // רענון נתונים של המשתמשים
-        queryClient.invalidateQueries({ queryKey: ['books'] });  // רענון נתונים של הספרים
+        // Refresh the page - invalidation of the queries
+        queryClient.invalidateQueries({ queryKey: ['users'] }); // Refresh users data
+        queryClient.invalidateQueries({ queryKey: ['books'] });  // Refresh books data
 
       } catch (error) {
         console.error('שגיאה בהסרת הספר:', error);

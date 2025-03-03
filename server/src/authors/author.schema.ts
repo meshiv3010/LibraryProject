@@ -12,7 +12,7 @@ export class Author extends Document {
   authorNumber: number;
 
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }])
-  books: mongoose.Types.ObjectId[]; // צריך לשמש כ-ID של ספרים
+  books: mongoose.Types.ObjectId[]; // Should be used as a book ID
 }
 
 

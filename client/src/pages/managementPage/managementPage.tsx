@@ -40,7 +40,7 @@ const ManagementPage = () => {
   return (
     <div className={style.background}>
       <div className={style.container}>
-        {/* עטיפת ה-Title עם div שמגדיר רוחב מלא */}
+        {/* Wrap the Title with a div that defines full width */}
         <div className={style.titleWrapper}>
           <Title userName={currentUser.name || ''} favBook={currentUser.favBook?.title || null} />
         </div>

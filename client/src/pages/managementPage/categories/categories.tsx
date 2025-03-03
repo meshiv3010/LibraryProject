@@ -8,7 +8,7 @@ interface Category {
 
 interface CategoriesProps {
   onCategorySelect: (category: string) => void;
-  selectedCategory?: string; // פרופס כדי לעקוב אחר הקטגוריה הנוכחית
+  selectedCategory?: string; // Props to follow the current category
 }
 
 const Categories = ({ onCategorySelect, selectedCategory }: CategoriesProps) => {

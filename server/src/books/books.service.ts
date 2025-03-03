@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, Inject, forwardRef } from '@nestjs/common'; // ייבוא Inject ו-forwardRef
+import { Injectable, NotFoundException, Inject, forwardRef } from '@nestjs/common'; 
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Book } from './book.schema';
@@ -12,13 +12,13 @@ import { UserService } from '../users/users.service';
 export class BookService {
   constructor(
     @InjectModel(Book.name) private bookModel: Model<Book>,
-    @Inject(forwardRef(() => UserService)) private readonly userService: UserService, // שימוש ב-forwardRef
+    @Inject(forwardRef(() => UserService)) private readonly userService: UserService, 
     @Inject(forwardRef(() => AuthorService)) private readonly authorService: AuthorService
 ) {}
 
 
     async updateBook(bookId: Types.ObjectId, updateBookDto: UpdateBookDto): Promise<Book> {
-        // עדכון הספר לפי ה-id וה-DTO
+        // Update the book by id and DTO
         const updatedBook = await this.bookModel.findByIdAndUpdate(bookId, updateBookDto, { new: true }).exec();
         if (!updatedBook) {
             throw new NotFoundException('Book not found');
@@ -31,32 +31,32 @@ export class BookService {
     }
 
     async addReaderToBook(bookId: Types.ObjectId, userId: Types.ObjectId): Promise<Book> {
-        // עדכון הספר כדי להוסיף את המשתמש לרשימת הקוראים
+        // Update the book to add the user to the reader list
         const book = await this.bookModel.findByIdAndUpdate(
             bookId,
-            { $addToSet: { readers: userId } }, // הוספת המשתמש ל-readers אם הוא לא קיים
-            { new: true } // החזרת הספר המעודכן
+            { $addToSet: { readers: userId } }, // Adding the user to readers if it does not exist
+            { new: true } //Returning the updated book
         ).exec();
     
         if (!book) {
-            throw new NotFoundException('Book not found'); // אם לא נמצא ספר
+            throw new NotFoundException('Book not found'); // If no book is found
         }
     
         return book;
     }
     
     async getAllBooks(): Promise<Book[]> {
-        // חיפוש ספרים עם populate על readers
+        // Search for books with populate on readers
         const books = await this.bookModel.find()
             .populate({
-                path: 'readers',  // אכלוס של הקוראים
-                model: 'User',     // דגם של המשתמשים
-                select: 'userNumber name readBooks favBook'  // פרטים שנרצה לאכלס עבור המשתמשים
+                path: 'readers',  // Location of readers
+                model: 'User',     // User model
+                select: 'userNumber name readBooks favBook'  //Details we would like to populate for users
             })
             .populate({
-                path: 'author',   // אכלוס פרטי הסופר
-                model: 'Author',  // דגם של הסופרים
-                select: 'writerNumber name'  // פרטים שנרצה לאכלס עבור הסופרים
+                path: 'author',   // Populating the writer's details
+                model: 'Author',  // A model of author
+                select: 'writerNumber name'  //Details we would like to populate for the authors
             })
             .exec();
             
@@ -66,22 +66,22 @@ export class BookService {
     async getBookById(id: Types.ObjectId): Promise<Book> {
         return this.bookModel.findById(id).populate({
             path: 'author',
-            model: 'Author' // אכלוס פרטי הסופר
+            model: 'Author' // Populating the author's details
         }).exec();
     }
     
     async getAuthorByBookId(bookId: Types.ObjectId): Promise<string> {
         const book = await this.bookModel.findById(bookId)
-            .populate<{ author: Pick<Author, 'name'> }>('author', 'name') // מביא רק את שם הסופר
+            .populate<{ author: Pick<Author, 'name'> }>('author', 'name') //Only gives the author's name
             .exec();    
-        return book.author.name; // מחזיר את שם הסופר
+        return book.author.name; //Returns the author's name.
     }
 
     async removeReaderFromBook(bookId: Types.ObjectId, userId: Types.ObjectId): Promise<Book> {
         const book = await this.bookModel.findByIdAndUpdate(
             bookId,
-            { $pull: { readers: userId } }, // הסרת המשתמש מהרשימה
-            { new: true } // החזרת מסמך הספר המעודכן
+            { $pull: { readers: userId } }, //Removing the user from the list
+            { new: true } // Returning the updated book
         ).exec();
     
         if (!book) {
@@ -92,21 +92,21 @@ export class BookService {
     }
     
     async deleteBook(bookId: Types.ObjectId): Promise<Book> {
-        // שליפת הספר
+        // Retrieving the book
         const book = await this.bookModel.findById(bookId).populate('author').exec();
         if (!book) {
             throw new NotFoundException('Book not found');
         }
     
-        // מחיקת הספר מרשימות הספרים שנקראו אצל המשתמשים
+        // Delete the book from the users' read books lists
         await this.userService.removeBookFromAllUsers(bookId);
     
-        // מחיקת הספר מהרשימה של הסופר
+        // Deleting the book from the author's list
         if (book.author) {
             await this.authorService.removeBookFromAuthor(book.author._id, bookId);
         }
     
-        // מחיקת הספר מהמאגר
+        // Deleting the book from the DB
         await this.bookModel.findByIdAndDelete(bookId).exec();
     
         return book;

@@ -12,10 +12,10 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<LogIn />} />                     {/* עמוד הכניסה */}
-            <Route path="/login" element={<LogIn />} />               {/* גישה ישירה לכניסה */}
-            <Route path="/management" element={<ManagementPage />} /> {/* עמוד ניהול */}
-            <Route path="*" element={<Navigate to="/" replace />} />  {/* הפנייה אוטומטית */}
+            <Route path="/" element={<LogIn />} />                     {/* Login page */}
+            <Route path="/login" element={<LogIn />} />               {/* Quick access to login */}
+            <Route path="/management" element={<ManagementPage />} /> {/* management page */}
+            <Route path="*" element={<Navigate to="/" replace />} />  {/* automatic reference */}
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>

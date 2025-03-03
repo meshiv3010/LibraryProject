@@ -26,30 +26,30 @@ export class UserService {
     }
 
     async addBookToUser(userId: Types.ObjectId, bookId: Types.ObjectId): Promise<User> {
-        // עדכון המשתמש כדי להוסיף את ה-bookId ל-readBooks
+        // Update the user to add the bookId to readBooks
         const user = await this.userModel.findByIdAndUpdate(
             userId,
-            { $addToSet: { readBooks: bookId } }, // הוספת bookId אם הוא לא קיים
-            { new: true } // החזרת המשתמש המעודכן
+            { $addToSet: { readBooks: bookId } }, // Adding bookId if it doesn't exist
+            { new: true } // Return the updated user
         ).exec();
 
         if (!user) {
-            throw new NotFoundException('User not found'); // אם לא נמצא משתמש
+            throw new NotFoundException('User not found'); // If no user is found
         }
 
-        // עדכון הספר כדי להוסיף את המשתמש ל-readers
+        // Update the book to add the user to readers
         await this.bookService.addReaderToBook(bookId, userId);
 
-        // שליפת המשתמש עם אכלוס פרטי הספרים ב-readBooks
+        // Retrieving the user with the book details populated in readBooks
         const populatedUser = await this.userModel.findById(user._id)
-            .populate('readBooks') // אכלוס פרטי הספרים
+            .populate('readBooks') // Populate the book details
             .exec();
 
-        return populatedUser; // החזרת המשתמש עם הספרים המאוכלסים
+        return populatedUser; // Return the user with the populated books
     }
 
     async setFavoriteBook(userId: Types.ObjectId, bookId: Types.ObjectId): Promise<User> {
-        // שליפת המשתמש מהמאגר
+        // Retrieve the user from the DB
         const user = await this.userModel.findById(userId).exec();
         if (!user) {
             throw new NotFoundException('User not found');
@@ -57,7 +57,7 @@ export class UserService {
         const updateData = (user.favBook && user.favBook.equals(bookId))
             ? { favBook: null }
             : { favBook: bookId };
-        // עדכון המשתמש
+        // Update the user
         const updatedUser = await this.userModel.findByIdAndUpdate(userId, updateData, { new: true })
             .populate('favBook')
             .exec();
@@ -74,23 +74,23 @@ export class UserService {
         await this.userModel.deleteOne({ _id: userId }).exec();
     }
     async removeBookFromUser(userId: Types.ObjectId, bookId: Types.ObjectId): Promise<User> {
-        // שליפת המשתמש
+        // Retrieve the user
         const user = await this.userModel.findById(userId).exec();
         if (!user) {
             throw new NotFoundException('User not found');
         }
     
-        // בדיקה אם הספר המוסר הוא הספר המועדף
+        // Check if the submitted book is the preferred book
         const isFavoriteBook = user.favBook && user.favBook.equals(bookId);
     
-        // הסרת הספר מרשימת ה-readBooks
+        // Removing the book from the readBooks list
         const removeFromReadBooks = await this.userModel.updateOne(
             { _id: userId },
             { $pull: { readBooks: bookId } }
         ).exec();
         console.log(`Removed book ${bookId} from user ${userId}:`, removeFromReadBooks);
     
-        // אם הספר המוסר הוא הספר המועדף, מחק אותו משדה favBook
+        // If the submitted book is the preferred book, delete it from the faceBook field
         if (isFavoriteBook) {
             const removeFromFavBook = await this.userModel.updateOne(
                 { _id: userId },
@@ -99,20 +99,20 @@ export class UserService {
             console.log(`Unset favorite book for user ${userId}:`, removeFromFavBook);
         }
     
-        // עדכון מסמך הספר להסרת המשתמש מרשימת הקוראים
+        // Update the book to remove the user from the readers list
         const removeReader = await this.bookService.removeReaderFromBook(bookId, userId);
         console.log(`Removed user ${userId} from book ${bookId} readers:`, removeReader);
     
-        // אימות שמסמך הספר אכן עודכן
-        const updatedBook = await this.bookService.getBookById(bookId); // הנח ש-`getBookById` מחזירה ספר מעודכן
+        // Verify that the book has indeed been updated
+        const updatedBook = await this.bookService.getBookById(bookId); // Assume `getBookById` returns an updated book
         console.log(`Book readers after update:`, updatedBook?.readers);
     
-        // שליפת המשתמש המעודכן עם פרטי הספרים
+        // Retrieve the updated user with the book details
         const updatedUser = await this.userModel.findById(userId)
             .populate('favBook')
             .populate({
                 path: 'readBooks',
-                populate: { path: 'author' }, // לוודא שגם authors מאוכלסים
+                populate: { path: 'author' }, // verify sure the connectors are also populated
             })
             .lean()
             .exec();
@@ -132,28 +132,28 @@ export class UserService {
             { 
                 $or: [
                     { readBooks: bookId },
-                    { favBook: bookId } // מחפשים גם ב-favBook
+                    { favBook: bookId } // Also search on favBook
                 ]
             },
             { 
-                $pull: { readBooks: bookId }, // מוחקים מה-readBooks
-                $unset: { favBook: "" } // מסירים את הספר משדה favBook
+                $pull: { readBooks: bookId }, // Delete from readBooks
+                $unset: { favBook: "" } //Remove the book from the favBook field
             }
         ).exec();
     }
 
     async updateUser(userId: Types.ObjectId, updateData: Partial<Omit<User, 'userNumber'>>): Promise<User> {
-        // שליפת המשתמש והוצאת userNumber מהעדכון
+        // Retrieve the user and remove userNumber from the update
         const user = await this.userModel.findById(userId).exec();
 
         if (!user) {
             throw new NotFoundException('User not found');
         }
 
-        // שמירת השדות לעדכון פרט לשדה userNumber
+        // Save the fields for update except for the userNumber field
         Object.assign(user, updateData);
 
-        // שמירת השינויים
+        // Saving the changes
         return user.save();
     }
 }

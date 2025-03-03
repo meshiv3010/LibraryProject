@@ -90,8 +90,8 @@ const Card: React.FC<CardProps> = ({
   };
   
   const handleRemoveBookFromUser = () => {
-    if (bookId && userId && onRemoveBookFromUser) {  // בודק אם הפונקציה קיימת
-      onRemoveBookFromUser(bookId);  // שולח את ה- bookId לפונקציה בקומפוננטת הורה
+    if (bookId && userId && onRemoveBookFromUser) {  // Checks if the function exists
+      onRemoveBookFromUser(bookId);  // Sends the bookId to a function in the parent component
     }
   };
   

@@ -61,7 +61,7 @@ export class UserController {
             if (error instanceof NotFoundException) {
                 throw new NotFoundException('User not found');
             }
-            throw error; // זרוק חריגות אחרות כפי שהן
+            throw error; 
         }
     } 
 

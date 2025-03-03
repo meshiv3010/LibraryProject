@@ -63,11 +63,11 @@ const RightSide = ({
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [users, setUsers] = useState<UserLogged[] | undefined>(initialUsers);
-  const navigate = useNavigate(); // ניתוב מחדש לעמוד LogIn
+  const navigate = useNavigate(); // Navigate to LogIn page
   const queryClient = useQueryClient(); 
 
   useEffect(() => {
-    setUsers(initialUsers); // מתעדכן כאשר initialUsers משתנה
+    setUsers(initialUsers); //Updates when initialUsers changes
   }, [initialUsers]);
 
   const handleCardClick = (id: string, type: 'user' | 'book' | 'author', item: any) => {
@@ -82,7 +82,7 @@ const RightSide = ({
       onDeleteUser(userId);
       if (userId === loggedUserId) {
         localStorage.removeItem('loggedUserId'); 
-        navigate('/login', { replace: true }); // עדכון הניווט
+        navigate('/login', { replace: true }); // Navigation update
       } else {
         setUsers((prevUsers) => prevUsers?.filter(user => user._id !== userId));
       }
@@ -94,7 +94,7 @@ const RightSide = ({
     onDeleteBook(bookId);
     queryClient.invalidateQueries({ queryKey: ['books'] });
     queryClient.invalidateQueries({ queryKey: ['users'] });
-    queryClient.refetchQueries({ queryKey: ['books'] }); // רענון נוסף של השאילתה
+    queryClient.refetchQueries({ queryKey: ['books'] }); // Refresh the query again
   }
 };
 

@@ -12,12 +12,12 @@ interface Book {
 
 interface AddBookProps {
   unreadBooks: Book[];
-  onAddBook: (book: Book) => void; // פונקציה שנקראת לאחר שהמשתמש בחר ספר
+  onAddBook: (book: Book) => void; 
 }
 
 const AddBook: React.FC<AddBookProps> = ({ unreadBooks, onAddBook }) => {
-  const [isOpen, setIsOpen] = useState(false); // מנהל את מצב הפופ-אפ
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null); // מנהל את הבחירה של הספר
+  const [isOpen, setIsOpen] = useState(false); // Manages pop-up mode
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null); //Manages the book selection
 
   const handleOpenPopup = () => {
     setIsOpen(true);
@@ -25,7 +25,7 @@ const AddBook: React.FC<AddBookProps> = ({ unreadBooks, onAddBook }) => {
 
   const handleClosePopup = () => {
     setIsOpen(false);
-    setSelectedBook(null); // מנקה את הבחירה אם סוגרים את הפופ-אפ בלי לבחור ספר
+    setSelectedBook(null); //Clears the selection after closing the pop-up, without selecting a book
   };
 
   const handleSelectBook = (book: Book) => {
@@ -34,8 +34,8 @@ const AddBook: React.FC<AddBookProps> = ({ unreadBooks, onAddBook }) => {
 
   const handleAddBook = () => {
     if (selectedBook) {
-      onAddBook(selectedBook); // קורא לפונקציה שמעבירה את הספר שנבחר ל-LeftSide
-      handleClosePopup(); // סוגר את הפופ-אפ לאחר הבחירה
+      onAddBook(selectedBook); //Calls a function that moves the selected book to LeftSide
+      handleClosePopup(); // Closes the pop-up after selection
     }
   };
 

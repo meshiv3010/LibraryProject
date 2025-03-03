@@ -7,11 +7,11 @@ import { deleteBook, Book as BookType } from '../../../api';
 import { UserLogged } from '../../../types';
 
 type BookProps = {
-  books: BookType[]; // תקבל את רשימת הספרים מתוך ה-ManagementPage
-  currentUser: UserLogged; // התאמה לנתו��ים המתקבלים מ-ManagementPage
+  books: BookType[]; // Get the list of books from the ManagementPage
+  currentUser: UserLogged; //Matching data received from ManagementPage
 };
 
-const Book = ({ books, currentUser }: BookProps) => { // כאן הוספנו את currentUser כחלק מה-props
+const Book = ({ books, currentUser }: BookProps) => { // Adding currentUser as part of the prop
   const [selectedBook, setSelectedBook] = useState<BookType | null>(null);
   const queryClient = useQueryClient();
 

@@ -9,8 +9,8 @@ import { BookController } from './books.controller';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Book', schema: BookSchema }]),
-    forwardRef(() => AuthorsModule), // שימוש ב-forwardRef
-    forwardRef(() => UsersModule),  // שימוש ב-forwardRef
+    forwardRef(() => AuthorsModule), 
+    forwardRef(() => UsersModule),  
   ],
   providers: [BookService],
   controllers: [BookController], 

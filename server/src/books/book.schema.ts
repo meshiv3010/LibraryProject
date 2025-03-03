@@ -13,7 +13,7 @@ export class Book extends Document {
     @Prop({ required: true })
     title: string;
 
-    @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] }) // שדה לקוראים
+    @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] }) // Field for readers
     readers: Types.ObjectId[];
 }
 

@@ -7,7 +7,7 @@ import { fetchUsers, deleteUser, addBookToUser } from '../../../api';
 import { UserLogged } from '../../../types';
 
 interface UserProps {
-  currentUser: UserLogged; // התאמה לנתונים המתקבלים מ-ManagementPage
+  currentUser: UserLogged; // Matching data received from ManagementPage
 }
 
 const User = ({ currentUser }: UserProps) => {
@@ -33,14 +33,14 @@ const User = ({ currentUser }: UserProps) => {
   // Handle selecting a user
   const handleUserSelect = (user: UserLogged) => {
     setSelectedUser(user);
-    setUserBooks(user.readBooks); // עדכון ספרים כאשר בוחרים משתמש אחר
+    setUserBooks(user.readBooks); // Update books when selecting another user
   };
 
   // Mutation for adding a book to the user
   const { mutate: addBookMutation } = useMutation<any, Error, { userId: string; bookId: string }>({
     mutationFn: ({ userId, bookId }) => addBookToUser(userId, bookId),
     onSuccess: (data) => {
-      setUserBooks(data.readBooks); // עדכון ספרי המשתמש לאחר הוספה
+      setUserBooks(data.readBooks); // Update user books after adding
       queryClient.invalidateQueries({ queryKey: ['users'] });
       alert('הספר נוסף בהצלחה!');
     },
@@ -71,7 +71,7 @@ const User = ({ currentUser }: UserProps) => {
           userId={selectedUser?._id || currentUser._id}
           loggedUserId={currentUser._id}
           selectedCategory="user"
-          setUserBooks={setUserBooks} // העברת הפונקציה setUserBooks לקומפוננטת LeftSide
+          setUserBooks={setUserBooks} // Moving the setUserBooks function to the LeftSide component
         />
       </div>
       <div className={style.rightSide}>
