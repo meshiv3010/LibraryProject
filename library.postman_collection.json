@@ -1,0 +1,540 @@
+{
+  "info": {
+    "_postman_id": "5ccec512-c5a2-41a8-bab7-25efcbfa41d0",
+    "name": "library",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "37317819"
+  },
+  "item": [
+    {
+      "name": "users",
+      "item": [
+        {
+          "name": "http://localhost:3000/users",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\":\"Tal\",\r\n  \"userNumber\":6\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getBooksDetailsWithAuthors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/users/66b9d1acbb0fd28826276884/books-details",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "66b9d1acbb0fd28826276884",
+                "books-details"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "addBookToUser",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/users/66b9cd98bb0fd28826276883/books/66c5cedc068f291ee6f659f8",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "66b9cd98bb0fd28826276883",
+                "books",
+                "66c5cedc068f291ee6f659f8"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "setFavoriteBook",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/users/66bdf82e4c8883c9ce677e3d/favBook/66c5cfc2068f291ee6f659fe",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "66bdf82e4c8883c9ce677e3d",
+                "favBook",
+                "66c5cfc2068f291ee6f659fe"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteUser",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/users/66b9cd98bb0fd28826276883",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "66b9cd98bb0fd28826276883"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateUser",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"2עידן דוידי- מעודכן\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/users/66b9cd98bb0fd28826276883",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "66b9cd98bb0fd28826276883"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "removeBookFromUser",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/users/66b9d1acbb0fd28826276884/books/66c5cedc068f291ee6f659f8",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "66b9d1acbb0fd28826276884",
+                "books",
+                "66c5cedc068f291ee6f659f8"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/users/66b9d1acbb0fd28826276884/books/66c5cedc068f291ee6f659f8",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "66b9d1acbb0fd28826276884",
+                "books",
+                "66c5cedc068f291ee6f659f8"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "books",
+      "item": [
+        {
+          "name": "findAll",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/books",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "books"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/books",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\":\"נילס\",\r\n    \"bookNumber\":2,\r\n    \"author\": \"66b9e9f6bb0fd2882627688b\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/books",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "books"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "findOne",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/books/66c5cedc068f291ee6f659f8",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "books",
+                "66c5cedc068f291ee6f659f8"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getAuthorByBookId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/books/66c5ce24068f291ee6f659f6/author",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "books",
+                "66c5ce24068f291ee6f659f6",
+                "author"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "removeReader",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/books/66c5cedc068f291ee6f659f8/readers/66b9d1acbb0fd28826276884",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "books",
+                "66c5cedc068f291ee6f659f8",
+                "readers",
+                "66b9d1acbb0fd28826276884"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteBook",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/books/66c5cfc2068f291ee6f659fe",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "books",
+                "66c5cfc2068f291ee6f659fe"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateBook",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"123 הארי פוטר\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/books/66c5cfc2068f291ee6f659fe",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "books",
+                "66c5cfc2068f291ee6f659fe"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "removeReaderFromBook",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/books/66c5cedc068f291ee6f659f8/readers/66b9d1acbb0fd28826276884",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "books",
+                "66c5cedc068f291ee6f659f8",
+                "readers",
+                "66b9d1acbb0fd28826276884"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "authors",
+      "item": [
+        {
+          "name": "findAll",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/authors",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "authors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "findBooksByAuthor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/authors/66b9e9f6bb0fd2882627688b/books",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "authors",
+                "66b9e9f6bb0fd2882627688b",
+                "books"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getAllAuthorsNameWithNumber",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/authors/nameAndNumner",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "authors",
+                "nameAndNumner"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteAuthor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/authors/66b9e9f6bb0fd2882627688b",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "authors",
+                "66b9e9f6bb0fd2882627688b"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateAuthor",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"פרופ' דן אריאלי\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/authors/66b9e9f6bb0fd28826276889",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "authors",
+                "66b9e9f6bb0fd28826276889"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
